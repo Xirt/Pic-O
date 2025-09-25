@@ -1,0 +1,235 @@
+import { History } from './History.js';
+import { PicoView } from './PicoView.js';
+import { Filter } from './Filter.js';
+import { Selection } from './Selection.js';
+import { AppRequest } from './AppRequest.js';
+import { Grid, GridItemFactory } from './Grid.js';
+import { SelectionManager } from './selectionManager.js';
+import { populateForm, getJSONFromForm, removeEventListeners, openCanvas, closeCanvas } from './domHelpers.js';
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+    const container = document.getElementById('grid');
+
+    new Selection(container);
+    const manager = new Albums();
+    manager.init();
+
+    const createForm = document.getElementById('createAlbumForm');
+    createForm.addEventListener('submit', async function (e) {
+
+        e.preventDefault();
+        if (!createForm.checkValidity()) {
+            createForm.reportValidity();
+            return;
+        }
+
+        try {
+
+            await AppRequest.request(createForm.action, 'POST', getJSONFromForm(createForm), 'albums');
+            await manager.init();
+
+        } catch (e) { console.error(e); }
+
+        closeCanvas('offcanvas-create-album');
+        createForm.reset();
+
+    });
+
+    const updateForm = document.getElementById('updateAlbumForm');
+    updateForm.addEventListener('submit', async function (e) {
+
+        e.preventDefault();
+
+        try {
+
+            const albumId = document.getElementById('albumId').value;
+
+            await AppRequest.request(route('album.update', { album: albumId }), 'PATCH', getJSONFromForm(updateForm), 'albums');
+            await manager.init();
+
+        } catch (e) { console.error(e); }
+
+        closeCanvas('offcanvas-modify-album');
+        updateForm.reset();
+
+    });
+
+    new SelectionManager({
+        elements: {
+            input       : 'dropdownInput',
+            menu        : 'dropdownMenu',
+            container   : 'search-dropdown-container',
+            hiddenInput : 'dropdownHidden'
+        },
+        apiUrl: '/api/folders/search',
+        renderItem: null
+    });
+
+});
+
+class Albums {
+
+    constructor() {
+
+        Filter.init(() => { this.init(); });
+
+        this.grid   = new Grid(this);
+        this.loader = new AlbumsLoader(Filter);
+
+    }
+
+    async init() {
+
+        this.grid.clear();
+        await this.show();
+
+    }
+
+    async show() {
+
+        const photos = await this.loader.start();
+        this._show(photos);
+
+    }
+
+    async showMore() {
+
+        if (this.loader.hasNextPage()) {
+
+            const photos = await this.loader.next();
+            this._show(photos);
+
+        }
+
+    }
+
+    async _show(photos) {
+
+        const elements = photos.map((entity) => {
+
+            const el = GridItemFactory.album(entity);
+
+            const modButton = el.querySelector('.btn-modify');
+            modButton.addEventListener('click', (event) => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                this.showModifyAlbum(el);
+
+            });
+
+            const delButton = el.querySelector('.btn-delete');
+            delButton.addEventListener('click', (event) => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                this.showRemovalconfirmation(el);
+
+            });
+
+            return el;
+
+        });
+
+        this.grid.add(elements);
+
+    }
+
+    async showModifyAlbum(card) {
+
+        try {
+
+            const url = route('album.get', { album: card.getAttribute('data-id') });
+            const result = await AppRequest.request(url, 'GET');
+
+            populateForm(document.getElementById('updateAlbumForm'), result.data);
+
+        } catch (e) { console.error(e); }
+
+        openCanvas('offcanvas-modify-album');
+
+    }
+
+    showRemovalconfirmation(card) {
+
+        const offcanvas = openCanvas('offcanvas-remove-album');
+
+        let removeButton = document.getElementById('btn-remove');
+        removeEventListeners(removeButton).addEventListener('click', () => {
+
+            try {
+
+                 const url = route('album.remove', { album: card.getAttribute('data-id') });
+                 AppRequest.request(url, 'DELETE');
+
+            } catch (e) { console.log(e); }
+
+            this.grid.remove(card);
+            offcanvas.hide();
+
+        });
+
+    }
+
+}
+
+class AlbumsLoader {
+
+    constructor(filter) {
+
+        this.filter      = filter;
+        this.lastPage    = null;
+        this.currentPage = 0;
+
+    }
+
+    async start() {
+
+        this.currentPage = 0;
+        return await this.next();
+
+    }
+
+    hasNextPage() {
+
+        return (this.lastPage == null || this.currentPage < this.lastPage);
+
+    }
+
+    async next() {
+
+        if (!this.hasNextPage()) {
+            return [];
+        }
+
+        return this._fetchPage(this.currentPage + 1);
+
+    }
+
+    async _fetchPage(pageNum = 1) {
+
+        if (AppRequest.isLoading('albums')) {
+            return [];
+        }
+
+        try {
+
+            const filter = this.filter;
+            const url    = `/api/albums/search?q=${encodeURIComponent(filter.searchQuery)}&order=${encodeURIComponent(filter.order)}&direction=${filter.direction}&page=${pageNum}`;
+            const result = await AppRequest.request(url, 'GET', null, 'albums');
+
+            this.currentPage = result.meta.current_page;
+            this.lastPage    = result.meta.last_page;
+
+            return result.data;
+
+        } catch (e) { console.error(e); }
+
+        return [];
+
+    }
+
+}
