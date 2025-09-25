@@ -303,9 +303,8 @@ class FolderLoader {
         try {
 
             const result = await AppRequest.request(`/api/folders/${this.folderId}`, 'GET', null, this.folderId);
-            //this.folderId = result.id;
 
-            return result;
+            return result.data;
 
         } catch (e) { console.error(e); }
 
