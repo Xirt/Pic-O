@@ -6,7 +6,7 @@ use App\Models\Folder;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FolderResource;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;      
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FolderController extends Controller
@@ -31,8 +31,7 @@ class FolderController extends Controller
         $folders = Folder::query()
             ->where('path', 'like', '%' . $query . '%')
             ->orderBy('name')
-            ->limit(10)
-            ->get();
+            ->paginate(10);
 
         return FolderResource::collection($folders);
     }

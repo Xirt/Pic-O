@@ -46,8 +46,7 @@ class AlbumController extends Controller
             ->withCount('photos')
             ->when($query, fn($q) => $q->where('name', 'like', "%{$query}%"))
             ->orderBy($order, $direction)
-            ->limit(10)
-            ->get();
+            ->paginate(10);
 
         return AlbumResource::collection($albums);
     }
