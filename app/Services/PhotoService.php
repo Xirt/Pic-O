@@ -9,7 +9,7 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Database\Eloquent\Collection;                   
+use Illuminate\Database\Eloquent\Collection;
 
 class PhotoService
 {
@@ -40,7 +40,7 @@ class PhotoService
         }
     }
 
-    public function render(Photo $photo): Response
+    public function render(Photo $photo): BinaryFileResponse
     {
         $fullPath = $this->getFullPath($photo);
 
