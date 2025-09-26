@@ -14,7 +14,7 @@ class FolderController extends Controller
     }
 
     // GET /folders/{folder}/thumbnail
-    public function thumbnail(int $folderId)
+    public function thumbnail(int $folderId, PhotoService $photoService)
     {
         $photos = Photo::with("folder")->where('folder_id', $folderId)
             ->inRandomOrder()
