@@ -157,7 +157,7 @@ class Album {
 
         try {
 
-            const url = route('album.update', { album: this.id });
+            const url = route('api.album.update', { album: this.id });
             await AppRequest.request(url, 'PATCH', { 'photo_id' : id});
             toast('coverToast');
 
@@ -172,7 +172,7 @@ class Album {
 
         try {
 
-             const url = route('album.removePhoto', { album: this.id, photo: id });
+             const url = route('api.album.removePhoto', { album: this.id, photo: id });
              await AppRequest.request(url, 'DELETE');
 
         } catch (e) { console.error(e); }
@@ -185,7 +185,7 @@ class Album {
 
             try {
 
-                 const url = route('album.addPhoto', { album: this.id, photo: id });
+                 const url = route('api.album.addPhoto', { album: this.id, photo: id });
                  await AppRequest.request(url, 'PUT');
 
             } catch (e) { console.error(e); }

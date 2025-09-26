@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     attachOffcanvasEvents('offcanvas-update-album');
 
     attachFormEvents('createAlbumForm', 'POST',
-        (data) => route('album.create'),
-        (result) => route('album', { album: result.data.id })
+        (data) => route('api.album.create'),
+        (result) => route('api.album', { album: result.data.id })
     );
 
     attachFormEvents('updateAlbumForm', 'PUT',
-        (data) => route('album.addPhotos', { album: data.album_id }),
-        (result, data) => route('album', { album: data.album_id })
+        (data) => route('api.album.addPhotos', { album: data.album_id }),
+        (result, data) => route('api.album', { album: data.album_id })
     );
 
     new SelectionManager({

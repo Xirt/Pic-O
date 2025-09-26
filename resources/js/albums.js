@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const albumId = document.getElementById('albumId').value;
 
-            await AppRequest.request(route('album.update', { album: albumId }), 'PATCH', getJSONFromForm(updateForm), 'albums');
+            await AppRequest.request(route('api.album.update', { album: albumId }), 'PATCH', getJSONFromForm(updateForm), 'albums');
             await manager.init();
 
         } catch (e) { console.error(e); }
@@ -142,7 +142,7 @@ class Albums {
 
         try {
 
-            const url = route('album.get', { album: card.getAttribute('data-id') });
+            const url = route('api.album.get', { album: card.getAttribute('data-id') });
             const result = await AppRequest.request(url, 'GET');
 
             populateForm(document.getElementById('updateAlbumForm'), result.data);
@@ -162,7 +162,7 @@ class Albums {
 
             try {
 
-                 const url = route('album.remove', { album: card.getAttribute('data-id') });
+                 const url = route('api.album.remove', { album: card.getAttribute('data-id') });
                  AppRequest.request(url, 'DELETE');
 
             } catch (e) { console.log(e); }
