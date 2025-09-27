@@ -16,7 +16,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.3.1/css/glightbox.min.css" rel="stylesheet">
     @vite('resources/css/app.css')
     @stack('styles')
-    @routes(['only' => 'api.album.*,api.photo.*,photo.download'])
+    @routes(['only' => 'api.album.*,api.photo.*'])
 </head>
 <body data-bs-spy="scroll" data-bs-target="#dummy-nav">
 

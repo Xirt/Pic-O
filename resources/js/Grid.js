@@ -220,7 +220,7 @@ export const GridItemFactory = {
 
         const card = document.createElement('a');
         card.className = 'card selectable position-relative ratio ratio-4x3 p-0 clickable';
-        card.href = route('album', {id: album.id});
+        card.href = route('albums.show', {id: album.id});
         card.setAttribute('data-id', album.id);
 
         if (album.cover) {

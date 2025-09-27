@@ -159,7 +159,7 @@ class Timeline {
 
         try {
 
-            const url = route('api.photo', { photo: id });
+            const url = route('api.photo.show', { photo: id });
             const result = await AppRequest.request(url, 'GET');
 
             populateForm(document.getElementById('infoForm'), {
@@ -177,7 +177,7 @@ class Timeline {
 
     forceDownload(id) {
 
-        const url = route('photo.download', { photo: id });
+        const url = route('photos.download', { photo: id });
         window.location.href = url;
 
     }

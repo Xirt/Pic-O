@@ -16,8 +16,8 @@ class PhotoResource extends JsonResource
     public function toArray(Request $request): array
     {
         $data = [
-            'path_full'      => route('photo.show', $this->id),
-            'path_thumb'     => route('photo.show_thumbnail', $this->id),
+            'path_full'      => route('photos.show', $this->id),
+            'path_thumb'     => route('photos.thumbnail', $this->id),
             'taken_day_desc' => null,
             'taken_age'      => null,
         ];

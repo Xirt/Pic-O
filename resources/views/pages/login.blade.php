@@ -18,7 +18,7 @@
 
                     <div class="card-body">
 
-                        <form action="{{ route('post.login') }}" method="POST" id="loginForm">
+                        <form action="{{ route('login.submit') }}" method="POST" id="loginForm">
                         @csrf
 
                             <div class="mb-3 row align-items-center">

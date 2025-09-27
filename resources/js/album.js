@@ -132,7 +132,7 @@ class Album {
 
         try {
 
-            const url = route('api.photo', { photo: id });
+            const url = route('api.photos.show', { photo: id });
             const result = await AppRequest.request(url, 'GET');
 
             populateForm(document.getElementById('infoForm'), {
@@ -148,7 +148,7 @@ class Album {
 
     forceDownload(id) {
 
-        const url = route('photo.download', { photo: id });
+        const url = route('photos.download', { photo: id });
         window.location.href = url;
 
     }
@@ -172,7 +172,7 @@ class Album {
 
         try {
 
-             const url = route('api.album.removePhoto', { album: this.id, photo: id });
+             const url = route('api.albums.photos.removeOne', { album: this.id, photo: id });
              await AppRequest.request(url, 'DELETE');
 
         } catch (e) { console.error(e); }
@@ -185,7 +185,7 @@ class Album {
 
             try {
 
-                 const url = route('api.album.addPhoto', { album: this.id, photo: id });
+                 const url = route('api.albums.photos.addOne', { album: this.id, photo: id });
                  await AppRequest.request(url, 'PUT');
 
             } catch (e) { console.error(e); }

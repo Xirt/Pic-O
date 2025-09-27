@@ -113,7 +113,7 @@
 
             <div class="offcanvas-body small overflow-visible">
 
-                <form action="{{ route('api.album.createFromFolder') }}" method="POST" id="createAlbumForm" class="w-100">
+                <form action="{{ route('api.albums.storeFromFolder') }}" method="POST" id="createAlbumForm" class="w-100">
                 @csrf
 
                     <div class="mb-1 row align-items-center">

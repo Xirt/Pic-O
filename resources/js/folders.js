@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     attachOffcanvasEvents('offcanvas-update-album');
 
     attachFormEvents('createAlbumForm', 'POST',
-        (data) => route('api.album.create'),
-        (result) => route('api.album', { album: result.data.id })
+        (data) => route('api.albums.store'),
+        (result) => route('api.albums.show', { album: result.data.id })
     );
 
     attachFormEvents('updateAlbumForm', 'PUT',
-        (data) => route('api.album.addPhotos', { album: data.album_id }),
-        (result, data) => route('api.album', { album: data.album_id })
+        (data) => route('api.album.photos.addMultiple', { album: data.album_id }),
+        (result, data) => route('api.albums.show', { album: data.album_id })
     );
 
     new SelectionManager({
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             container   : 'search-dropdown-container',
             hiddenInput : 'dropdownHidden'
         },
-        apiUrl: '/api/albums/search',
+        apiUrl: route('api.albums.search'),
         renderItem: null
     });
 
@@ -197,7 +197,7 @@ class Folder {
 
         try {
 
-            const url = route('api.photo', { photo: id });
+            const url = route('api.photos.show', { photo: id });
             const result = await AppRequest.request(url, 'GET');
 
             populateForm(document.getElementById('infoForm'), {
@@ -213,7 +213,7 @@ class Folder {
 
     forceDownload(id) {
 
-        const url = route('photo.download', { photo: id });
+        const url = route('photos.download', { photo: id });
         window.location.href = url;
 
     }

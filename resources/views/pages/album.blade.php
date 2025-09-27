@@ -10,7 +10,7 @@
 
             <h1>
 
-                <a href="{{ route("albums") }}" class="btn btn-secondary m-1 mt-0 p-1 ps-2" style="aspect-ratio: 1 / 1;" aria-label="Back to albums">
+                <a href="{{ route("albums.index") }}" class="btn btn-secondary m-1 mt-0 p-1 ps-2" style="aspect-ratio: 1 / 1;" aria-label="Back to albums">
                     <i class="bi bi-caret-left-fill"></i>
                 </a>
 

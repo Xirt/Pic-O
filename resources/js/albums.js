@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const albumId = document.getElementById('albumId').value;
 
-            await AppRequest.request(route('api.album.update', { album: albumId }), 'PATCH', getJSONFromForm(updateForm), 'albums');
+            await AppRequest.request(route('api.albums.update', { album: albumId }), 'PATCH', getJSONFromForm(updateForm), 'albums');
             await manager.init();
 
         } catch (e) { console.error(e); }
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             container   : 'search-dropdown-container',
             hiddenInput : 'dropdownHidden'
         },
-        apiUrl: '/api/folders/search',
+        apiUrl: route('api.albums.search'),
         renderItem: null
     });
 
@@ -142,7 +142,7 @@ class Albums {
 
         try {
 
-            const url = route('api.album.get', { album: card.getAttribute('data-id') });
+            const url = route('api.albums.show', { album: card.getAttribute('data-id') });
             const result = await AppRequest.request(url, 'GET');
 
             populateForm(document.getElementById('updateAlbumForm'), result.data);
@@ -162,7 +162,7 @@ class Albums {
 
             try {
 
-                 const url = route('api.album.remove', { album: card.getAttribute('data-id') });
+                 const url = route('api.albums.destroy', { album: card.getAttribute('data-id') });
                  AppRequest.request(url, 'DELETE');
 
             } catch (e) { console.log(e); }

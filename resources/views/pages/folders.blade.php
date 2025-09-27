@@ -92,7 +92,7 @@
 
             <div class="offcanvas-body small">
 
-                <form action="{{ route('api.album.create') }}" method="POST" id="createAlbumForm" class="w-100">
+                <form action="{{ route('api.albums.store') }}" method="POST" id="createAlbumForm" class="w-100">
                 @csrf
 
                     <div class="mb-1 row align-items-center">

@@ -12,11 +12,11 @@
             <ul class="navbar-nav">
                 @auth
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('albums') }}">Albums</a>
+                    <a class="nav-link" href="{{ route('albums.index') }}">Albums</a>
                 </li>
                 @if(auth()->check() && auth()->user()->role->value === 'admin')
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('folders') }}">Folders</a>
+                    <a class="nav-link" href="{{ route('folders.index') }}">Folders</a>
                 </li>
                 @endif
                 <li class="nav-item">
@@ -24,7 +24,7 @@
                 </li>
                 @if(auth()->check() && auth()->user()->role->value === 'admin')
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('users') }}">Users</a>
+                        <a class="nav-link" href="{{ route('users.index') }}">Users</a>
                     </li>
                 @endif
                 <li class="nav-item">
@@ -37,7 +37,7 @@
 </nav>
 @endauth
 
-<form id="logout-form" action="{{ route('post.logout') }}" method="POST" class="d-none">
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
 @csrf
 </form>
 
