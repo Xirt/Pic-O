@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pico_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www
+      # ⚠️ User photos (MUST configure this on host, e.g., /mnt/nas/photos)
+      - /path/to/host/photos:/var/www/storage/photos
+      # ⚠️ Persist other app uploads in storage/app (configure host path, e.g., /mnt/nas/storage-app)
+      - /path/to/host/storage-app:/var/www/storage/app
+    depends_on:
+      - mariadb
+    env_file:
+      - .env.docker
+    networks:
+      - pico
+
+  mariadb:
+    image: mariadb:11
+    container_name: pico_mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pico
+      MYSQL_USER: pico
+      MYSQL_PASSWORD: pico_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - pico
+
+networks:
+  pico:
+
+volumes:
+  mariadb_data:
