@@ -48,7 +48,7 @@ class LoginController extends Controller
 
             return response()->json([
                 'message'     => 'Login successful!',
-                'redirect_to' => route('albums'),
+                'redirect_to' => route('home'),
             ]);
         }
 
