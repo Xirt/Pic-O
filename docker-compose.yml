@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   app:
     build:
@@ -11,9 +9,9 @@ services:
     volumes:
       - ./src:/var/www
       # ⚠️ User photos (MUST configure this on host, e.g., /mnt/nas/photos)
-      - /path/to/host/photos:/var/www/storage/photos
+      - D:/TMP/photos:/var/www/storage/photos
       # ⚠️ Persist other app uploads in storage/app (configure host path, e.g., /mnt/nas/storage-app)
-      - /path/to/host/storage-app:/var/www/storage/app
+      - D:/TMP/storage:/var/www/storage/app
     depends_on:
       - mariadb
     env_file:

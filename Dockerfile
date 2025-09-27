@@ -1,7 +1,21 @@
 FROM php:8.2-fpm
 
 # Install dependencies
-RUN apt-get update && apt-get install -y     git     curl     zip     unzip     nginx     supervisor     libpng-dev     libonig-dev     libxml2-dev     libzip-dev     libssl-dev     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    zip \
+    unzip \
+    nginx \
+    supervisor \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    libssl-dev \
+    mariadb-client \
+    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -18,14 +32,14 @@ WORKDIR /var/www
 
 # Copy Laravel code and env
 COPY src/ /var/www
-COPY .env.docker /var/www/.env
+COPY .env.docker /docker_env/.env.docker
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Install dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Expose port
 EXPOSE 80
