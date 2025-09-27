@@ -8,10 +8,8 @@ services:
       - "8080:80"
     volumes:
       - ./src:/var/www
-      # ⚠️ User photos (MUST configure this on host, e.g., /mnt/nas/photos)
-      - D:/TMP/photos:/var/www/storage/photos
-      # ⚠️ Persist other app uploads in storage/app (configure host path, e.g., /mnt/nas/storage-app)
-      - D:/TMP/storage:/var/www/storage/app
+      - "${PHOTO_STORAGE_PATH}:/var/www/storage/photos"
+      - "${APP_STORAGE_PATH}:/var/www/storage/app"
     depends_on:
       - mariadb
     env_file:
