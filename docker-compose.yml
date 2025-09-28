@@ -7,13 +7,20 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./src:/var/www
+      #- ./src:/var/www
       - "${PHOTO_STORAGE_PATH}:/var/www/storage/photos"
       - "${APP_STORAGE_PATH}:/var/www/storage/app"
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_DATABASE: pico
+      DB_USERNAME: pico
+      DB_PASSWORD: pico_pass
     depends_on:
       - mariadb
     env_file:
-      - .env.docker
+      - ./src/.env.docker
     networks:
       - pico
 

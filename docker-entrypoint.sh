@@ -49,9 +49,11 @@ chmod 644 /var/www/.env
 # -----------------------------------------------------------------------------
 # 4. Generate APP_KEY if missing
 # -----------------------------------------------------------------------------
-if ! grep -q '^APP_KEY=' .env; then
-    echo "Generating application key..."
+if ! grep -q '^APP_KEY=.\+' .env; then
+    echo "No APP_KEY found in .env, generating..."
     php artisan key:generate --force
+else
+    echo "APP_KEY already exists in .env, skipping generation."
 fi
 
 # -----------------------------------------------------------------------------
