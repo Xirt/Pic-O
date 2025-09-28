@@ -3,8 +3,8 @@ set -e
 
 cd /var/www
 if [ ! -f ".env" ]; then
-    echo "Copying docker.env to .env..."
-    cp docker.env .env
+    echo "Copying .env.docker to .env..."
+    cp .env.docker .env
 fi
 
 # -----------------------------------------------------------------------------
