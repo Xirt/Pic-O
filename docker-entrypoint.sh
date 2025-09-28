@@ -2,8 +2,9 @@
 set -e
 
 cd /var/www
-if [ ! -f "/var/www/.env" ]; then
-    cp /docker_env/.env.docker /var/www/.env
+if [ ! -f ".env" ]; then
+    echo "Copying docker.env to .env..."
+    cp docker.env .env
 fi
 
 # -----------------------------------------------------------------------------
@@ -42,13 +43,13 @@ echo "Setting permissions for storage and bootstrap/cache..."
 chown -R www-data:www-data storage bootstrap/cache || true
 chmod -R 775 storage bootstrap/cache || true
 chown www-data:www-data /var/www/.env
-chmod 600 /var/www/.env
+chmod 644 /var/www/.env
 
 
 # -----------------------------------------------------------------------------
 # 4. Generate APP_KEY if missing
 # -----------------------------------------------------------------------------
-if [ -z "$APP_KEY" ]; then
+if ! grep -q '^APP_KEY=' .env; then
     echo "Generating application key..."
     php artisan key:generate --force
 fi
