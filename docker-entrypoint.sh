@@ -47,7 +47,16 @@ chmod 644 /var/www/.env
 
 
 # -----------------------------------------------------------------------------
-# 4. Generate APP_KEY if missing
+# 4. Clear & rebuild caches
+# -----------------------------------------------------------------------------
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+
+
+# -----------------------------------------------------------------------------
+# 5. Generate APP_KEY if missing
 # -----------------------------------------------------------------------------
 if ! grep -q '^APP_KEY=.\+' .env; then
     echo "No APP_KEY found in .env, generating..."
@@ -57,23 +66,18 @@ else
 fi
 
 # -----------------------------------------------------------------------------
-# 5. Run database migrations
+# 6. Run database migrations
 # -----------------------------------------------------------------------------
 php artisan migrate --force
 
 # -----------------------------------------------------------------------------
-# 6. Clear & rebuild caches
+# 7. Clear & rebuild caches
 # -----------------------------------------------------------------------------
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
-php artisan cache:clear
-
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
 # -----------------------------------------------------------------------------
-# 7. Start Supervisor (manages PHP-FPM + queue worker)
+# 8. Start Supervisor (manages PHP-FPM + queue worker)
 # -----------------------------------------------------------------------------
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
