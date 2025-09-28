@@ -3,7 +3,7 @@ import { Selection } from './Selection.js';
 import { AppRequest } from './AppRequest.js';
 import { Grid, GridItemFactory } from './Grid.js';
 import { SelectionManager } from './selectionManager.js';
-import { populateForm, getJSONFromForm } from './domHelpers.js';
+import { populateForm, getJSONFromForm, openCanvas } from './domHelpers.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
 

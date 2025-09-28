@@ -157,7 +157,7 @@ class Album {
 
         try {
 
-            const url = route('api.album.update', { album: this.id });
+            const url = route('api.albums.update', { album: this.id });
             await AppRequest.request(url, 'PATCH', { 'photo_id' : id});
             toast('coverToast');
 

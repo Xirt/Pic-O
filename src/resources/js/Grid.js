@@ -166,7 +166,7 @@ export const GridItemFactory = {
 
     },
 
-    async photo(photo) {
+    async photo(photo, inAlbum = true) {
 
         const ratioSmall = Math.min(250 / photo.width, 1);
         const newWidth  = Math.round(photo.width * ratioSmall);
@@ -203,8 +203,11 @@ export const GridItemFactory = {
 
         toolbar.appendChild(this.createInfoButton(card));
         toolbar.appendChild(this.createDownloadButton(card));
-        toolbar.appendChild(this.createCoverButton(card));
-        toolbar.appendChild(this.createDeleteButton(card));
+
+        if (inAlbum) {
+            toolbar.appendChild(this.createCoverButton(card));
+            toolbar.appendChild(this.createDeleteButton(card));
+        }
 
         thumb.onload = () => {
             thumb.classList.remove('opacity-0');
