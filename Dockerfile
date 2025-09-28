@@ -31,7 +31,6 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 WORKDIR /var/www
 
 # Copy Laravel code and env
-COPY .env.docker /var/www/.env.docker
 COPY src/ /var/www
 
 # Copy entrypoint script
