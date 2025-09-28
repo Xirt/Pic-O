@@ -30,7 +30,7 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Set working directory
 WORKDIR /var/www
 
-# Copy Laravel code and env
+# Copy Laravel code
 COPY src/ /var/www
 
 # Copy entrypoint script

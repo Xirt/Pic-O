@@ -11,7 +11,7 @@ fi
 # 1. Ensure Composer dependencies are installed
 # -----------------------------------------------------------------------------
 if [ ! -d "vendor" ]; then
-    echo "No vendor/ directory found. Installing Composer dependencies..."
+    echo "No vendor directory found. Installing Composer dependencies..."
     composer install --no-dev --optimize-autoloader --no-scripts
 else
     echo "Vendor directory already present. Skipping Composer install."
