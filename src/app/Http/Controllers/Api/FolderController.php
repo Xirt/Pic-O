@@ -48,7 +48,7 @@ class FolderController extends Controller
     public function subfolders(int $folderId): AnonymousResourceCollection
     {
         $subfolders = Folder::where('parent_id', $this->parseFolderId($folderId))
-            ->orderBy('created_at', 'desc')
+            ->orderBy('name', 'asc')
             ->paginate(50);
 
         return FolderResource::collection($subfolders);
