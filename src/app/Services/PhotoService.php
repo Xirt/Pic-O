@@ -2,14 +2,17 @@
 
 namespace App\Services;
 
+use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 use App\Models\Photo;
 use App\ValueObjects\Position;
 use App\ValueObjects\Dimension;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Database\Eloquent\Collection;
+use kornrunner\Blurhash\Blurhash;
 
 class PhotoService
 {
@@ -32,6 +35,9 @@ class PhotoService
 
     protected string $cacheDir;
 
+    /**
+     * Constructor - Initializes cache
+     */
     public function __construct()
     {
         $this->cacheDir = storage_path('app/public/thumbnails');
@@ -40,23 +46,32 @@ class PhotoService
         }
     }
 
+    /**
+     * Returns the original file of the provided photo
+     */
     public function render(Photo $photo): BinaryFileResponse
     {
-        $fullPath = $this->getFullPath($photo);
+        $fullPath = $this->getFilePath($photo);
 
         return Response::file($fullPath);
     }
 
+    /**
+     * Enforces downloading of the original file of the provided photo
+     */
     public function download(Photo $photo): BinaryFileResponse
     {
-        $fullPath = $this->getFullPath($photo);
+        $fullPath = $this->getFilePath($photo);
 
         return Response::download($fullPath);
     }
 
+    /**
+     * Returns a downscaled version of the provided photo
+     */
     public function thumbnail(Photo $photo, int $maxDimensions = 500): BinaryFileResponse
     {
-        $fullPath = $this->getFullPath($photo);
+        $fullPath = $this->getFilePath($photo);
 
         $cacheName = md5_file($fullPath) . $maxDimensions;
         if ($image = $this->retrieveFromCache($cacheName)) {
@@ -73,13 +88,16 @@ class PhotoService
         return $this->storeInCache($image, $cacheName);
     }
 
+    /**
+     * Returns an image file with the provided photos on it
+     */
     public function collection(Collection $photos): \Illuminate\Http\Response
     {
         $fullPaths = [];
         foreach ($photos as $photo)
         {
 
-            $fullPath = $this->getFullPath($photo);
+            $fullPath = $this->getFilePath($photo);
             if (file_exists($fullPath))
             {
                 $fullPaths[] = $fullPath;
@@ -123,17 +141,17 @@ class PhotoService
         return response((string) $canvas->toPng(), 200)->header('Content-Type', 'image/png');
     }
 
-    private function getFullPath(Photo $photo): string
+    /**
+     * Returns blurhash for given photo
+     */
+    function blurhash(Photo $photo, $width = 4, $height = 3)
     {
-        $fullPath = resource_path($photo->folder->path . DIRECTORY_SEPARATOR . $photo->filename);
-
-        if (!file_exists($fullPath)) {
-            abort(404, 'Photo file not found.');
-        }
-
-        return $fullPath;
+        return Blurhash::encode($this->pixels($photo), $width, $height);
     }
 
+    /**
+     * Retrieve an image from cache using the given name
+     */
     private function retrieveFromCache(string $name): ?BinaryFileResponse
     {
         $fullPath = $this->getCachePath($name);
@@ -144,7 +162,10 @@ class PhotoService
         return Response::file($fullPath);
     }
 
-    private function storeInCache($image, string $name): BinaryFileResponse
+    /**
+     * Stores the given image in the cache under the given name
+     */
+    private function storeInCache(Image $image, string $name): BinaryFileResponse
     {
         $fullPath = $this->getCachePath($name);
         $image->save($fullPath, 100, 'jpg');
@@ -152,12 +173,32 @@ class PhotoService
         return Response::file($fullPath);
     }
 
+    /**
+     * Returns the absolute path to the given photo
+     */
+    private function getFilePath(Photo $photo): string
+    {
+        $fullPath = resource_path($photo->folder->path . DIRECTORY_SEPARATOR . $photo->filename);
+
+        if (!file_exists($fullPath)) {
+            abort(404, 'Photo file not found.');
+        }
+
+        return $fullPath;
+    }
+
+    /**
+     * Returns the absolute path to the given file in the cache
+     */
     private function getCachePath(string $name): string
     {
         return $this->cacheDir . DIRECTORY_SEPARATOR . $name . '.jpg';
     }
 
-    private function resizeImage(\Intervention\Image\Image $image, int $maxDimension): \Intervention\Image\Image
+    /**
+     * Returns a downsaled version of the given image
+     */
+    private function resizeImage(Image $image, int $maxDimension): Image
     {
         $ratio = min($maxDimension / $image->width(), $maxDimension / $image->height());
 
@@ -167,6 +208,36 @@ class PhotoService
         return $image->resize($newWidth, $newHeight);
     }
 
+    /**
+     * Get (downscaled) pixel matrix for given photo
+     */
+    private function pixels(Photo $photo): array
+    {
+        $manager  = new ImageManager(new Driver());
+        $fullPath = $this->getFilePath($photo);
+
+        $image  = $manager->read($fullPath);
+        $image  = $this->resizeImage($image, 100);
+        
+        $pixels = [];
+        for ($y = 0; $y < $image->height(); $y++)
+        {
+            $row = [];
+            for ($x = 0; $x < $image->width(); ++$x)
+            {
+                $color = $image->pickColor($x, $y);
+                $row[] = [$color->red()->toInt(), $color->green()->toInt(), $color->blue()->toInt()];
+            }
+
+            $pixels[] = $row;
+        }
+
+        return $pixels;
+    }
+
+    /**
+     * Generates random (spread) positions for items on a canvas
+     */
     private function generatePositions(Dimension $canvas, Dimension $item, int $count = 10): array
     {
 
@@ -200,6 +271,9 @@ class PhotoService
         return $positions;
     }
 
+    /**
+     * Returns a random position (top / left) for item placement
+     */
     private function getRandomPos(int $cw, int $ch, int $pw, int $ph): Position
     {
         $x = rand(0, $cw - $pw);
@@ -208,6 +282,9 @@ class PhotoService
         return new Position($x, $y, $pw, $ph);
     }
 
+    /**
+     * Checks whether the given position is placed at a given distance from a given list of positions
+     */
     private function isFarEnough(Position $newPos, array $positions, int $minDist): bool
     {
         foreach ($positions as $pos)
