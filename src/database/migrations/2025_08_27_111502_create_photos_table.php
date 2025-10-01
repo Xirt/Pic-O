@@ -23,7 +23,7 @@ return new class extends Migration
 
             // Basic file info
             $table->string('filename');
-            $table->string('blurhash');
+            $table->string('blurhash')->nullable();
 			$table->integer('width')->nullable();
 			$table->integer('height')->nullable();
             $table->bigInteger('size')->nullable();
