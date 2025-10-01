@@ -186,7 +186,7 @@ export const GridItemFactory = {
         const body = document.createElement('div');
         body.className = 'img-container text-primary position-relative d-inline-block align-items-center text-center';
 
-        const placeholder = await this._createBlurHash2(photo, newWidth, newHeight);
+        const placeholder = await this._createBlurHash(photo, newWidth, newHeight);
         placeholder.className = 'd-block w-100 h-100 m-0 blurhash';
         placeholder.removeAttribute('height');
         placeholder.removeAttribute('width');
@@ -219,7 +219,7 @@ export const GridItemFactory = {
 
     },
 
-    album(album) {
+    async album(album) {
 
         const card = document.createElement('a');
         card.className = 'card selectable position-relative ratio ratio-4x3 p-0 clickable';
@@ -228,7 +228,7 @@ export const GridItemFactory = {
 
         if (album.cover) {
 
-            const canvas = this._createBlurHash(album.cover);
+            const canvas = await this._createBlurHash(album.cover);
             canvas.className = 'd-block position-absolute object-fit-cover w-100 h-100';
             card.appendChild(canvas);
 
@@ -334,16 +334,10 @@ export const GridItemFactory = {
 
     },
 
-    _createBlurHash(photo, width = 250, height = 250) {
+    async _createBlurHash(photo, width = 250, height = 250) {
 
-        return blurhash.drawImageDataOnNewCanvas(
-            blurhash.decode(photo.blurhash, width, height),
-            width, height
-        );
-
-    },
-
-    async _createBlurHash2(photo, width = 250, height = 250) {
+        const fallbackHash = "UOOGF~WB~qWB~qWB~qWB~qWB~qWB";
+        const hash = photo.blurhash ? photo.blurhash : fallbackHash;
 
         const img = await blurhash.getImageDataAsImageWithOnloadPromise(
             blurhash.decode(photo.blurhash, width, height),
