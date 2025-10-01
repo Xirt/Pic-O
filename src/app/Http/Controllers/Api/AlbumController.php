@@ -65,7 +65,7 @@ class AlbumController extends Controller
         ])->validate();
 
         $photoIds = $this->getPhotoIds($request);
-        return createAlbum($validated['name'], $photoIds);
+        return $this->createAlbum($validated['name'], $photoIds);
     }
 
     // POST /api/albums/create-from-folder
@@ -89,7 +89,7 @@ class AlbumController extends Controller
         }
 
         $photoIds = Photo::whereIn('folder_id', $folderIds)->pluck('id')->toArray();
-        return createAlbum($validated['name'], $photoIds);
+        return $this->createAlbum($validated['name'], $photoIds);
     }
 
     // PATCH /api/albums/{id}
