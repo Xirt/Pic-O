@@ -40,7 +40,7 @@ chmod -R 775 storage bootstrap/cache || true
 # -----------------------------------------------------------------------------
 # 5. Run database migrations
 # -----------------------------------------------------------------------------
-php artisan migrate --force
+php artisan migrate --force --seed
 
 # -----------------------------------------------------------------------------
 # 7. Start Supervisor (manages PHP-FPM + queue worker)
