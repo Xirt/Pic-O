@@ -1,6 +1,8 @@
 FROM php:8.2-fpm
 
-# Install dependencies
+# -----------------------------------------------------------------------------
+# 1. Install dependencies
+# -----------------------------------------------------------------------------
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -17,31 +19,58 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Composer
+# -----------------------------------------------------------------------------
+# 2. Install Composer
+# -----------------------------------------------------------------------------
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Configure Nginx
+# -----------------------------------------------------------------------------
+# 3. Configure Nginx
+# -----------------------------------------------------------------------------
 RUN rm /etc/nginx/sites-enabled/default
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Configure Supervisor
+# -----------------------------------------------------------------------------
+# 4. Configure Supervisor
+# -----------------------------------------------------------------------------
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Set working directory
+# -----------------------------------------------------------------------------
+# 5. Set working directory
+# -----------------------------------------------------------------------------
 WORKDIR /var/www
 
-# Copy Laravel code
+# -----------------------------------------------------------------------------
+# 6. Copy Pic-O code
+# -----------------------------------------------------------------------------
 COPY src/ /var/www
 
-# Copy entrypoint script
+# -----------------------------------------------------------------------------
+# 7. Create environment key
+# -----------------------------------------------------------------------------
+RUN if ! grep -q '^APP_KEY=.\+' /var/www/.env.docker; then \
+        APP_KEY="base64:$(php -r 'echo base64_encode(random_bytes(32));')" && \
+        sed -i "s|^APP_KEY=.*|APP_KEY=$APP_KEY|" /var/www/.env.docker; \
+    fi \
+    && mv /var/www/.env.docker /var/www/.env
+
+# -----------------------------------------------------------------------------
+# 8. Copy entrypoint script
+# -----------------------------------------------------------------------------
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Install dependencies
+# -----------------------------------------------------------------------------
+# 9. Install dependencies
+# -----------------------------------------------------------------------------
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Expose port
+# -----------------------------------------------------------------------------
+# 10. Expose port
+# -----------------------------------------------------------------------------
 EXPOSE 80
 
-# Entrypoint
+# -----------------------------------------------------------------------------
+# 11. Set Entrypoint
+# -----------------------------------------------------------------------------
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

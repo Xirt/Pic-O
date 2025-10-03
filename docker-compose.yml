@@ -7,7 +7,6 @@ services:
     ports:
       - "8080:80"
     volumes:
-      #- ./src:/var/www
       - "${PHOTO_STORAGE_PATH}:/var/www/storage/photos"
       - "${APP_STORAGE_PATH}:/var/www/storage/app"
     environment:
@@ -19,8 +18,6 @@ services:
       DB_PASSWORD: pico_pass
     depends_on:
       - mariadb
-    env_file:
-      - ./src/.env.docker
     networks:
       - pico
 

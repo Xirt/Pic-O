@@ -2,23 +2,9 @@
 set -e
 
 cd /var/www
-if [ ! -f ".env" ]; then
-    echo "Copying .env.docker to .env..."
-    cp .env.docker .env
-fi
 
 # -----------------------------------------------------------------------------
-# 1. Ensure Composer dependencies are installed
-# -----------------------------------------------------------------------------
-if [ ! -d "vendor" ]; then
-    echo "No vendor directory found. Installing Composer dependencies..."
-    composer install --no-dev --optimize-autoloader --no-scripts
-else
-    echo "Vendor directory already present. Skipping Composer install."
-fi
-
-# -----------------------------------------------------------------------------
-# 2. Wait for MariaDB to be ready before running migrations
+# 1. Wait for MariaDB to be ready before running migrations
 # -----------------------------------------------------------------------------
 MAX_RETRIES=30
 COUNT=0
@@ -37,47 +23,26 @@ done
 echo "Database is ready!"
 
 # -----------------------------------------------------------------------------
-# 3. Set permissions for storage and cache directories
-# -----------------------------------------------------------------------------
-echo "Setting permissions for storage and bootstrap/cache..."
-chown -R www-data:www-data storage bootstrap/cache || true
-chmod -R 775 storage bootstrap/cache || true
-chown www-data:www-data /var/www/.env
-chmod 644 /var/www/.env
-
-
-# -----------------------------------------------------------------------------
-# 4. Clear & rebuild caches
+# 2. Clear & rebuild caches
 # -----------------------------------------------------------------------------
 php artisan config:clear
-php artisan route:clear
-php artisan view:clear
-php artisan cache:clear
-
-
-# -----------------------------------------------------------------------------
-# 5. Generate APP_KEY if missing
-# -----------------------------------------------------------------------------
-if ! grep -q '^APP_KEY=.\+' .env; then
-    echo "No APP_KEY found in .env, generating..."
-    php artisan key:generate --force
-else
-    echo "APP_KEY already exists in .env, skipping generation."
-fi
-
-# -----------------------------------------------------------------------------
-# 6. Run database migrations
-# -----------------------------------------------------------------------------
-php artisan migrate --force
-
-# -----------------------------------------------------------------------------
-# 7. Clear & rebuild caches
-# -----------------------------------------------------------------------------
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
 # -----------------------------------------------------------------------------
-# 8. Start Supervisor (manages PHP-FPM + queue worker)
+# 3. Set permissions for storage and cache directories
+# -----------------------------------------------------------------------------
+echo "Setting permissions for storage and bootstrap/cache..."
+chown -R www-data:www-data storage bootstrap/cache || true
+chmod -R 775 storage bootstrap/cache || true
+
+# -----------------------------------------------------------------------------
+# 5. Run database migrations
+# -----------------------------------------------------------------------------
+php artisan migrate --force
+
+# -----------------------------------------------------------------------------
+# 7. Start Supervisor (manages PHP-FPM + queue worker)
 # -----------------------------------------------------------------------------
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
