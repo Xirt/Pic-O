@@ -22,12 +22,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     attachFormEvents('createAlbumForm', 'POST',
         (data) => route('api.albums.store'),
-        (result) => route('api.albums.show', { album: result.data.id })
+        (result) => route('albums.show', { album: result.data.id })
     );
 
     attachFormEvents('updateAlbumForm', 'PUT',
         (data) => route('api.album.photos.addMultiple', { album: data.album_id }),
-        (result, data) => route('api.albums.show', { album: data.album_id })
+        (result, data) => route('albums.show', { album: data.album_id })
     );
 
     new SelectionManager({

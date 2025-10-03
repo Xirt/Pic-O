@@ -122,7 +122,7 @@ class Timeline {
         }
 
         photoGroup.forEach(async (photo) => {
-            this.grid.add(await GridItemFactory.photo(photo, this), entries.length == 1);
+            this.grid.add(await GridItemFactory.photo(photo, false), entries.length == 1);
         });
 
     }
@@ -159,7 +159,7 @@ class Timeline {
 
         try {
 
-            const url = route('api.photo.show', { photo: id });
+            const url = route('api.photos.show', { photo: id });
             const result = await AppRequest.request(url, 'GET');
 
             populateForm(document.getElementById('infoForm'), {
