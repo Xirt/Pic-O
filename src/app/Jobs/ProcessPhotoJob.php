@@ -148,7 +148,7 @@ class ProcessPhotoJob implements ShouldQueue
     /**
      * Interprets a given EXIF value based on its specific format
      */
-    private function interpretValue(String $value): mixed
+    private function interpretValue(?string $value): mixed
     {
         if (strpos($value, '/') !== false)
         {
