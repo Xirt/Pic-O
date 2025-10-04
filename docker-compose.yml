@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - "${PHOTO_STORAGE_PATH}:/var/www/storage/photos"
+      - "${PHOTO_STORAGE_PATH}:/var/www/resources/photos"
       - "${APP_STORAGE_PATH}:/var/www/storage/app"
     environment:
       DB_CONNECTION: mysql
