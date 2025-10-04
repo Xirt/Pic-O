@@ -334,8 +334,8 @@ h1 .btn .bi {
 .form-message.visible {
     opacity: 1;
     visibility: visible;
-    max-height: 200px; /* adjust as needed */
-    padding: 1rem;     /* your desired padding */
+    max-height: 200px;
+    padding: 1rem;
 }
 
 table .col-id {
@@ -448,4 +448,21 @@ footer {
     inset: 0; /* covers full lightbox-inner */
     background: rgba(255, 255, 255, 0.7); /* semi-transparent */
     z-index: 15; /* above images, below toolbar/buttons */
+}
+
+/**
+ * Admin page
+ */
+.progress-container {    
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition:
+        opacity 1s ease,
+        max-height 1s ease;
+}
+
+.progress-container.visible {
+    max-height: 50px;
+    opacity: 1;
 }

@@ -11,18 +11,33 @@
         </button>
     </div>
 
-    <div class="d-flex align-items-center gap-2 d-none">
+    <div class="progress-container">
 
-        <div class="flex-grow-1">
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" id="progressBar" style="width: 75%;" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="d-flex align-items-center job-progress gap-2" data-job-type="TraverseFolderJob">
+
+            <div class="flex-grow-1">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
             </div>
+
+            <span class="job-count"></span> Remaining
+
         </div>
 
-        <span id="progressText">10 / 100</span>
+        <div class="d-flex align-items-center job-progress gap-2" data-job-type="ProcessPhotoJob">
+
+            <div class="flex-grow-1">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+
+            <span class="job-count"></span> Remaining
+
+        </div>
 
     </div>
-
 
 
 </div>

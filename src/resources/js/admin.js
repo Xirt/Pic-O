@@ -1,8 +1,11 @@
 import { AppRequest } from './AppRequest.js';
+import { JobProgressIndicator } from './JobProgressIndicator.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
     let messageTimeoutId;
+
+    JobProgressIndicator.start();  
 
     const scanButton = document.getElementById('scanButton');
     scanButton.addEventListener('click', async (e) => {
