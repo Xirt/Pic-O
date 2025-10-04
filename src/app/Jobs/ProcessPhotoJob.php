@@ -150,6 +150,11 @@ class ProcessPhotoJob implements ShouldQueue
      */
     private function interpretValue(?string $value): mixed
     {
+        if (is_null($value))
+        {
+            return null;
+        }
+
         if (strpos($value, '/') !== false)
         {
             list($num, $den) = explode('/', $value);
@@ -159,5 +164,4 @@ class ProcessPhotoJob implements ShouldQueue
 
         return is_numeric($value) ? (float)$value : null;
     }
-
 }
