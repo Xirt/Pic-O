@@ -10,6 +10,7 @@ export const JobProgressIndicator = (function () {
 
     let pollTimer = null;
     let isPolling = false;
+    let checkInProgress = false;
 
     function initJobElements() {
 
@@ -33,7 +34,13 @@ export const JobProgressIndicator = (function () {
         });
     }
 
-    async function checkPendingJobs() {
+    async function update() {
+
+        if (checkInProgress) {
+            return;
+        }
+
+        checkInProgress = true;
 
         try {
 
@@ -53,6 +60,9 @@ export const JobProgressIndicator = (function () {
             updateIndicator(currentCounts);
 
         } catch (e) { console.log(e); }
+
+        checkInProgress = false;
+
     }
 
     function updateIndicator(currentCounts) {
@@ -85,11 +95,10 @@ export const JobProgressIndicator = (function () {
             if (isPolling) return;
 
             initJobElements();
-
             isPolling = true;
-            checkPendingJobs();
 
-            pollTimer = setInterval(checkPendingJobs, POLL_INTERVAL_MS);
+            pollTimer = setInterval(update, POLL_INTERVAL_MS);
+            update();
 
         },
 
