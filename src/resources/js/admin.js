@@ -4,6 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let messageTimeoutId;
 
+    const scanButton = document.getElementById('scanButton');
+    scanButton.addEventListener('click', async (e) => {
+
+        e.preventDefault();
+
+        try {
+
+            scanButton.disabled = true;
+            const response = await AppRequest.request(route('api.jobs.dispatch'), 'POST', { type: 'TraverseFolderJob' });
+
+        } catch (e) { console.log(e); }
+
+    });
+
     const form = document.getElementById('createForm');
     form.addEventListener('submit', async (e) => {
 
@@ -13,9 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
-            const response = await AppRequest.request(form.action, "POST", data);
+            const response = await AppRequest.request(form.action, 'POST', data);
 
-            showMessage(document.getElementById("createFormMessage"), response.message, true);
+            showMessage(document.getElementById('createFormMessage'), response.message, true);
 
             setTimeout(() => {
                 // TODO :: Dynamically refresh list, reset form and hide canvas
@@ -25,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
 
             const errorMessage = error?.response?.message || error?.message || 'An unknown error occurred.';
-            showMessage(document.getElementById("createFormMessage"), errorMessage, false);
+            showMessage(document.getElementById('createFormMessage'), errorMessage, false);
 
         }
 
@@ -77,16 +91,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
 
             const errorMessage = error?.response?.message || error?.message || 'An unknown error occurred.';
-            showMessage(document.getElementById("modifyFormMessage"), errorMessage, false);
+            showMessage(document.getElementById('modifyFormMessage'), errorMessage, false);
 
         }
     });
 
     function showMessage(container, message, isSuccess = true) {
 
-        container.classList.add("visible");
-        container.classList.toggle("alert-success", isSuccess);
-        container.classList.toggle("alert-warning", !isSuccess);
+        container.classList.add('visible');
+        container.classList.toggle('alert-success', isSuccess);
+        container.classList.toggle('alert-warning', !isSuccess);
         container.textContent = message;
 
         if (messageTimeoutId) {
@@ -94,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         messageTimeoutId = setTimeout(() => {
-            container.classList.remove("visible");
+            container.classList.remove('visible');
         }, 3000);
 
     }

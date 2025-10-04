@@ -7,7 +7,7 @@ use App\Http\Controllers\{
     PhotoController,
     FolderController,
     AlbumController,
-    UserController
+    AdminController
 };
 
 Route::get('/', function () {
@@ -67,10 +67,10 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function ()
         Route::get('{id}/thumbnail', [FolderController::class, 'thumbnail'])->name('thumbnail');
     });
 
-    // Users
-    Route::prefix('users')->as('users.')->group(function ()
+    // Admin
+    Route::prefix('admin')->as('admin.')->group(function ()
     {
-        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/', [AdminController::class, 'index'])->name('index');
     });
 });
 

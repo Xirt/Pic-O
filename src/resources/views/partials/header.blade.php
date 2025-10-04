@@ -24,7 +24,7 @@
                 </li>
                 @if(auth()->check() && auth()->user()->role->value === 'admin')
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('users.index') }}">Users</a>
+                        <a class="nav-link" href="{{ route('admin.index') }}">Admin</a>
                     </li>
                 @endif
                 <li class="nav-item">

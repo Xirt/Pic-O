@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Job;
-use App\Http\Resources\JobResource;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
+use App\Http\Resources\JobResource;
+use App\Jobs\TraverseFolderJob;
+use App\Jobs\ProcessPhotoJob;
+use App\Models\Job;
 
 class JobController extends Controller
 {
@@ -37,6 +41,7 @@ class JobController extends Controller
         switch ($type) {
 
             case 'TraverseFolderJob':
+                $params['path'] = resource_path(!empty($params['path']) ? $params['path'] : config('settings.media_root'));
                 TraverseFolderJob::dispatch(...$params);
                 break;
 

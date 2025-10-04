@@ -38,6 +38,15 @@
       "app.css"
     ]
   },
+  "resources/js/admin.js": {
+    "file": "assets/admin-BFQYe2Di.js",
+    "name": "admin",
+    "src": "resources/js/admin.js",
+    "isEntry": true,
+    "imports": [
+      "_AppRequest-D0B9dxYA.js"
+    ]
+  },
   "resources/js/album.js": {
     "file": "assets/album-C5N0PMHo.js",
     "name": "album",
@@ -104,15 +113,6 @@
       "_AppRequest-D0B9dxYA.js",
       "_Grid-Cxs4u4A_.js",
       "_domHelpers-0caSGQTr.js"
-    ]
-  },
-  "resources/js/users.js": {
-    "file": "assets/users-D6z_gNeD.js",
-    "name": "users",
-    "src": "resources/js/users.js",
-    "isEntry": true,
-    "imports": [
-      "_AppRequest-D0B9dxYA.js"
     ]
   }
 }

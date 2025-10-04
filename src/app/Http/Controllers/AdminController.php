@@ -1,16 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Jobs\TraverseFolderJob;
                             
 use App\Models\User;
 
-class UserController extends Controller
+class AdminController extends Controller
 {
-    // GET /users
+    // GET /admin
     public function index()
     {
         $users = User::all();
 
-        return view('pages.users', compact('users'));
+        return view('pages.admin', compact('users'));
     }
 }

@@ -13,7 +13,7 @@ export default defineConfig({
                 'resources/js/timeline.js',
                 'resources/js/albums.js',
                 'resources/js/album.js',
-                'resources/js/users.js'],
+                'resources/js/admin.js'],
             refresh: true,
         }),
         tailwindcss(),
