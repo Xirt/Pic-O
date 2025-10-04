@@ -14,11 +14,14 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name'     => 'Admin',
-            'email'    => 'admin@mydomain.com',
-            'password' => Hash::make('password'),
-            'role'     => 'admin',
-        ]);
+		// TODO :: Only create if there are no other admins
+		User::firstOrCreate(
+			['email' => 'admin@mydomain.com'],
+			[
+				'name'     => 'Admin',
+				'password' => Hash::make('password'),
+				'role'     => 'admin',
+			]
+		);
     }
 }

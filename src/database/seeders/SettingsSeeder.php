@@ -15,9 +15,14 @@ class SettingsSeeder extends Seeder
      */
     public function run(): void
     {
-        Setting::insert([
-            ['key' => 'site_title', 'value' => 'Pic-O'],
-            ['key' => 'media_root', 'value' => '/photos'],
-        ]);
+		Setting::firstOrCreate(
+			['key'   => 'site_title'],
+			['value' => 'Pic-O']
+		);
+
+		Setting::firstOrCreate(
+			['key'   => 'media_root'],
+			['value' => '/photos']
+		);
     }
 }
