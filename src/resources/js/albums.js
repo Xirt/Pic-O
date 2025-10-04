@@ -106,33 +106,37 @@ class Albums {
 
     async _show(photos) {
 
-        const elements = photos.map((entity) => {
+        const elements = await Promise.all(
 
-            const el = GridItemFactory.album(entity);
+            photos.map(async (entity) => {
 
-            const modButton = el.querySelector('.btn-modify');
-            modButton.addEventListener('click', (event) => {
+                const el = await GridItemFactory.album(entity);
 
-                event.preventDefault();
-                event.stopPropagation();
+                const modButton = el.querySelector('.btn-modify');
+                modButton.addEventListener('click', (event) => {
 
-                this.showModifyAlbum(el);
+                    event.preventDefault();
+                    event.stopPropagation();
 
-            });
+                    this.showModifyAlbum(el);
 
-            const delButton = el.querySelector('.btn-delete');
-            delButton.addEventListener('click', (event) => {
+                });
 
-                event.preventDefault();
-                event.stopPropagation();
+                const delButton = el.querySelector('.btn-delete');
+                delButton.addEventListener('click', (event) => {
 
-                this.showRemovalconfirmation(el);
+                    event.preventDefault();
+                    event.stopPropagation();
 
-            });
+                    this.showRemovalconfirmation(el);
 
-            return el;
+                });
 
-        });
+                return el;
+
+            })
+    
+        );
 
         this.grid.add(elements);
 
