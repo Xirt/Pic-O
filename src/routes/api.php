@@ -7,7 +7,8 @@ use App\Http\Controllers\Api\{
     AlbumController,
     FolderController,
     PhotoController,
-    UserController
+    UserController,
+    JobController
 };
 
 /*
@@ -20,8 +21,8 @@ Route::middleware([
     EnsureFrontendRequestsAreStateful::class,
     'auth:sanctum',
 
-])->group(function () {
-
+])->group(function ()
+{
     // Albums
     Route::prefix('albums')->as('api.albums.')->group(function ()
     {
@@ -65,6 +66,13 @@ Route::middleware([
 
 ])->group(function ()
 {
+    // Jobs
+    Route::prefix('jobs')->as('api.jobs.')->group(function ()
+    {
+        Route::get('/', [JobController::class, 'index'])->name('index');
+        Route::post('dispatch', [JobController::class, 'dispatchJob'])->name('dispatch');
+        Route::get('pending-count', [JobController::class, 'countPending'])->name('count');
+    });
 
     // Folders
     Route::prefix('folders')->as('api.folders.')->group(function ()
