@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Version: 20251004-1850
+
 set -e
 
 cd /var/www
