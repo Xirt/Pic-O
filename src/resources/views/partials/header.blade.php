@@ -11,26 +11,26 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 @auth
+
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('albums.index') }}">Albums</a>
                 </li>
-                @if(auth()->check() && auth()->user()->role->value === 'admin')
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('folders.index') }}">Folders</a>
-                </li>
-                @endif
-                <li class="nav-item">
-                    <a class="nav-link" href="#" disabled>Preferences</a>
-                </li>
-                @if(auth()->check() && auth()->user()->role->value === 'admin')
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.index') }}">Admin</a>
-                    </li>
-                @endif
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-                </li>
+
+					@if(auth()->check() && auth()->user()->role->value === 'admin')
+					<li class="nav-item">
+						<a class="nav-link" href="{{ route('folders.index') }}">Folders</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" href="{{ route('admin.index') }}">Admin</a>
+					</li>
+					@endif
+
+				<li class="nav-item">
+					<a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+				</li>
                 @endauth
+
             </ul>
         </div>
     </div>
