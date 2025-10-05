@@ -4,10 +4,11 @@
 
 @section('content')
 
-    <div id="currentSectionLabel" class="rounded-end fixed-top bg-dark text-light px-3 py-2 fw-bold" style="
+    <div id="currentSectionLabel" class="rounded-start fixed-top bg-dark text-light px-3 py-2 fw-bold" style="
         top: 80px;
         right: 0px;
-        width: max-content;
+        left: auto;
+        width: fit-content;
         user-select: none;
         pointer-events: none;">
 
@@ -17,7 +18,7 @@
 
     </div>
 
-    <div class="container position-relative px-4" id="container">
+    <div class="container-lg position-relative px-4" id="container">
         <nav id="dummy-nav" class="d-none"></nav>
     </div>
 

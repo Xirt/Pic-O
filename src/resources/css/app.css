@@ -375,7 +375,7 @@ footer {
 .picoview {
     opacity: 0;
     transition: opacity 0.4s ease;
-    z-index: 500;
+    z-index: 5000;
 }
 
 .picoview.show-bg {

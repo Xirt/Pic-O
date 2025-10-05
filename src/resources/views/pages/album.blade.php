@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="container px-4" data-album-id="{{ $album->id }}" id="album">
+    <div class="container-lg px-4" data-album-id="{{ $album->id }}" id="album">
 
         <div class="d-flex align-items-center justify-content-between mb-2 ms-1">
 
@@ -93,7 +93,7 @@
         </div>
     </div>
 
-    @include('partials.photo-info-form') 
+    @include('partials.photo-info-form')
 
     <div class="position-fixed bottom-0 start-50 translate-middle-x p-3 mb-5" style="z-index: 110000000;">
 
