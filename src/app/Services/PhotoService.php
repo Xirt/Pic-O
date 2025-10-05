@@ -114,17 +114,16 @@ class PhotoService
         $manager = new ImageManager(new Driver());
         $canvas = $manager->create(self::CANVAS_WIDTH, self::CANVAS_HEIGHT)->fill(self::CANVAS_COLOR);
 
+		// TODO :: Make this configurable
+		ini_set('memory_limit', '512M');
+		
         foreach ($fullPaths as $index => $fullPath)
         {
 
-            $image = $manager->read($fullPath)->resize(
+            $image = $manager->read($fullPath)->cover(
                 self::POLAROID_WIDTH - 2 * self::POLAROID_BORDER,
                 self::POLAROID_HEIGHT - self::POLAROID_BOTTOM_MARGIN - 2 * self::POLAROID_BORDER,
-                function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                }
-
+                'center'
             );
 
             $polaroid = $manager->create(self::POLAROID_WIDTH, self::POLAROID_HEIGHT)->fill(self::POLAROID_COLOR);
@@ -138,6 +137,7 @@ class PhotoService
         }
 
         // TODO :: Store thumbnail for folders in cache (after resizing)
+		$canvas = $this->resizeImage($canvas);
         return response((string) $canvas->toPng(), 200)->header('Content-Type', 'image/png');
     }
 
@@ -198,7 +198,7 @@ class PhotoService
     /**
      * Returns a downsaled version of the given image
      */
-    private function resizeImage(Image $image, int $maxDimension): Image
+    private function resizeImage(Image $image, int $maxDimension = 500): Image
     {
         $ratio = min($maxDimension / $image->width(), $maxDimension / $image->height());
 
@@ -274,10 +274,11 @@ class PhotoService
     /**
      * Returns a random position (top / left) for item placement
      */
-    private function getRandomPos(int $cw, int $ch, int $pw, int $ph): Position
+    private function getRandomPos(int $cw, int $ch, int $pw, int $ph, $margin = 25): Position
     {
-        $x = rand(0, $cw - $pw);
-        $y = rand(0, $ch - $ph);
+		
+        $x = rand($margin, $cw - $pw- $margin);
+        $y = rand($margin, $ch - $ph - $margin);
 
         return new Position($x, $y, $pw, $ph);
     }
