@@ -24,5 +24,10 @@ class SettingsSeeder extends Seeder
 			['key'   => 'media_root'],
 			['value' => '/photos']
 		);
+
+		Setting::firstOrCreate(
+			['key'   => 'session_persistent'],
+			['value' => '0']
+		);
     }
 }

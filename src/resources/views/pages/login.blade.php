@@ -61,7 +61,7 @@
                                 <div class="col-sm-8 d-flex align-items-center">
 
                                     <div class="form-check form-switch d-flex align-items-center mb-0">
-                                        <input class="form-check-input" type="checkbox" name="remember" id="store-session" role="switch">
+                                        <input class="form-check-input" type="checkbox" name="remember" id="store-session" role="switch" {{ config('settings.session_persistent')  ? 'checked' : '' }}>
                                         <label class="form-check-label ms-3 mb-0 fst-italic" for="store-session">Keep me signed in</label>
                                     </div>
 
