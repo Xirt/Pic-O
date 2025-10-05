@@ -342,7 +342,7 @@ export const GridItemFactory = {
         hash = (typeof hash === 'string' && hash.length >= 6) ? hash : fallbackHash;
 
         const img = await blurhash.getImageDataAsImageWithOnloadPromise(
-            blurhash.decode(photo.blurhash, width, height),
+            blurhash.decode(hash, width, height),
             width, height
         );
 
