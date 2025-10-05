@@ -463,6 +463,14 @@ footer {
 }
 
 .progress-container.visible {
-    max-height: 50px;
+    max-height: 75px;
     opacity: 1;
+}
+
+.progress-container .job-label {
+    width: 100px;
+}
+
+.progress-container .job-count {
+    font-size: 0.9em;
 }

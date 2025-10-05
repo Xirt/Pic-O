@@ -13,27 +13,35 @@
 
     <div class="progress-container">
 
-        <div class="d-flex align-items-center job-progress gap-2" data-job-type="TraverseFolderJob">
+        <div class="d-flex align-items-center job-progress gap-2 my-2" data-job-type="TraverseFolderJob">
+
+            <div class="job-label">
+                Folders
+            </div>
 
             <div class="flex-grow-1">
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                        <span class="job-count"></span>
+                    </div>
                 </div>
             </div>
-
-            <span class="job-count"></span> Remaining
 
         </div>
 
-        <div class="d-flex align-items-center job-progress gap-2" data-job-type="ProcessPhotoJob">
+        <div class="d-flex align-items-center job-progress gap-2 my-2" data-job-type="ProcessPhotoJob">
+
+            <div class="job-label">
+                Photos
+            </div>
 
             <div class="flex-grow-1">
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                        <span class="job-count"></span>
+                    </div>
                 </div>
             </div>
-
-            <span class="job-count"></span> Remaining
 
         </div>
 

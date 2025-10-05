@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let messageTimeoutId;
 
-    JobProgressIndicator.start();  
-
     const scanButton = document.getElementById('scanButton');
     scanButton.addEventListener('click', async (e) => {
 
@@ -14,11 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
 
-            scanButton.disabled = true;
             const response = await AppRequest.request(route('api.jobs.dispatch'), 'POST', { type: 'TraverseFolderJob' });
 
         } catch (e) { console.log(e); }
 
+    });
+
+    JobProgressIndicator.start((hasJobs) => {
+        scanButton.disabled = hasJobs;
     });
 
     const form = document.getElementById('createForm');

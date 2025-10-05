@@ -1,59 +1,4 @@
-const IndicatorManager = (function () {
-    let errorOccurred = false;
-    let loadingCount = 0;
-    const indicator = document.getElementById('indicator-loading');
-
-    function updateIndicator() {
-
-        if (indicator) {
-            indicator.classList.toggle('d-none', (loadingCount === 0 && !errorOccurred));
-            indicator.classList.toggle('text-danger', errorOccurred);
-        }
-
-    }
-
-    return {
-
-        start() {
-            loadingCount++;
-            updateIndicator();
-        },
-
-        stop() {
-
-            if (loadingCount > 0) {
-                loadingCount--;
-                updateIndicator();
-            }
-
-        },
-
-        error(status) {
-
-            if (loadingCount > 0 && status >= 500) {
-                errorOccurred = true;
-                updateIndicator();
-            }
-
-        },
-
-        isLoading() {
-
-            return loadingCount > 0 && !errorOccurred;
-
-        },
-
-        reset() {
-
-            loadingCount = 0;
-            errorOccurred = false;
-            updateIndicator();
-
-        }
-
-    };
-
-})();
+import { IndicatorManager } from './IndicatorManager.js';
 
 export const AppRequest = (function () {
 
@@ -67,7 +12,7 @@ export const AppRequest = (function () {
 
         },
 
-        async request(url, method = 'GET', data = null, key = null) {
+        async request(url, method = 'GET', data = null, key = null, showIndicator = true) {
 
             const requestKey = key || `${method.toUpperCase()}:${url}`;
 
@@ -77,7 +22,7 @@ export const AppRequest = (function () {
             }
 
             activeRequests.add(requestKey);
-            IndicatorManager.start();
+            if (showIndicator) IndicatorManager.start();
 
             const options = {
                 method: method.toUpperCase(),
@@ -104,7 +49,7 @@ export const AppRequest = (function () {
                 if (!response.ok) {
 
                     const status = response.status;
-                    IndicatorManager.error(status);
+                    if (showIndicator) IndicatorManager.error(status);
 
                     const errorData = await response.json().catch(() => ({}));
                     throw new Error(errorData.message || 'Request failed');
@@ -122,7 +67,7 @@ export const AppRequest = (function () {
             } finally {
 
                 activeRequests.delete(requestKey);
-                IndicatorManager.stop();
+                if (showIndicator) IndicatorManager.stop();
 
             }
         }
