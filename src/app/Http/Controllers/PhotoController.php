@@ -7,6 +7,11 @@ use App\Services\PhotoService;
 
 class PhotoController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Photo::class, 'photo');
+    }
+
     // GET /
     public function index()
     {

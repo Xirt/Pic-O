@@ -2,7 +2,8 @@
 
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\ShareTokenMiddleware;
+use App\Http\Middleware\OptionalAuth;
 use App\Http\Controllers\Api\{
     SettingController,
     FolderController,
@@ -20,7 +21,8 @@ use App\Http\Controllers\Api\{
 Route::middleware([
 
     EnsureFrontendRequestsAreStateful::class,
-    'auth:sanctum',
+    OptionalAuth::class,
+    ShareTokenMiddleware::class,
 
 ])->group(function ()
 {
@@ -63,7 +65,6 @@ Route::middleware([
 
     EnsureFrontendRequestsAreStateful::class,
     'auth:sanctum',
-    AdminMiddleware::class,
 
 ])->group(function ()
 {

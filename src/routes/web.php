@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\ShareTokenMiddleware;
+use App\Http\Middleware\OptionalAuth;
 use App\Http\Controllers\{
     PhotoController,
     FolderController,
@@ -29,7 +30,12 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
  * Authenticated user routes
  *--------------------------------------------------------------------------
  */
-Route::middleware(['auth'])->group(function () {
+Route::middleware([
+
+    OptionalAuth::class,
+    ShareTokenMiddleware::class]
+
+)->group(function () {
 
     // Home (Photos index)
     Route::get('/home', [PhotoController::class, 'index'])->name('home');
@@ -56,7 +62,11 @@ Route::middleware(['auth'])->group(function () {
  * Admin-only routes
  *--------------------------------------------------------------------------
  */
-Route::middleware(['auth', AdminMiddleware::class])->group(function ()
+Route::middleware([
+
+    'auth'
+
+])->group(function ()
 {
 
     // Folders

@@ -13,6 +13,10 @@ use App\Enums\UserRole;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
 
     // GET /users
     public function index()

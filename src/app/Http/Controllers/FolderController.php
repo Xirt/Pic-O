@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Photo;
+use App\Models\Folder;
 use App\Services\PhotoService;       
 
 class FolderController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Folder::class, 'folder');
+    }
+
     // GET /folders
     public function index()
     {

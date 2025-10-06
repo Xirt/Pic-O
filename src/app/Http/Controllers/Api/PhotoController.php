@@ -11,6 +11,11 @@ use App\Http\Resources\PhotoResource;
 
 class PhotoController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Photo::class, 'photo');
+    }
+
     // GET /photos
     public function index(): AnonymousResourceCollection
     {

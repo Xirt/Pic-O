@@ -14,9 +14,10 @@ class FolderController extends Controller
     // GET /api/folders
     public function index(): FolderResource
     {
-        $rootFolder = Folder::whereNull('parent_id')->firstOrFail();
+        $folder = Folder::whereNull('parent_id')->firstOrFail();
+        $this->authorize('view', $folder);
 
-        return new FolderResource($rootFolder);
+        return new FolderResource($folder);
     }
 
     // GET /api/folders/search
@@ -40,6 +41,7 @@ class FolderController extends Controller
     public function show(int $folderId): FolderResource
     {
         $folder = Folder::findOrFail($this->parseFolderId($folderId));
+        $this->authorize('view', $folder);
 
         return new FolderResource($folder);
     }
@@ -47,7 +49,10 @@ class FolderController extends Controller
     // GET /api/folders/{folder}/subfolders
     public function subfolders(int $folderId): AnonymousResourceCollection
     {
-        $subfolders = Folder::where('parent_id', $this->parseFolderId($folderId))
+        $folder = Folder::findOrFail($this->parseFolderId($folderId));
+        $this->authorize('view', $folder);
+
+        $subfolders = Folder::where('parent_id', $folder->id)
             ->orderBy('name', 'asc')
             ->paginate(50);
 

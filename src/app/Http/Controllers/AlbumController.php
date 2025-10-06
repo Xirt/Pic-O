@@ -7,6 +7,11 @@ use App\Services\PhotoService;
 
 class AlbumController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Album::class, 'album');
+    }
+
     // GET /albums
     public function index()
     {

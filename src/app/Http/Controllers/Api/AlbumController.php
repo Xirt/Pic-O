@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Validator;
 
 class AlbumController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Album::class, 'album');
+    }
+
     // GET /api/albums
     public function index(): AnonymousResourceCollection
     {

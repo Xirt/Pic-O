@@ -12,6 +12,11 @@ use App\Models\Job;
 
 class JobController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Job::class, 'job');
+    }
+
     /**
      * Get a paginated list of Pic-O jobs.
      */
