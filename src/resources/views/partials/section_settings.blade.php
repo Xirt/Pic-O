@@ -65,8 +65,11 @@
 
         <div class="d-flex justify-content-center mt-4 mb-3">
 
-            <button type="submit" class="btn btn-primary w-50">
+            <button type="submit" class="btn btn-primary w-25 mx-2">
                 <i class="bi bi-box-arrow-in-right me-2"></i> Save
+            </button>
+            <button type="reset" class="btn btn-secondary w-25 mx-2">
+                <i class="bi bi-skip-backward-fill me-2"></i> Reset
             </button>
 
         </div>

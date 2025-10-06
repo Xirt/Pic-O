@@ -87,7 +87,7 @@
             </button>
 
             <button class="btn btn-secondary action" data-action="photo.remove" title="Remove">
-                <i class="bi bi-x-lg"></i>
+                <i class="bi bi-trash3-fill"></i>
             </button>
 
         </div>
