@@ -22,6 +22,28 @@ document.addEventListener('DOMContentLoaded', () => {
         scanButton.disabled = hasJobs;
     });
 
+    const settingsForm = document.getElementById('settingsForm');
+    settingsForm.addEventListener('submit', async (e) => {
+
+        e.preventDefault();
+
+        try {
+
+            const formData = new FormData(settingsForm);
+            const data = Object.fromEntries(formData.entries());
+            const response = await AppRequest.request(settingsForm.action, 'POST', data);
+
+            showMessage(settingsForm.querySelector('.form-message'), response.message, true);
+
+        } catch (error) {
+
+            const errorMessage = error?.response?.message || error?.message || 'An unknown error occurred.';
+            showMessage(settingsForm.querySelector('.form-message'), errorMessage, false);
+
+        }
+
+    });
+
     const form = document.getElementById('createForm');
     form.addEventListener('submit', async (e) => {
 

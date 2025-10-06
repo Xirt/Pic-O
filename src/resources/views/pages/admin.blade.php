@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="container px-4">
+<div class="container-lg px-4">
 
     <div class="mb-3 ms-1">
         <h1 class="mb-0">Administration</h1>
@@ -30,11 +30,11 @@
             </div>
 
             <div class="tab-pane fade" id="v-pills-scanner" role="tabpanel" aria-labelledby="v-pills-scanner-tab" tabindex="0">
-               @include('partials.section_jobs')
+                @include('partials.section_jobs')
             </div>
 
             <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" tabindex="0">
-                Configuration
+                @include('partials.section_settings')
             </div>
 
         </div>

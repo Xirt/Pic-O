@@ -4,9 +4,10 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\Api\{
-    AlbumController,
+    SettingController,
     FolderController,
     PhotoController,
+    AlbumController,
     UserController,
     JobController
 };
@@ -94,4 +95,9 @@ Route::middleware([
         Route::delete('{user}', [UserController::class, 'destroy'])->name('destroy');
     });
 
+    // Settings
+    Route::prefix('settings')->as('api.settings.')->group(function ()
+    {
+        Route::post('/', [SettingController::class, 'store'])->name('store');
+    });
 });

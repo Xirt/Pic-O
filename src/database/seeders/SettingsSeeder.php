@@ -16,7 +16,7 @@ class SettingsSeeder extends Seeder
     public function run(): void
     {
 		Setting::firstOrCreate(
-			['key'   => 'site_title'],
+			['key'   => 'site_name'],
 			['value' => 'Pic-O']
 		);
 
