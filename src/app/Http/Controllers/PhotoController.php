@@ -21,18 +21,24 @@ class PhotoController extends Controller
     // GET /photos/{photo}/download
     public function download(Photo $photo, PhotoService $photoService)
     {
+        $this->authorize('view', $photo);
+
         return $photoService->download($photo);
     }
 
     // GET /photos/{photo}
     public function showRender(Photo $photo, PhotoService $photoService)
     {
+        $this->authorize('view', $photo);
+
         return $photoService->render($photo);
     }
 
     // GET /photos/{photo}/thumbnail
     public function showThumbnail(Photo $photo, PhotoService $photoService)
-    {
+    {                          
+        $this->authorize('view', $photo);
+        
         return $photoService->thumbnail($photo);
     }
 }

@@ -18,6 +18,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     attachViewerEvents(viewer, manager);
     attachContainerEvents(container, viewer);
 
+    const shareBtn = document.getElementById('generateTokenBtn');
+    shareBtn.addEventListener('click', async function (e) {
+
+        e.preventDefault();
+
+        try {
+
+            const albumId = shareBtn.getAttribute('data-album-id');
+            const result = await AppRequest.request(route('api.tokens.store'), 'POST', { album_id: albumId });
+            console.log(result);
+
+        } catch (e) { console.error(e); }
+
+        closeCanvas('offcanvas-share-album');
+        shareForm.reset();
+
+    });
+
     function attachViewerEvents(viewer, manager) {
 
         const viewerEvents = {

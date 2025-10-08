@@ -301,7 +301,7 @@ export const GridItemFactory = {
     createCoverButton(card) {
 
         const button = document.createElement('button');
-        button.className = 'btn btn-light btn-sm me-1 btn-cover';
+        button.className = 'btn btn-light btn-sm me-1 btn-cover no-share';
 
         const icon = createIcon('star-fill', 'text-secondary');
         button.appendChild(icon);
@@ -313,7 +313,7 @@ export const GridItemFactory = {
     createModifyButton(card) {
 
         const button = document.createElement('button');
-        button.className = 'btn btn-light btn-sm me-1 btn-modify';
+        button.className = 'btn btn-light btn-sm me-1 btn-modify no-share';
 
         const icon = createIcon('pencil-fill', 'text-secondary');
         button.appendChild(icon);
@@ -325,7 +325,7 @@ export const GridItemFactory = {
     createDeleteButton (card) {
 
         const button = document.createElement('button');
-        button.className = 'btn btn-light btn-sm btn-delete';
+        button.className = 'btn btn-light btn-sm btn-delete no-share';
 
         const button_icon = createIcon('trash3', 'text-secondary');
         button.appendChild(button_icon);

@@ -21,7 +21,10 @@ class AlbumController extends Controller
     // GET /albums/{album}
     public function show(Album $album)
     {
-        return view('pages.album', compact('album'));
+        return view('pages.album', [
+            'sharedView' => (bool) request()->token,
+            'album'      => $album,
+        ]);
     }
 
     // GET /albums/{album}/thumbnail

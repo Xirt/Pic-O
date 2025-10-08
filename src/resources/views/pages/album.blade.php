@@ -10,7 +10,7 @@
 
             <h1>
 
-                <a href="{{ route("albums.index") }}" class="btn btn-secondary m-1 mt-0 p-1 ps-2" style="aspect-ratio: 1 / 1;" aria-label="Back to albums">
+                <a href="{{ route("albums.index") }}" class="btn btn-secondary m-1 mt-0 p-1 ps-2 no-share" style="aspect-ratio: 1 / 1;" aria-label="Back to albums">
                     <i class="bi bi-caret-left-fill"></i>
                 </a>
 
@@ -18,13 +18,17 @@
 
             </h1>
 
-            <div class="toolbar text-end pe-1">
+            <div class="toolbar text-end pe-1 no-share">
+
+                <button type="button" class="btn btn-sm btn-primary no-select" id="shareButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-share-album" aria-controls="offcanvas-share-album">
+                    <i class="bi bi-share-fill"></i> Share
+                </button>
 
                 <button type="button" class="btn btn-sm btn-primary select-start">
                     <i class="bi bi-check2-all"></i> Selection Mode
                 </button>
 
-                <button type="button" class="btn btn-sm btn-primary select-action mx-1" id="btn-remove-selection2">
+                <button type="button" class="btn btn-sm btn-primary select-action mx-1" id="btn-remove-selection-multi" disabled>
                     <i class="bi bi-trash3-fill"></i> Remove
                 </button>
 
@@ -82,11 +86,11 @@
                 <i class="bi bi-download"></i>
             </button>
 
-            <button class="btn btn-secondary action" data-action="photo.cover" title="Album cover">
+            <button class="btn btn-secondary action no-share" data-action="photo.cover" title="Album cover">
                 <i class="bi bi-star-fill"></i>
             </button>
 
-            <button class="btn btn-secondary action" data-action="photo.remove" title="Remove">
+            <button class="btn btn-secondary action no-share" data-action="photo.remove" title="Remove">
                 <i class="bi bi-trash3-fill"></i>
             </button>
 
@@ -130,6 +134,47 @@
                     </button>
 
                 </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvas-share-album" aria-labelledby="offcanvasShareLabel">
+
+        <div class="offcanvas-inner bg-white rounded-top mx-auto w-100 px-3">
+
+            <div class="offcanvas-header">
+
+                <h5 class="offcanvas-title" id="offcanvasCreateLabel">
+                    Share album
+                </h5>
+
+            </div>
+
+            <div class="offcanvas-body small overflow-visible">
+
+                <form action="{{ route('api.tokens.store') }}" id="shareTokenForm" class="mt-3">
+                @csrf
+
+                    <div id="tokenList" class="d-flex flex-column gap-2 mb-3"></div>
+
+                    <button type="button" class="btn btn-primary" id="generateTokenBtn" data-album-id="{{ $album->id }}">
+                        <i class="bi bi-link-45deg"></i> Generate Link
+                    </button>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-center mt-4 mb-3">
+
+                        <button type="button" class="btn btn-secondary w-50 mx-4" data-bs-dismiss="offcanvas">
+                            <i class="bi bi-x-lg me-1"></i> Cancel
+                        </button>
+
+                    </div>
+
+                </form>
 
             </div>
 

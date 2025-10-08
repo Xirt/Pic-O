@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Album;
+use App\Models\ShareToken;
 use App\Enums\UserRole;
 
-class AlbumPolicy
+class ShareTokenPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -21,8 +21,8 @@ class AlbumPolicy
      */
     public function view(?User $user, Album $album): bool
     {
-        $token = request()->token;
-        return ($user || ($token && $token->album_id === $album->id && !$token->isExpired()));
+        $token = request()->share_token;
+        return $user || ($token && !$token->isExpired());
     }
 
     /**
@@ -30,7 +30,7 @@ class AlbumPolicy
      */
     public function create(?User $user): bool
     {
-        return $user && in_array($user->role, [UserRole::ADMIN]);
+        return $user && in_array($user->role, [UserRole::USER, UserRole::ADMIN]);
     }
 
     /**
@@ -38,7 +38,7 @@ class AlbumPolicy
      */
     public function update(?User $user, Album $album): bool
     {
-        return $user && in_array($user->role, [UserRole::ADMIN]);
+        return $user && in_array($user->role, [UserRole::USER, UserRole::ADMIN]);
     }
 
     /**
@@ -46,7 +46,7 @@ class AlbumPolicy
      */
     public function delete(?User $user, Album $album): bool
     {
-        return $user && in_array($user->role, [UserRole::ADMIN]);
+        return $user && in_array($user->role, [UserRole::USER, UserRole::ADMIN]);
     }
 
     /**

@@ -13,11 +13,7 @@ class PhotoPolicy
      */
     public function viewAny(?User $user): bool
     {
-        $token   = request()->share_token;
-        $album   = request()->route('album');
-        $albumId = $album instanceof \App\Models\Album ? $album->id : $album;
-
-        return ($user || ($token && $token->album_id === $albumId && !$token->isExpired()));
+        return (bool) $user;
     }
 
     /**
@@ -25,8 +21,12 @@ class PhotoPolicy
      */
     public function view(?User $user, Photo $photo): bool
     {
-        $token = request()->share_token;
-        return ($user || ($token && $token->album_id === $photo->album_id && !$token->isExpired()));
+        $token = request()->token;     
+        if (!$user && $token && !$token->isExpired()) {
+            return $photo->albums()->where('albums.id', $token->album_id)->exists();
+        }
+
+        return (bool) $user;
     }
 
     /**

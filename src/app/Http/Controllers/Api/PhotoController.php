@@ -27,7 +27,9 @@ class PhotoController extends Controller
 
     // GET /api/albums/{album}/photos
     public function byAlbum(Album $album): AnonymousResourceCollection
-    {
+    {                        
+        $this->authorize('view', $album);
+
         $photos = $album->photos()
             ->orderBy('taken_at', 'desc')
             ->paginate(50);
@@ -38,6 +40,8 @@ class PhotoController extends Controller
     // GET /api/folders/{folder}/photos
     public function byFolder(Folder $folder): AnonymousResourceCollection
     {
+        $this->authorize('view', $folder);
+
         $photos = $folder->photos()
             ->orderBy('taken_at', 'desc')
             ->paginate(50);

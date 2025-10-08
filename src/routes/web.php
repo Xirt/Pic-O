@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Middleware\ShareTokenMiddleware;
 use App\Http\Middleware\OptionalAuth;
 use App\Http\Controllers\{
     PhotoController,
@@ -33,9 +32,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware([
 
     OptionalAuth::class,
-    ShareTokenMiddleware::class]
 
-)->group(function () {
+])->group(function () {
 
     // Home (Photos index)
     Route::get('/home', [PhotoController::class, 'index'])->name('home');

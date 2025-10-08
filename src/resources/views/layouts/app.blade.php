@@ -18,7 +18,7 @@
     @stack('styles')
     @routes(['only' => 'api.album.*,api.photo.*'])
 </head>
-<body data-bs-spy="scroll" data-bs-target="#dummy-nav">
+<body data-bs-spy="scroll" data-bs-target="#dummy-nav" class="{{ ($sharedView ?? false) ? 'shared-view' : '' }}">
 
     {{-- Header --}}
     @include('partials.header')

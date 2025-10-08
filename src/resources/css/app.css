@@ -451,6 +451,13 @@ footer {
 }
 
 /**
+ * Tokenized access
+ */
+.shared-view .no-share {
+    display: none !important;
+}
+
+/**
  * Admin page
  */
 .progress-container {    

@@ -2,9 +2,9 @@
 
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\ShareTokenMiddleware;
 use App\Http\Middleware\OptionalAuth;
 use App\Http\Controllers\Api\{
+    ShareTokenController,
     SettingController,
     FolderController,
     PhotoController,
@@ -22,7 +22,6 @@ Route::middleware([
 
     EnsureFrontendRequestsAreStateful::class,
     OptionalAuth::class,
-    ShareTokenMiddleware::class,
 
 ])->group(function ()
 {
@@ -94,6 +93,12 @@ Route::middleware([
         Route::post('/', [UserController::class, 'store'])->name('store');
         Route::put('{user}', [UserController::class, 'update'])->name('update');
         Route::delete('{user}', [UserController::class, 'destroy'])->name('destroy');
+    });
+
+    // Users
+    Route::prefix('tokens')->as('api.tokens.')->group(function ()
+    {
+        Route::post('/', [ShareTokenController::class, 'store'])->name('store');
     });
 
     // Settings
