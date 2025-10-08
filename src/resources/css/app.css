@@ -6,6 +6,10 @@ header {
     z-index: 2500 !important;
 }
 
+.offcanvas {
+    z-index: 7500 !important;
+}
+
 .navbar-brand img {
     height: 45px;
     width: 45px;
