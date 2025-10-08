@@ -18,6 +18,7 @@ class PhotoResource extends JsonResource
         $data = [
             'path_full'      => route('photos.show', $this->id),
             'path_thumb'     => route('photos.thumbnail', $this->id),
+            'path_download'  => route('photos.download', $this->id),
             'taken_day_desc' => null,
             'taken_age'      => null,
         ];
