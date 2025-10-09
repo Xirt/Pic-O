@@ -2,29 +2,38 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Folder;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\FolderResource;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+use App\Models\Folder;
+use App\Http\Resources\FolderResource;
+
 class FolderController extends Controller
 {
-    // GET /api/folders
+    /**
+     * Retrieve one or more Folders
+     * GET /api/folders
+     */
     public function index(): FolderResource
     {
         $folder = Folder::whereNull('parent_id')->firstOrFail();
+
         $this->authorize('view', $folder);
 
         return new FolderResource($folder);
     }
 
-    // GET /api/folders/search
+    /**
+     * Search for one or more Folders
+     * GET /api/folders/search
+     */
     public function search(Request $request): AnonymousResourceCollection
     {
-        $query = $request->query('q', '');
+        $this->authorize('viewAny', $folder);
 
+        $query = $request->query('q', '');
         if (Str::of($query)->trim()->length() < 2) {
             return response()->json([], 200);
         }
@@ -37,19 +46,27 @@ class FolderController extends Controller
         return FolderResource::collection($folders);
     }
 
-    // GET /api/folders/{folder}
+    /**
+     * Retrieve a specific Folder
+     * GET /api/folders/{id}
+     */
     public function show(int $folderId): FolderResource
     {
         $folder = Folder::findOrFail($this->parseFolderId($folderId));
+
         $this->authorize('view', $folder);
 
         return new FolderResource($folder);
     }
 
-    // GET /api/folders/{folder}/subfolders
+    /**
+     * Retrieve subfolders for a specific Folder
+     * GET /api/folders/{id}/subfolders
+     */
     public function subfolders(int $folderId): AnonymousResourceCollection
     {
         $folder = Folder::findOrFail($this->parseFolderId($folderId));
+
         $this->authorize('view', $folder);
 
         $subfolders = Folder::where('parent_id', $folder->id)

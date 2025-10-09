@@ -29,7 +29,7 @@ class JobPolicy
      */
     public function create(?User $user): bool
     {
-        return false;
+        return $user && in_array($user->role, [UserRole::ADMIN]);
     }
 
     /**

@@ -19,7 +19,7 @@ class ShareTokenPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(?User $user, ShareToken $album): bool
+    public function view(?User $user, ShareToken $token): bool
     {
         return (bool) $user;
     }
@@ -35,7 +35,7 @@ class ShareTokenPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(?User $user, ShareToken $album): bool
+    public function update(?User $user, ShareToken $token): bool
     {
         return $user && in_array($user->role, [UserRole::USER, UserRole::ADMIN]);
     }
@@ -43,7 +43,7 @@ class ShareTokenPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(?User $user, ShareToken $album): bool
+    public function delete(?User $user, ShareToken $token): bool
     {
         return $user && in_array($user->role, [UserRole::USER, UserRole::ADMIN]);
     }
@@ -51,7 +51,7 @@ class ShareTokenPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(?User $user, ShareToken $album): bool
+    public function restore(?User $user, ShareToken $token): bool
     {
         return $user && in_array($user->role, []);
     }
@@ -59,7 +59,7 @@ class ShareTokenPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(?User $user, ShareToken $album): bool
+    public function forceDelete(?User $user, ShareToken $token): bool
     {
         return $user && in_array($user->role, []);
     }

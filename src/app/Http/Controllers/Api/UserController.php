@@ -13,28 +13,38 @@ use App\Enums\UserRole;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(User::class, 'user');
-    }
-
-    // GET /users
+    /**
+     * Retrieve one or more Users
+     * GET /api/users
+     */
     public function index()
     {
+        $this->authorize('viewAny', User::class);
+
         $users = User::all();
 
         return UserResource::collection($users);
     }
 
-    // GET /users/{user}
+    /**
+     * Retrieve a specific User
+     * GET /api/users/{id}
+     */
     public function show(User $user)
     {
+        $this->authorize('view', $user);
+
         return new UserResource($user);
     }
 
-    // POST /users
+    /**
+     * Create a new User
+     * POST /api/users
+     */
     public function store(Request $request)
     {
+        $this->authorize('store', User::class);
+
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
@@ -55,9 +65,13 @@ class UserController extends Controller
             ->response();
     }
 
-    // PUT /users/{user}
+    /**
+     * Update a given User
+     * PUT /api/users/{id}
+     */
     public function update(Request $request, User $user)
     {
+        $this->authorize('update', $user);
 
         $validated = $request->validate([
             'name'     => 'sometimes|string|max:255',
@@ -88,10 +102,13 @@ class UserController extends Controller
     }
 
     /**
-     * DELETE /users/{user}
+     * Delete a given User
+     * DELETE /api/users/{id}
      */
     public function destroy(Request $request, User $user)
     {
+        $this->authorize('delete', $user);
+
         if ($request->user()->id === $user->id)
         {
             return response()->json([
@@ -109,6 +126,8 @@ class UserController extends Controller
 
         $user->delete();
 
-        return response()->json([ 'message' => 'User deleted successfully.' ]);
+        return response()->json([
+            'message' => 'User deleted successfully.'
+        ], 200);
     }
 }

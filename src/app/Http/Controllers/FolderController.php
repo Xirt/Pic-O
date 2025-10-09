@@ -7,21 +7,26 @@ use App\Models\Folder;
 use App\Services\PhotoService;       
 
 class FolderController extends Controller
-{
-    public function __construct()
-    {
-        $this->authorizeResource(Folder::class, 'folder');
-    }
-
-    // GET /folders
+{          
+    /**
+     * Show one or more Folders
+     * GET /folders
+     */
     public function index()
     {
+        $this->authorize('viewAny', Folder::class);
+
         return view('pages.folders');
     }
 
-    // GET /folders/{folder}/thumbnail
+    /**
+     * Show thumbnail for a given Folder
+     * GET /folders/{id}/thumbnail
+     */
     public function thumbnail(int $folderId, PhotoService $photoService)
     {
+        $this->authorize('viewAny', Folder::class);
+
         $photos = Photo::with("folder")->where('folder_id', $folderId)
             ->inRandomOrder()
             ->take(10)

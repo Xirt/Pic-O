@@ -11,15 +11,15 @@ use App\Models\ShareToken;
 
 class ShareTokenController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(ShareToken::class, 'token');
-    }
-
+    /**
+     * Retrieve one or more Tokens
+     * UNUSED
+     */
     public function index()
     {
-        $query = ShareToken::query();
+        $this->authorize('viewAny', ShareToken::class);
 
+        $query = ShareToken::query();
         if ($request->has('album_id'))
         {
             $query->where('album_id', $request->album_id);
@@ -28,8 +28,14 @@ class ShareTokenController extends Controller
         return ShareTokenResource::collection($query->get());
     }
 
+    /**
+     * Create a new Token for a specific Album
+     * POST /api/tokens
+     */
     public function store(Request $request): ShareTokenResource
     {
+        $this->authorize('create', ShareToken::class);
+
         $request->validate([
             'album_id'   => 'required|exists:albums,id',
             'expires_at' => 'nullable|date',
@@ -43,9 +49,14 @@ class ShareTokenController extends Controller
         return new ShareTokenResource($token);
     }
 
-    public function revoke(ShareToken $id): JsonResponse
+    /**
+     * Delete a given Token
+     * DELETE /api/tokens/{id}
+     */
+    public function revoke(ShareToken $token): JsonResponse
     {
-        $token = ShareToken::findOrFail($id);
+        $this->authorize('delete', $token);
+
         $token->delete();
 
         return response()->json(['message' => 'Token revoked']);

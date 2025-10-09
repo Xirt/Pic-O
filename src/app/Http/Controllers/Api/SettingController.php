@@ -9,12 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Setting;
 
 class SettingController extends Controller
-{
-    public function __construct()
-    {
-        $this->authorizeResource(Setting::class, 'setting');
-    }
-
+{     
     /**
      * Allowed settings and their validation rules.
      */
@@ -35,19 +30,17 @@ class SettingController extends Controller
     ];
 
     /**
-     * Store or update settings via API.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * Create / update one or more Settings
+     * POST /api/settings
      */
     public function store(Request $request): JsonResponse
     {
-        $input = $request->all();
+        $this->authorize('update', Setting::class);
 
         $rules = [];
         foreach (self::ALLOWED_SETTINGS as $key => $meta)
         {
-            if (array_key_exists($key, $input))
+            if (array_key_exists($key, $request->all()))
             {
                 $rules[$key] = $meta['rules'];
             }

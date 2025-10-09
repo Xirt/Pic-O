@@ -6,27 +6,22 @@ use App\Models\Photo;
 use App\Services\PhotoService;
 
 class PhotoController extends Controller
-{
-    public function __construct()
-    {
-        $this->authorizeResource(Photo::class, 'photo');
-    }
-
-    // GET /
+{                                        
+    /**
+     * Show one or more Photos
+     * GET /
+     */
     public function index()
     {
+        $this->authorize('viewAny', Photo::class);
+
         return view('pages.timeline');
     }
 
-    // GET /photos/{photo}/download
-    public function download(Photo $photo, PhotoService $photoService)
-    {
-        $this->authorize('view', $photo);
-
-        return $photoService->download($photo);
-    }
-
-    // GET /photos/{photo}
+    /**
+     * Show a given Photo
+     * GET /photos/{id}
+     */
     public function showRender(Photo $photo, PhotoService $photoService)
     {
         $this->authorize('view', $photo);
@@ -34,11 +29,25 @@ class PhotoController extends Controller
         return $photoService->render($photo);
     }
 
-    // GET /photos/{photo}/thumbnail
+    /**
+     * Show a thumbnail version of a given Photo
+     * GET /photos/{id}/thumbnail
+     */
     public function showThumbnail(Photo $photo, PhotoService $photoService)
-    {                          
+    {
         $this->authorize('view', $photo);
         
         return $photoService->thumbnail($photo);
+    }
+
+    /**
+     * Download a given Photo
+     * GET /photos/{id}/download
+     */
+    public function download(Photo $photo, PhotoService $photoService)
+    {
+        $this->authorize('view', $photo);
+
+        return $photoService->download($photo);
     }
 }

@@ -15,26 +15,29 @@ use App\Models\Folder;
 
 class AlbumController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(Album::class, 'album');
-    }
-
-    // GET /api/albums
+    /**
+     * Retrieve one or more Albums
+     * GET /api/albums
+     */
     public function index(): AnonymousResourceCollection
     {
+        $this->authorize('viewAny', Album::class);
+
         $albums = Album::with(['coverPhoto'])
-                       ->withCount('photos')
-                       ->orderBy('name', 'asc')
-                       ->paginate(10);
+           ->withCount('photos')
+           ->orderBy('name', 'asc')
+           ->paginate(10);
 
         return AlbumResource::collection($albums);
     }
 
-    // GET /api/albums/search
+    /**
+     * Search for one or more Albums
+     * GET /api/albums/search
+     */
     public function search(Request $request): AnonymousResourceCollection
     {
-        $this->authorize('viewAny', 'album');
+        $this->authorize('viewAny', Album::class);
 
         $query     = $request->query('q', '');
         $order     = $request->query('order', 'name');
@@ -59,15 +62,25 @@ class AlbumController extends Controller
         return AlbumResource::collection($albums);
     }
 
-    // GET /api/albums/{album}
+    /**
+     * Retrieve a specific Album
+     * GET /api/albums/{id}
+     */
     public function show(Album $album): AlbumResource
     {
+        $this->authorize('view', $album);
+
         return new AlbumResource($album);
     }
 
-    // POST /api/albums/create
+    /**
+     * Create a new Album
+     * POST /api/albums/create
+     */
     public function store(Request $request): AlbumResource
     {
+        $this->authorize('store', Album::class);
+
         $validated = Validator::make($request->all(), [
             'name' => 'required|string|max:255'
         ])->validate();
@@ -76,10 +89,13 @@ class AlbumController extends Controller
         return $this->createAlbum($validated['name'], $photoIds);
     }
 
-    // POST /api/albums/from-folder
+    /**
+     * Create a new Album using a specific Folder
+     * POST /api/albums/from-folder
+     */
     public function storeFromFolder(Request $request): AlbumResource
     {
-        $this->authorize('create', 'album');
+        $this->authorize('create', Album::class);
 
         $validated = Validator::make($request->all(), [
             'name'      => 'required|string|max:255',
@@ -102,16 +118,19 @@ class AlbumController extends Controller
         return $this->createAlbum($validated['name'], $photoIds);
     }
 
-    // PATCH /api/albums/{id}
+    /**
+     * Update a given Album
+     * PATCH /api/albums/{id}
+     */
     public function update(Request $request, Album $album): AlbumResource
     {
-        // Validate the input: both fields optional
+        $this->authorize('update', $album);
+
         $validated = $request->validate([
             'name'     => 'sometimes|string|max:255',
             'photo_id' => 'sometimes|integer|exists:photos,id',
         ]);
 
-        // Update only if the fields are present in the request
         if (isset($validated['name'])) {
             $album->name = $validated['name'];
         }
@@ -125,7 +144,10 @@ class AlbumController extends Controller
         return new AlbumResource($album);
     }
 
-    // PUT /api/albums/{id}/photos/{id}
+    /**
+     * Add a given Photo to a given Album
+     * PUT /api/albums/{id}/photos/{id}
+     */
     public function addPhoto(Request $request, Album $album, Photo $photo): JsonResponse
     {
         $this->authorize('update', $album);
@@ -135,20 +157,25 @@ class AlbumController extends Controller
         return $this->addPhotos($modifiedRequest, $album);
     }
 
-    // PUT /api/albums/{id}/photos
+    /**
+     * Add given Photos to a given Album
+     * PUT /api/albums/{id}/photos
+     */
     public function addPhotos(Request $request, Album $album): JsonResponse
     {
         $this->authorize('update', $album);
 
         $photoIds = $this->getPhotoIds($request);
         $alreadyAttached = $album->photos()->whereIn('photos.id', $photoIds)->pluck('photos.id')->toArray();
-
         $album->photos()->attach(array_diff($photoIds, $alreadyAttached));
 
         return response()->json(['status' => 'ok']);
     }
 
-    // DELETE /api/albums/{id}/photos/{id}
+    /**
+     * Remove a given Photo from a given Album
+     * DELETE /api/albums/{id}/photos/{id}
+     */
     public function removePhoto(Album $album, Photo $photo)
     {
         $this->authorize('update', $album);
@@ -158,9 +185,14 @@ class AlbumController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    // DELETE /api/albums/{album}
+    /**
+     * Delete a given Album
+     * DELETE /api/albums/{album}
+     */
     public function destroy(Album $album): JsonResponse
     {
+        $this->authorize('delete', $album);
+
         $album->delete();
 
         return response()->json(['message' => 'Album deleted']);

@@ -15,13 +15,19 @@ class LoginController extends Controller
 
     private const DECAY_SECONDS = 60;
 
-    // GET /login
+    /**
+     * Show login page
+     * POST /login
+     */
     public function index()
     {
         return view('pages.login');
     }
 
-    // POST /login
+    /**
+     * Perform a login attempt
+     * POST /login
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -59,7 +65,10 @@ class LoginController extends Controller
         ], 401);
     }
 
-    // POST /lgout
+    /**
+     * Perform a logout attempt
+     * POST /logout
+     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -67,14 +76,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('message', 'Logged out successfully');
-    }
-
-    protected function validateLogin(Request $request)
-    {
-        $request->validate([
-            $this->username() => 'required|email',
-            'password'        => 'required|string',
-        ]);
+        return redirect()->route('login');
     }
 }

@@ -12,39 +12,39 @@ use App\Models\Job;
 
 class JobController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(Job::class, 'job');
-    }
-
     /**
-     * Get a paginated list of Pic-O jobs.
+     * Retrieve one or more Jobs
+     * GET /api/jobs
      */
     public function index()
     {
+        $this->authorize('viewAny', Job::class);
+
         $jobs = Job::picOJobs()
             ->orderBy('created_at', 'desc')
-            ->select('id', 'payload', 'created_at')
             ->paginate(50);
 
         return JobResource::collection($jobs);
     }
 
     /**
-     * Start a specific job with given parameters
+     * Starts a specific Job with given parameters
+     * GET /api/jobs/dispatch
      */
     public function dispatchJob(Request $request)
     {
+        $this->authorize('create', Job::class);
+
         $validated = $request->validate([
-            'type' => 'required|string|in:TraverseFolderJob,ProcessPhotoJob',
+            'type'   => 'required|string|in:TraverseFolderJob,ProcessPhotoJob',
             'params' => 'nullable|array'
         ]);
 
         $type   = $validated['type'];
         $params = $validated['params'] ?? [];
 
-        switch ($type) {
-
+        switch ($type)
+        {
             case 'TraverseFolderJob':
                 $params['path'] = resource_path(!empty($params['path']) ? $params['path'] : config('settings.media_root'));
                 TraverseFolderJob::dispatch(...$params);
@@ -53,7 +53,6 @@ class JobController extends Controller
             case 'ProcessPhotoJob':
                 ProcessPhotoJob::dispatch(...$params);
                 break;
-
         }
 
         return response()->json([
@@ -64,10 +63,13 @@ class JobController extends Controller
     }
 
     /**
-     * Get count of pending Pic-O jobs by type (optimized, database-level).
+     * Get the number of pending Jobs by type
+     * GET /api/jobs/pending-count
      */
     public function countPending()
     {
+        $this->authorize('viewAny', Job::class);
+
         $counts = Job::picOJobs()
             ->selectRaw("
                 CASE

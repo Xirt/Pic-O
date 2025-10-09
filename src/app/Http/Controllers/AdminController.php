@@ -25,7 +25,10 @@ class AdminController extends Controller
         });
     }
 
-    // GET /admin
+    /**
+     * Show administration page
+     * GET /admin
+     */
     public function index()
     {
         $users = User::all();
