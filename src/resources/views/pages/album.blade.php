@@ -113,6 +113,18 @@
 
     <div class="position-fixed bottom-0 start-50 translate-middle-x p-3 mb-5" style="z-index: 110000000;">
 
+        <div id="clipboardToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+
+            <div class="toast-body text-center">
+                URL copied to clipboard.
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="position-fixed bottom-0 start-50 translate-middle-x p-3 mb-5" style="z-index: 110000000;">
+
         <div id="removalToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 
         <div class="toast-header">
@@ -153,16 +165,18 @@
 
             </div>
 
-            <div class="offcanvas-body small overflow-visible">
+            <div class="d-flex offcanvas-body small overflow-visible">
 
-                <form action="{{ route('api.tokens.store') }}" id="shareTokenForm" class="mt-3">
+                <form action="{{ route('api.tokens.store') }}" id="shareTokenForm" class="w-100">
                 @csrf
 
-                    <div id="tokenList" class="d-flex flex-column gap-2 mb-3"></div>
+                    <div id="tokenList" class="d-flex flex-column mb-3"></div>
 
-                    <button type="button" class="btn btn-primary" id="generateTokenBtn" data-album-id="{{ $album->id }}">
-                        <i class="bi bi-link-45deg"></i> Generate Link
-                    </button>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary" id="generateTokenBtn" data-album-id="{{ $album->id }}">
+                            <i class="bi bi-link-45deg"></i> Generate Link
+                        </button>
+                    </div>
 
                     <hr />
 

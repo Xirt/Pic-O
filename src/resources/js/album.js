@@ -3,7 +3,7 @@ import { PicoView } from './PicoView.js';
 import { Selection } from './Selection.js';
 import { AppRequest } from './AppRequest.js';
 import { Grid, GridItemFactory } from './Grid.js';
-import { populateForm, removeEventListeners, openCanvas, toast } from './domHelpers.js';
+import { populateForm, removeEventListeners, openCanvas, toast, createIcon } from './domHelpers.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -27,14 +27,70 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const albumId = shareBtn.getAttribute('data-album-id');
             const result = await AppRequest.request(route('api.tokens.store'), 'POST', { album_id: albumId });
+
+
+            const container = document.getElementById('tokenList');
+            container.appendChild(appendToken(result.data));
             console.log(result);
 
         } catch (e) { console.error(e); }
 
-        closeCanvas('offcanvas-share-album');
-        shareForm.reset();
-
     });
+
+    function appendToken(tokenResponse) {
+
+        const url = route('albums.show', {
+            'album': tokenResponse.album_id,
+            'token': tokenResponse.token
+        });
+
+        const container = document.createElement('div');
+        container.className = 'd-flex mb-1';
+
+            const tokenInp = document.createElement('input');
+            tokenInp.className = 'flex-grow-1';
+            tokenInp.value = url;
+            tokenInp.className = 'form-control';
+
+        container.appendChild(tokenInp);
+
+            const copyButton = document.createElement('button');
+            copyButton.type = "button";
+            copyButton.className = 'btn btn-primary btn-sm mx-2 btn-copy';
+
+            copyButton.addEventListener('click', () => {
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+
+                    navigator.clipboard.writeText(url);
+
+                } else {
+
+                    tokenInp.select();
+                    document.execCommand('copy');
+
+                }
+
+                toast('clipboardToast');
+
+            });
+
+            const copyIcon = createIcon('copy');
+            copyButton.appendChild(copyIcon);
+
+        container.appendChild(copyButton);
+
+            const dateButton = document.createElement('button');
+            dateButton.className = 'btn btn-secondary btn-sm btn-calendar';
+
+            const dateIcon = createIcon('calendar3-event');
+            dateButton.appendChild(dateIcon);
+
+        container.appendChild(dateButton);
+
+        return container;
+
+    }
 
     function attachViewerEvents(viewer, manager) {
 
