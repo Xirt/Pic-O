@@ -18,6 +18,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     attachViewerEvents(viewer, manager);
     attachContainerEvents(container, viewer);
 
+    const offcanvas = document.getElementById('offcanvas-share-album');
+    offcanvas.addEventListener('show.bs.offcanvas', async function(e) {
+
+        try {
+
+            const albumId = shareBtn.getAttribute('data-album-id');
+            const result = await AppRequest.request(route('api.albums.tokens', { 'album' : albumId }), 'GET');
+
+            const container = document.getElementById('tokenList');
+            result.data.forEach((token) => {
+                container.appendChild(appendToken(token))
+            });
+
+        } catch(e) { console.error(e); }
+
+
+    });
+
     const shareBtn = document.getElementById('generateTokenBtn');
     shareBtn.addEventListener('click', async function (e) {
 
@@ -28,12 +46,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const albumId = shareBtn.getAttribute('data-album-id');
             const result = await AppRequest.request(route('api.tokens.store'), 'POST', { album_id: albumId });
 
-
             const container = document.getElementById('tokenList');
             container.appendChild(appendToken(result.data));
             console.log(result);
 
-        } catch (e) { console.error(e); }
+        } catch(e) { console.error(e); }
 
     });
 
@@ -44,52 +61,47 @@ document.addEventListener('DOMContentLoaded', async () => {
             'token': tokenResponse.token
         });
 
-        const container = document.createElement('div');
-        container.className = 'd-flex mb-1';
+        const template = document.getElementById("tokenTpl");
+        const clone = template.content.cloneNode(true);
 
-            const tokenInp = document.createElement('input');
-            tokenInp.className = 'flex-grow-1';
-            tokenInp.value = url;
-            tokenInp.className = 'form-control';
+        clone.querySelector('input').value = url;
+        clone.querySelector('.expiry').classList.toggle('d-none', !tokenResponse.expires_at);
+        clone.querySelector('.expires_at').value = tokenResponse.expires_at;
 
-        container.appendChild(tokenInp);
+        const copyButton = clone.querySelector('.btn-copy');
+        copyButton.addEventListener('click', () => {
 
-            const copyButton = document.createElement('button');
-            copyButton.type = "button";
-            copyButton.className = 'btn btn-primary btn-sm mx-2 btn-copy';
+            if (navigator.clipboard && navigator.clipboard.writeText) {
 
-            copyButton.addEventListener('click', () => {
+                navigator.clipboard.writeText(url);
 
-                if (navigator.clipboard && navigator.clipboard.writeText) {
+            } else {
 
-                    navigator.clipboard.writeText(url);
+                const wrapper = deleteButton.closest(".token-wrapper");
+                wrapper.querySelector('input').select();
+                document.execCommand('copy');
 
-                } else {
+            }
 
-                    tokenInp.select();
-                    document.execCommand('copy');
+            toast('clipboardToast');
 
-                }
+        });
 
-                toast('clipboardToast');
+        const deleteButton = clone.querySelector('.btn-delete');
+        deleteButton.addEventListener('click', () => {
 
-            });
+            AppRequest.request(route('api.tokens.destroy', {
+                'token': tokenResponse.id
+            }), 'DELETE');
 
-            const copyIcon = createIcon('copy');
-            copyButton.appendChild(copyIcon);
+            const wrapper = deleteButton.closest(".token-wrapper");
+            wrapper.remove();
 
-        container.appendChild(copyButton);
+            toast('deleteToast');
 
-            const dateButton = document.createElement('button');
-            dateButton.className = 'btn btn-secondary btn-sm btn-calendar';
+        });
 
-            const dateIcon = createIcon('calendar3-event');
-            dateButton.appendChild(dateIcon);
-
-        container.appendChild(dateButton);
-
-        return container;
-
+        return clone;
     }
 
     function attachViewerEvents(viewer, manager) {

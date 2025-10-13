@@ -35,6 +35,7 @@ Route::middleware([
         Route::post('from-folder', [AlbumController::class, 'storeFromFolder'])->name('storeFromFolder');
         Route::patch('{album}', [AlbumController::class, 'update'])->name('update');
         Route::delete('{album}', [AlbumController::class, 'destroy'])->name('destroy');
+        Route::get('/{album}/tokens', [ShareTokenController::class, 'index'])->name('tokens');
 
         // Album Photos
         Route::prefix('{album}/photos')->as('photos.')->group(function ()
@@ -52,6 +53,14 @@ Route::middleware([
         Route::get('/', [PhotoController::class, 'index'])->name('index');
         Route::get('{photo}', [PhotoController::class, 'show'])->name('show');
     });
+
+    // Tokens
+    Route::prefix('tokens')->as('api.tokens.')->group(function ()
+    {
+        Route::post('/', [ShareTokenController::class, 'store'])->name('store');
+        Route::delete('{token}', [ShareTokenController::class, 'destroy'])->name('destroy');
+    });
+
 });
 
 
@@ -93,12 +102,6 @@ Route::middleware([
         Route::post('/', [UserController::class, 'store'])->name('store');
         Route::put('{user}', [UserController::class, 'update'])->name('update');
         Route::delete('{user}', [UserController::class, 'destroy'])->name('destroy');
-    });
-
-    // Users
-    Route::prefix('tokens')->as('api.tokens.')->group(function ()
-    {
-        Route::post('/', [ShareTokenController::class, 'store'])->name('store');
     });
 
     // Settings

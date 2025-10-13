@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 
 use App\Http\Resources\ShareTokenResource;
 use App\Models\ShareToken;
+use App\Models\Album;
 
 class ShareTokenController extends Controller
 {
@@ -15,17 +16,16 @@ class ShareTokenController extends Controller
      * Retrieve one or more Tokens
      * UNUSED
      */
-    public function index()
+    public function index(Album $album)
     {
         $this->authorize('viewAny', ShareToken::class);
+        $this->authorize('view', $album);
 
-        $query = ShareToken::query();
-        if ($request->has('album_id'))
-        {
-            $query->where('album_id', $request->album_id);
-        }
+        $tokens = ShareToken::query()
+            ->where('album_id', $album->id)
+            ->get();
 
-        return ShareTokenResource::collection($query->get());
+        return ShareTokenResource::collection($tokens);
     }
 
     /**
@@ -53,7 +53,7 @@ class ShareTokenController extends Controller
      * Delete a given Token
      * DELETE /api/tokens/{id}
      */
-    public function revoke(ShareToken $token): JsonResponse
+    public function destroy(ShareToken $token): JsonResponse
     {
         $this->authorize('delete', $token);
 

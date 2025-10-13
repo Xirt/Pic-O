@@ -461,6 +461,18 @@ footer {
     display: none !important;
 }
 
+.token-container {
+    max-height: 50vh;
+}
+
+.token-container:has(.token-wrapper) .no-token {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    max-height: 75vh;
+}
+
 /**
  * Admin page
  */
