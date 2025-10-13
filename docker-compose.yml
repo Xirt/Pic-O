@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: pico_app
     ports:
-      - "8080:80"
+      - "${APP_PORT}:80"
     volumes:
       - "${PHOTO_STORAGE_PATH}:/var/www/resources/photos"
       - "${APP_STORAGE_PATH}:/var/www/storage/app"
@@ -16,6 +16,7 @@ services:
       DB_DATABASE: pico
       DB_USERNAME: pico
       DB_PASSWORD: pico_pass
+      APP_URL: "http://${APP_HOST}:${APP_PORT}"
     depends_on:
       - mariadb
     networks:
