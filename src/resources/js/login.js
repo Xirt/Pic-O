@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
 
+            await AppRequest.request('/sanctum/csrf-cookie', 'GET');
+
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             const response = await AppRequest.request(form.action, 'POST', data);
