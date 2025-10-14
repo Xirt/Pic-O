@@ -44,25 +44,38 @@ export const AppRequest = (function () {
 
             try {
 
+                let data;
+
                 const response = await fetch(url, options);
+                const contentType = response.headers.get('content-type') || '';
 
-                if (!response.ok) {
+                if (contentType.includes('application/json')) {
 
-                    const status = response.status;
-                    if (showIndicator) IndicatorManager.error(status);
+                    try {
+                        data = await response.json();
+                    } catch (e) { console.log(e); }
 
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || 'Request failed');
+                } else {
+
+                    data = await response.text();
 
                 }
 
-                const result = await response.json();
-                return result;
+                if (!response.ok) {
 
-            } catch (err) {
+                    if (showIndicator) IndicatorManager.error(response.status);
 
-                console.log(err);
-                throw err;
+                    const message = (typeof data === 'object' && data?.message) || data;
+                    throw new Error(message || 'Request failed');
+
+                }
+
+                return data;
+
+            } catch (e) {
+
+                console.log(e);
+                throw e;
 
             } finally {
 
