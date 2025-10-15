@@ -125,7 +125,7 @@ class ProcessPhotoJob implements ShouldQueue
         // Formatting for focal length (in mm)
         if (!empty($metadata['focal_length']))
         {
-            $metadata['focal_length'] = $metadata['focal_length'] . ' mm';
+            $metadata['focal_length'] = round($metadata['focal_length']) . ' mm';
         }
 
         // Formatting for exposure time (in sec)
