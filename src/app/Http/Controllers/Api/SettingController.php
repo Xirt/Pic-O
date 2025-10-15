@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Setting;
 
 class SettingController extends Controller
-{     
+{
     /**
      * Allowed settings and their validation rules.
      */
@@ -37,10 +37,12 @@ class SettingController extends Controller
     {
         $this->authorize('update', Setting::class);
 
+        $input = $request->all();
+
         $rules = [];
         foreach (self::ALLOWED_SETTINGS as $key => $meta)
         {
-            if (array_key_exists($key, $request->all()))
+            if (array_key_exists($key, $input))
             {
                 $rules[$key] = $meta['rules'];
             }

@@ -35,7 +35,7 @@ class SettingPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(?User $user, Setting $setting): bool
+    public function update(?User $user): bool
     {
         return $user && in_array($user->role, [UserRole::ADMIN]);
     }
