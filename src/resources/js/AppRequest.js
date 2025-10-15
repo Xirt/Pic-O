@@ -27,8 +27,7 @@ export const AppRequest = (function () {
             const options = {
                 method: method.toUpperCase(),
                 credentials: 'include',
-                headers: {
-                    //'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                headers: {                                                                         
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }

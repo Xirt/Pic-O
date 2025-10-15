@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             const response = await AppRequest.request(form.action, 'POST', data);
+            await AppRequest.request('/api/debug-auth', 'GET');
 
             showMessage(response.message, true);
 
