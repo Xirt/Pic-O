@@ -7,23 +7,43 @@ set -e
 cd /var/www
 
 # -----------------------------------------------------------------------------
-# 1. Wait for MariaDB to be ready before running migrations
+# 1. Wait for DB to be ready before running migrations
 # -----------------------------------------------------------------------------
 MAX_RETRIES=30
 COUNT=0
+SLEEP_TIME=3
 echo "Waiting for database to be ready..."
 
-until mysqladmin ping -h "$DB_HOST" -u "$DB_USERNAME" -p"$DB_PASSWORD" --silent; do
-    COUNT=$((COUNT+1))
-    if [ $COUNT -ge $MAX_RETRIES ]; then
-        echo "Error: Database not ready after $MAX_RETRIES attempts. Exiting."
-        exit 1
-    fi
-    echo "Database not ready - retrying in 3s... ($COUNT/$MAX_RETRIES)"
-    sleep 3
-done
+if [ "$DB_CONNECTION" = "mysql" ] || [ "$DB_CONNECTION" = "mariadb" ]; then
+    echo "Detected MariaDB/MySQL. Checking with mysqladmin..."
+    until mysqladmin ping -h "$DB_HOST" -u "$DB_USERNAME" -p"$DB_PASSWORD" --silent; do
+        COUNT=$((COUNT+1))
+        if [ $COUNT -ge $MAX_RETRIES ]; then
+            echo "Error: MariaDB/MySQL not ready after $MAX_RETRIES attempts. Exiting."
+            exit 1
+        fi
+        echo "MariaDB/MySQL is unavailable - sleeping $SLEEP_TIME seconds... ($COUNT/$MAX_RETRIES)"
+        sleep $SLEEP_TIME
+    done
 
-echo "Database is ready!"
+elif [ "$DB_CONNECTION" = "pgsql" ]; then
+    echo "Detected PostgreSQL. Checking with pg_isready..."
+    export PGPASSWORD="$DB_PASSWORD"
+    until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" > /dev/null 2>&1; do
+        COUNT=$((COUNT+1))
+        if [ $COUNT -ge $MAX_RETRIES ]; then
+            echo "Error: PostgreSQL not ready after $MAX_RETRIES attempts. Exiting."
+            exit 1
+        fi
+        echo "PostgreSQL is unavailable - sleeping $SLEEP_TIME seconds... ($COUNT/$MAX_RETRIES)"
+        sleep $SLEEP_TIME
+    done
+
+else
+    echo "Warning: Unknown DB_CONNECTION value '$DB_CONNECTION'. Skipping database readiness check."
+fi
+
+echo "Database is ready! Continuing startup."
 
 # -----------------------------------------------------------------------------
 # 2. Clear & rebuild caches

@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libssl-dev \
     mariadb-client \
+    postgresql-client \
     && docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg \  
