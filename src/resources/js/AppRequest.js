@@ -4,6 +4,19 @@ export const AppRequest = (function () {
 
     const activeRequests = new Set();
 
+    function getCookie(name) {
+
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+
+        if (parts.length === 2) {
+            return parts.pop().split(';').shift();
+        }
+
+        return null;
+
+    }
+
     return {
 
         isLoading(key = null) {
@@ -32,6 +45,16 @@ export const AppRequest = (function () {
                     'Content-Type': 'application/json'
                 }
             };
+
+            if (!['GET', 'HEAD', 'OPTIONS'].includes(options.method)) {
+
+                const csrfToken = getCookie('XSRF-TOKEN');
+
+                if (csrfToken) {
+                    options.headers['X-XSRF-TOKEN'] = decodeURIComponent(csrfToken);
+                }
+
+            }
 
             if (data) {
 
