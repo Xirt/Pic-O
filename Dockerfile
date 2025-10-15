@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     libssl-dev \
+    libpq-dev \
     mariadb-client \
     postgresql-client \
     && docker-php-ext-configure gd \
