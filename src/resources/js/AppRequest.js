@@ -48,10 +48,9 @@ export const AppRequest = (function () {
 
             if (!['GET', 'HEAD', 'OPTIONS'].includes(options.method)) {
 
-                const csrfToken = getCookie('XSRF-TOKEN');
-
-                if (csrfToken) {
-                    options.headers['X-XSRF-TOKEN'] = decodeURIComponent(csrfToken);
+                const csrfToken = getCookie('XSRF-TOKEN'); 
+                if (csrfToken && csrfToken.length > 10) {
+                    options.headers['X-XSRF-TOKEN'] = csrfToken;
                 }
 
             }
