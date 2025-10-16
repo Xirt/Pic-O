@@ -56,9 +56,19 @@ php artisan view:cache
 # -----------------------------------------------------------------------------
 # 3. Set permissions for storage and cache directories
 # -----------------------------------------------------------------------------
-echo "Setting permissions for storage and bootstrap/cache..."
-chown -R www-data:www-data storage bootstrap/cache || true
-chmod -R 775 storage bootstrap/cache || true
+if [ "$(id -u)" -eq 0 ]; then
+
+  echo "Setting permissions for storage and bootstrap/cache..."
+
+  chown -R www-data:www-data storage bootstrap/cache || true
+
+  chmod -R 775 storage bootstrap/cache || true
+
+else
+
+  echo "Not running as root — skipping chown/chmod"
+
+fi
 
 # -----------------------------------------------------------------------------
 # 5. Run database migrations
