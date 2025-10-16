@@ -6,6 +6,35 @@ set -e
 
 cd /var/www
 
+#!/bin/sh
+
+set -e
+
+# -----------------------------------------------------------------------------
+# 0. Create missing authorizations (optional)
+# -----------------------------------------------------------------------------
+if [ -n "$PHOTOS_GID" ]; then
+
+  GROUP_NAME="photos"
+
+  if ! getent group "$PHOTOS_GID" > /dev/null; then
+    echo "Creating group $GROUP_NAME with GID $PHOTOS_GID"
+    groupadd -g "$PHOTOS_GID" "$GROUP_NAME"
+  else
+    GROUP_NAME=$(getent group "$PHOTOS_GID" | cut -d: -f1)
+  fi
+
+  if ! id www-data | grep -q "$PHOTOS_GID"; then
+    echo "Adding www-data to group $GROUP_NAME (GID $PHOTOS_GID)"
+    usermod -aG "$GROUP_NAME" www-data
+  fi
+
+else
+
+  echo "No PHOTOS_GID set — skipping group setup."
+
+fi
+
 # -----------------------------------------------------------------------------
 # 1. Wait for DB to be ready before running migrations
 # -----------------------------------------------------------------------------
