@@ -46,12 +46,18 @@ class JobController extends Controller
         switch ($type)
         {
             case 'TraverseFolderJob':
-                $params['path'] = resource_path(!empty($params['path']) ? $params['path'] : config('settings.media_root'));
-                TraverseFolderJob::dispatch(...$params);
+
+                $path = !empty($params['path']) ? $params['path'] : config('settings.media_root');
+                if (!empty($path))
+                {
+                    $params['path'] = realpath(resource_path($path));
+                    TraverseFolderJob::dispatch(...$params)->onQueue('folders');
+                }
+
                 break;
 
             case 'ProcessPhotoJob':
-                ProcessPhotoJob::dispatch(...$params);
+                ProcessPhotoJob::dispatch(...$params)->onQueue('photos');
                 break;
         }
 
