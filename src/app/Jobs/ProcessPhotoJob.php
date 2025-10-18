@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 use Carbon\Carbon;
 use App\Models\Photo;
@@ -16,20 +17,24 @@ class ProcessPhotoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected string $path;
+
     protected int $folderId;
 
     protected string $filename;
 
-    protected string $fullPath;
+    protected string $relativePath;
 
     /**
      * Constructor
      */
-    public function __construct(int $folderId, string $fullPath)
+    public function __construct(int $folderId, string $path)
     {
-        $this->folderId = $folderId;
-        $this->fullPath = $fullPath;
-        $this->filename = basename($fullPath);
+        $this->folderId     = $folderId;
+        $this->path         = $path;
+
+        $this->filename     = basename($path);
+        $this->relativePath = str_replace(resource_path(), '', $path);
     }
 
     /**
@@ -37,22 +42,26 @@ class ProcessPhotoJob implements ShouldQueue
      */
     public function handle(PhotoService $photoService): void
     {
-        if (file_exists($this->fullPath) && is_readable($this->fullPath))
+
+        Log::channel('scanner')->info("Processing photo: $this->relativePath");
+
+        if (file_exists($this->path) && is_readable($this->path))
         {
             $photo = Photo::where('folder_id', $this->folderId)
                 ->where('filename', $this->filename)
                 ->first();
 
-            $fileModifiedTime = filemtime($this->fullPath);
+            $fileModifiedTime = filemtime($this->path);
             if ($photo && $photo->updated_at->timestamp > $fileModifiedTime)
             {
+                Log::channel('scanner')->info("Processed (no change): $this->relativePath");
                 return;
             }
 
             // Gather photo metadata
-            $dims = @getimagesize($this->fullPath);
+            $dims = @getimagesize($this->path);
             $metadata = array_merge($this->getEXIFData($fileModifiedTime), [
-                'size' => filesize($this->fullPath),
+                'size' => filesize($this->path),
             ]);
 
             // Store the photo
@@ -72,6 +81,7 @@ class ProcessPhotoJob implements ShouldQueue
 
         }
 
+        Log::channel('scanner')->info("Processed: $this->relativePath");
     }
 
     /**
