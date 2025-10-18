@@ -6,7 +6,7 @@ export const JobProgressIndicator = (function () {
 
     const container = document.querySelector('.progress-container');
 
-    const maxCounts   = {};
+    let previousCounts   = {};
     const jobElements = {};
 
     let pollTimer       = null;
@@ -27,11 +27,13 @@ export const JobProgressIndicator = (function () {
 
                 jobWrapper: el,
                 countEl: el.querySelector('.job-count'),
-                barEl: el.querySelector('.progress-bar')
+                upArrow: el.querySelector('.arrow-up'),
+                downArrow: el.querySelector('.arrow-down'),
+                //barEl: el.querySelector('.progress-bar')
 
             };
 
-            maxCounts[type] = 0;
+            previousCounts[type] = 0;
 
         });
     }
@@ -51,15 +53,11 @@ export const JobProgressIndicator = (function () {
             const currentCounts = {};
 
             for (const job of jobs) {
-
                 currentCounts[job.type] = job.count;
-                if (!maxCounts[job.type] || job.count > maxCounts[job.type]) {
-                    maxCounts[job.type] = job.count;
-                }
-
             }
 
-            update(currentCounts);
+            update(currentCounts, previousCounts);
+            previousCounts = currentCounts;
 
         } catch (e) { console.log(e); }
 
@@ -73,16 +71,29 @@ export const JobProgressIndicator = (function () {
 
         for (const type in jobElements) {
 
-            const { jobWrapper, countEl, barEl } = jobElements[type];
+            const { jobWrapper, countEl, upArrow, downArrow } = jobElements[type];
 
-            const current   = currentCounts[type] || 0;
-            const max       = maxCounts[type] || 1;
-            const remaining = max - current;
-            const progress  = 1 - current / max;
-            const clamped   = Math.min(Math.max(progress, 0), 1);
+            const current  = currentCounts[type] || 0;
+            const previous = previousCounts[type] || 0;
 
-            barEl.style.width = `${(clamped * 100).toFixed(0)}%`;
-            countEl.textContent = (max - current) + '/' + max + ' (' + Math.round(clamped * 100) + '%)';
+            countEl.textContent = current;
+
+            if (previous < current) {
+
+                upArrow.classList.add('show');
+                setTimeout(() => {
+                    upArrow.classList.remove('show');
+                }, 500);
+
+            }
+            if (previous > current) {
+
+                downArrow.classList.add('show');   
+                setTimeout(() => {
+                    downArrow.classList.remove('show');
+                }, 500);
+
+            }
 
             hasJobs = (current == 0) ? hasJobs : true;
         }

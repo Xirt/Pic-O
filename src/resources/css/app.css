@@ -476,9 +476,11 @@ footer {
 /**
  * Admin page
  */
-.progress-container {    
+.progress-container {
+    float: right;   
     overflow: hidden;
     max-height: 0;
+    width: 400px;
     opacity: 0;
     transition:
         opacity 1s ease,
@@ -486,14 +488,55 @@ footer {
 }
 
 .progress-container.visible {
-    max-height: 75px;
+    max-height: 125px;
     opacity: 1;
-}
-
-.progress-container .job-label {
-    width: 100px;
 }
 
 .progress-container .job-count {
     font-size: 0.9em;
+}
+
+.spinner {
+    width: 100px;
+}
+
+.spinner-custom {
+    transform: translate(-50%, -50%);
+    border-style: solid;
+    border-radius: 50%;
+}
+
+.spinner-outer {
+    width: 100%;
+    height: 100%;
+    border-width: 0.8em;
+    color: #ff6ec4;
+    border-color: currentColor transparent currentColor currentColor;
+    animation: spin 1s linear infinite;
+}
+
+.spinner-inner {
+    width: 65%;
+    height: 65%;
+    border-width: 0.5em;
+    color: #7873f5;
+    border-color: currentColor currentColor currentColor transparent;
+    animation: spin-reverse 0.8s linear infinite;
+}
+
+.spinner-text {
+    font-size: 0.5em;
+    font-weight: bold;
+}
+
+@keyframes spin {
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes spin-reverse {
+    100% {
+        transform: translate(-50%, -50%) rotate(-360deg);
+    }
 }

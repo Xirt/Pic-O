@@ -2,7 +2,6 @@
 <p>To keep your photo library up to date, the scanner checks for new or changed files across all folders. Click "Scan Now" to manually start a scan. This will index all photos and folders, ensuring your gallery reflects the latest content.</p>
 <p>During a scan, you can monitor the progress on this page.</p>
 
-
 <div class="mx-lg-5">
 
     <div class="text-end my-2 mb-3">
@@ -15,41 +14,35 @@
         </a>
     </div>
 
-    <div class="progress-container">
+    <div class="progress-container d-flex align-items-center job-progress bg-light rounded p-3 my-2">
 
-        <div class="d-flex align-items-center job-progress gap-2 my-2" data-job-type="TraverseFolderJob">
+        <div class="spinner position-relative ratio ratio-1x1">
 
-            <div class="job-label">
-                Folders
-            </div>
+            <div class="spinner-custom position-absolute top-50 start-50 bg-transparent spinner-outer"></div>
+            <div class="spinner-custom position-absolute top-50 start-50 bg-transparent spinner-inner"></div>
 
-            <div class="flex-grow-1">
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                        <span class="job-count"></span>
-                    </div>
-                </div>
+            <div class="spinner-text position-absolute text-center d-flex justify-content-center align-items-center w-100 h-100">
+                Scanning
             </div>
 
         </div>
 
-        <div class="d-flex align-items-center job-progress gap-2 my-2" data-job-type="ProcessPhotoJob">
+        <div class="flex-grow-1 ms-5">
 
-            <div class="job-label">
-                Photos
+            <div class="job-progress position-relative my-3" data-job-type="TraverseFolderJob">
+                <span class="job-count"></span> folder remaining
+                <i class="position-absolute end-0 fade bi bi-caret-up-fill arrow-up text-danger"></i>
+                <i class="position-absolute end-0 fade bi bi-caret-down-fill arrow-down text-success"></i>
             </div>
 
-            <div class="flex-grow-1">
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                        <span class="job-count"></span>
-                    </div>
-                </div>
+            <div class="job-progress position-relative my-3" data-job-type="ProcessPhotoJob">
+                <span class="job-count"></span> photos remaining
+                <i class="position-absolute end-0 fade bi bi-caret-up-fill arrow-up text-danger"></i>
+                <i class="position-absolute end-0 fade bi bi-caret-down-fill arrow-down text-success"></i>
             </div>
 
         </div>
 
     </div>
-
 
 </div>
