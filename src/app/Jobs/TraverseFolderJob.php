@@ -76,7 +76,7 @@ class TraverseFolderJob implements ShouldQueue
         {
             $relativePath = str_replace(resource_path() . DIRECTORY_SEPARATOR, '', $subfolder);
 
-            Log::channel('scanner')->info("Requesting scan: $relativePath");
+            Log::channel('scanner')->info("Requesting folder scan: $relativePath");
             TraverseFolderJob::dispatch($subfolder, $folderId)->onQueue('folders');
         }
 
@@ -112,7 +112,7 @@ class TraverseFolderJob implements ShouldQueue
                 $foundFilenames[] = $file->getFilename();
                 $relativeFile = str_replace(resource_path() . DIRECTORY_SEPARATOR, '', $file->getPathname());
 
-                Log::channel('scanner')->info("Requesting scan: $relativeFile");
+                Log::channel('scanner')->info("Requesting photo scan: $relativeFile");
                 ProcessPhotoJob::dispatch($folderId, $file->getPathname())->onQueue('photos');
             }
         }
@@ -152,7 +152,9 @@ class TraverseFolderJob implements ShouldQueue
 
         foreach ($patterns as $pattern)
         {
-            if (fnmatch($pattern, $normalized)) {
+            if (fnmatch($pattern, $normalized))
+            {
+                Log::channel('scanner')->info("Ignoring file: $path");
                 return true;
             }
         }
