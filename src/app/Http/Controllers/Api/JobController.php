@@ -36,7 +36,7 @@ class JobController extends Controller
         $this->authorize('create', Job::class);
 
         $validated = $request->validate([
-            'type'   => 'required|string|in:TraverseFolderJob,ProcessPhotoJob',
+            'type'   => 'required|string|in:TraverseFolderJob',
             'params' => 'nullable|array'
         ]);
 
@@ -47,6 +47,15 @@ class JobController extends Controller
         {
             case 'TraverseFolderJob':
 
+                // Truncate scanner log
+                $logFile = storage_path('logs/scanner.log');
+                if (file_exists($logFile))
+                {
+                    $handle = fopen($logFile, 'w');
+                    fclose($handle);
+                }
+
+                // Start scan
                 $path = !empty($params['path']) ? $params['path'] : config('settings.media_root');
                 if (!empty($path))
                 {
@@ -54,10 +63,6 @@ class JobController extends Controller
                     TraverseFolderJob::dispatch(...$params)->onQueue('folders');
                 }
 
-                break;
-
-            case 'ProcessPhotoJob':
-                ProcessPhotoJob::dispatch(...$params)->onQueue('photos');
                 break;
         }
 
