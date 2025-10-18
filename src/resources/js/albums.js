@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             container   : 'search-dropdown-container',
             hiddenInput : 'dropdownHidden'
         },
-        apiUrl: route('api.albums.search'),
+        apiUrl: route('api.folders.search'),
         renderItem: null
     });
 
