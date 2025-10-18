@@ -31,7 +31,7 @@ class FolderController extends Controller
      */
     public function search(Request $request): AnonymousResourceCollection
     {
-        $this->authorize('viewAny', $folder);
+        $this->authorize('viewAny', Folder::class);
 
         $query = $request->query('q', '');
         if (Str::of($query)->trim()->length() < 2) {

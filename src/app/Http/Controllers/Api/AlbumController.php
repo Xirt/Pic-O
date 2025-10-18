@@ -79,7 +79,7 @@ class AlbumController extends Controller
      */
     public function store(Request $request): AlbumResource
     {
-        $this->authorize('store', Album::class);
+        $this->authorize('create', Album::class);
 
         $validated = Validator::make($request->all(), [
             'name' => 'required|string|max:255'
