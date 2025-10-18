@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 use App\Jobs\ProcessPhotoJob;
 use App\Models\Folder;
@@ -21,6 +22,10 @@ class TraverseFolderJob implements ShouldQueue
 
     protected ?int $parentId;
 
+    protected string $folderName;
+
+    protected string $relativePath;
+
     public const PHOTO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
 
     /**
@@ -28,29 +33,34 @@ class TraverseFolderJob implements ShouldQueue
      */
     public function __construct(string $path, int $parentId = NULL)
     {
-        $this->parentId = $parentId;
-        $this->path = $path;
+        $this->parentId     = $parentId;
+        $this->path         = $path;
+
+        $this->folderName   = basename($path);
+        $this->relativePath = str_replace(resource_path(), '', $path);
     }
 
     /**
-     * Execute the job.
+     * Execute the job
      */
     public function handle(): void
     {
-        $rootPath     = realpath(resource_path(config('settings.media_root')));
-        $relativePath = str_replace(resource_path(), '', $this->path);
-        $folderName   = basename($this->path);
+        Log::channel('scanner')->info("Scanning folder: $this->relativePath");
 
         // Add directory entry
         $folder = Folder::firstOrCreate([
-            'path'      => $relativePath,
-            'name'      => $folderName,
+            'path'      => $this->relativePath,
+            'name'      => $this->folderName,
             'parent_id' => $this->parentId
         ]);
 
+        $rootPath = realpath(resource_path(config('settings.media_root')));
         $ignorePatterns = $this->getIgnorePatterns($this->path, $rootPath);
-        $this->scanSubdirectories($this->path, $relativePath, $folder->id, $ignorePatterns);
+
+        $this->scanSubdirectories($this->path, $this->relativePath, $folder->id, $ignorePatterns);
         $this->scanFiles($this->path, $folder->id, $ignorePatterns);
+
+        Log::channel('scanner')->info("Completed scan: $this->relativePath");
     }
 
     private function scanSubdirectories(string $absolutePath, string $relativePath, int $folderId, array $ignorePatterns): void
@@ -64,6 +74,9 @@ class TraverseFolderJob implements ShouldQueue
         // Scan found subdirectories
         foreach ($subfolders as $subfolder)
         {
+            $relativePath = str_replace(resource_path() . DIRECTORY_SEPARATOR, '', $subfolder);
+
+            Log::channel('scanner')->info("Requesting scan: $relativePath");
             TraverseFolderJob::dispatch($subfolder, $folderId)->onQueue('folders');
         }
 
@@ -97,7 +110,10 @@ class TraverseFolderJob implements ShouldQueue
             if (in_array($extension, self::PHOTO_EXTENSIONS))
             {
                 $foundFilenames[] = $file->getFilename();
-                ProcessPhotoJob::dispatch($folderId, $file->getPathname())->onQueue('photos');;
+                $relativeFile = str_replace(resource_path() . DIRECTORY_SEPARATOR, '', $file->getPathname());
+
+                Log::channel('scanner')->info("Requesting scan: $relativeFile");
+                ProcessPhotoJob::dispatch($folderId, $file->getPathname())->onQueue('photos');
             }
         }
 
