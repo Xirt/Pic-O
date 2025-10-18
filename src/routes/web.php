@@ -79,6 +79,7 @@ Route::middleware([
     Route::prefix('admin')->as('admin.')->group(function ()
     {
         Route::get('/', [AdminController::class, 'index'])->name('index');
+        Route::get('/scanner-log', [AdminController::class, 'getScannerLog'])->name('log');
     });
 });
 

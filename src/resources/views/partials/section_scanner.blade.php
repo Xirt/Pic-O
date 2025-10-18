@@ -6,9 +6,13 @@
 <div class="mx-lg-5">
 
     <div class="text-end my-2 mb-3">
-        <button type="button" class="btn btn-sm btn-primary" id="scanButton">
+        <button type="button" class="btn btn-sm btn-primary mx-2" id="scanButton">
             <i class="bi bi-pencil me-1"></i> Scan now
         </button>
+
+        <a href="{{ route('admin.log') }}" class="btn btn-sm btn-secondary" role="button">
+            <i class="bi bi-download me-1"></i> Log
+        </a>
     </div>
 
     <div class="progress-container">
