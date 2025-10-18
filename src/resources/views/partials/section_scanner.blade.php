@@ -30,13 +30,13 @@
         <div class="flex-grow-1 ms-5">
 
             <div class="job-progress position-relative my-3" data-job-type="TraverseFolderJob">
-                <span class="job-count"></span> folder remaining
+                <span class="job-count"></span> folder(s) remaining
                 <i class="position-absolute end-0 fade bi bi-caret-up-fill arrow-up text-danger"></i>
                 <i class="position-absolute end-0 fade bi bi-caret-down-fill arrow-down text-success"></i>
             </div>
 
             <div class="job-progress position-relative my-3" data-job-type="ProcessPhotoJob">
-                <span class="job-count"></span> photos remaining
+                <span class="job-count"></span> photo(s) remaining
                 <i class="position-absolute end-0 fade bi bi-caret-up-fill arrow-up text-danger"></i>
                 <i class="position-absolute end-0 fade bi bi-caret-down-fill arrow-down text-success"></i>
             </div>
