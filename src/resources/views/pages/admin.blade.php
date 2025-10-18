@@ -30,7 +30,7 @@
             </div>
 
             <div class="tab-pane fade" id="v-pills-scanner" role="tabpanel" aria-labelledby="v-pills-scanner-tab" tabindex="0">
-                @include('partials.section_jobs')
+                @include('partials.section_scanner')
             </div>
 
             <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" tabindex="0">
