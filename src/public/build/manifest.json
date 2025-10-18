@@ -31,7 +31,7 @@
     "name": "domHelpers"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CdTWIhgO.css",
+    "file": "assets/app-D-CrRoLW.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -39,7 +39,7 @@
     ]
   },
   "resources/js/admin.js": {
-    "file": "assets/admin-D5Q2Kiob.js",
+    "file": "assets/admin-BuY7X9bW.js",
     "name": "admin",
     "src": "resources/js/admin.js",
     "isEntry": true,
