@@ -92,7 +92,7 @@ class TraverseFolderJob implements ShouldQueue
             $folderName   = basename($dbFolder->path);
             $absolutePath = resource_path($dbFolder->path);
 
-            if (!File::isDirectory($absolutePath) || $this->isIgnored($folderName, $ignorePatterns))
+            if (!File::isDirectory($absolutePath) || $this->isIgnored($dbFolder->path, $ignorePatterns))
             {
                 $dbFolder->delete();
             }
@@ -179,13 +179,14 @@ class TraverseFolderJob implements ShouldQueue
 
     protected function isIgnored(string $path, array $patterns): bool
     {
+        $filename   = basename($path);
         $normalized = str_replace('\\', '/', $path);
 
         foreach ($patterns as $pattern)
         {
-            if (fnmatch($pattern, $normalized))
+            if (fnmatch($pattern, $normalized) || fnmatch($pattern, $filename))
             {
-                Log::channel(self::LOG_CHANNEL)->info("Ignoring file: $path");
+                Log::channel(self::LOG_CHANNEL)->info("Ignoring path: $path");
                 return true;
             }
         }
