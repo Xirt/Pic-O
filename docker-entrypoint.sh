@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: 20251004-1850
+# Version: 20251019-1912
 
 set -e
 
@@ -34,6 +34,13 @@ else
   echo "No PHOTOS_GID set — skipping group setup."
 
 fi
+
+# -----------------------------------------------------------------------------
+# 0. Set PHP Memory limit
+# -----------------------------------------------------------------------------
+PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-256M}"
+echo "memory_limit = ${PHP_MEMORY_LIMIT}" > /usr/local/etc/php/conf.d/99-memory-limit.ini
+echo "Setting PHP Memory limit to $PHP_MEMORY_LIMIT"
 
 # -----------------------------------------------------------------------------
 # 1. Wait for DB to be ready before running migrations
