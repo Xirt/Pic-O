@@ -152,7 +152,7 @@ class TraverseFolderJob implements ShouldQueue
 
         foreach ($patterns as $pattern)
         {
-            if (fnmatch($pattern, $normalized))
+            if (fnmatch($pattern, $normalized, FNM_PATHNAME))
             {
                 Log::channel('scanner')->info("Ignoring file: $path");
                 return true;
