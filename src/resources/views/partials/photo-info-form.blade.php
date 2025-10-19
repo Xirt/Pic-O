@@ -23,10 +23,10 @@
 
                 <div class="mb-1 row align-items-center">
 
-                    <label for="taken_day_desc" class="col-4 col-form-label">Taken</label>
+                    <label for="taken_at" class="col-4 col-form-label">Taken</label>
 
                     <div class="col-8">
-                        <input type="text" class="form-control-plaintext" id="taken_day_desc" name="taken_day_desc" value="">
+                        <input type="text" class="form-control-plaintext" id="taken_at" name="taken_at" value="">
                     </div>
 
                 </div>

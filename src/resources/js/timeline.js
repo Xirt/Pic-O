@@ -70,11 +70,11 @@ class Timeline {
             const photos = await this.loader.next();
             photos.forEach(photo => {
 
-                if (!this.photoGroups[photo.taken_day_desc]) {
-                    this.photoGroups[photo.taken_day_desc] = [];
+                if (!this.photoGroups[photo.taken_date]) {
+                    this.photoGroups[photo.taken_date] = [];
                 }
 
-                this.photoGroups[photo.taken_day_desc].push(photo);
+                this.photoGroups[photo.taken_date].push(photo);
 
             });
 
@@ -84,7 +84,7 @@ class Timeline {
 
     }
 
-    addPhotoGroup() {
+    async addPhotoGroup() {
 
         const entries = Object.entries(this.photoGroups);
         if (!entries.length) {
@@ -121,16 +121,20 @@ class Timeline {
 
         }
 
-        for (const photo of [...photoGroup]) {
+        await this.addPhotoGroupPhotos(photoGroup, entries.length == 1);
 
+    }
+
+    async addPhotoGroupPhotos(photoGroup, isLast) {
+
+        for (const photo of [...photoGroup]) {
             const gridItem = await GridItemFactory.photo(photo, false);
-            this.grid.add(gridItem, entries.length === 1);
+            this.grid.add(gridItem, isLast);
 
             const photoIndex = photoGroup.indexOf(photo);
             if (photoIndex > -1) {
                 photoGroup.splice(photoIndex, 1);
             }
-
         }
 
     }
