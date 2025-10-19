@@ -7,8 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 use App\Jobs\ProcessPhotoJob;
 use App\Models\Folder;
@@ -26,7 +28,9 @@ class TraverseFolderJob implements ShouldQueue
 
     protected string $relativePath;
 
-    public const PHOTO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+    private const LOG_CHANNEL = 'scanner';
+
+    private const PHOTO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
 
     /**
      * Constructor
@@ -45,7 +49,7 @@ class TraverseFolderJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::channel('scanner')->info("Scanning folder: $this->relativePath");
+        Log::channel(self::LOG_CHANNEL)->info("Scanning folder: $this->relativePath");
 
         // Add directory entry
         $folder = Folder::firstOrCreate([
@@ -57,15 +61,15 @@ class TraverseFolderJob implements ShouldQueue
         $rootPath = realpath(resource_path(config('settings.media_root')));
         $ignorePatterns = $this->getIgnorePatterns($this->path, $rootPath);
 
-        $this->scanSubdirectories($this->path, $this->relativePath, $folder->id, $ignorePatterns);
-        $this->scanFiles($this->path, $folder->id, $ignorePatterns);
+        $this->scanSubdirectories($folder->id, $ignorePatterns);
+        $this->scanFiles($folder->id, $ignorePatterns);
 
-        Log::channel('scanner')->info("Completed scan: $this->relativePath");
+        Log::channel(self::LOG_CHANNEL)->info("Completed scan: $this->relativePath");
     }
 
-    private function scanSubdirectories(string $absolutePath, string $relativePath, int $folderId, array $ignorePatterns): void
+    private function scanSubdirectories(int $folderId, array $ignorePatterns): void
     {
-        $subfolders = collect(File::directories($absolutePath))
+        $subfolders = collect(File::directories($this->path))
             ->filter(function ($subfolder) use ($ignorePatterns) {
                 $relative = str_replace(resource_path() . DIRECTORY_SEPARATOR, '', $subfolder);
                 return !$this->isIgnored($relative, $ignorePatterns);
@@ -74,14 +78,14 @@ class TraverseFolderJob implements ShouldQueue
         // Scan found subdirectories
         foreach ($subfolders as $subfolder)
         {
-            $relativePath = str_replace(resource_path() . DIRECTORY_SEPARATOR, '', $subfolder);
+            $relativePath = $this->getRelativePath($subfolder);
 
-            Log::channel('scanner')->info("Requesting folder scan: $relativePath");
+            Log::channel(self::LOG_CHANNEL)->info("Requesting folder scan: $relativePath");
             TraverseFolderJob::dispatch($subfolder, $folderId)->onQueue('folders');
         }
 
         // Remove obsolete (sub)directory entries
-        $dbSubfolders = Folder::where('path', 'like', $relativePath . DIRECTORY_SEPARATOR . '%')->get();
+        $dbSubfolders = Folder::where('path', 'like', $this->relativePath . DIRECTORY_SEPARATOR . '%')->get();
         foreach ($dbSubfolders as $dbFolder)
         {
             $folderName   = basename($dbFolder->path);
@@ -94,26 +98,39 @@ class TraverseFolderJob implements ShouldQueue
         }
     }
 
-    private function scanFiles(string $absolutePath, int $folderId, array $ignorePatterns): void
+    private function scanFiles(int $folderId, array $ignorePatterns): void
     {
         $foundFilenames = [];
-        $files = collect(File::files($absolutePath))
+        $files = collect(File::files($this->path))
             ->filter(function ($file) use ($ignorePatterns) {
                 $relative = str_replace(resource_path() . DIRECTORY_SEPARATOR, '', $file->getPathname());
                 return !$this->isIgnored($relative, $ignorePatterns);
             });
 
         // Scan found files
+        $knownPhotos = $this->getKnownPhotos($folderId);
         foreach ($files as $file)
         {
-            $extension = strtolower($file->getExtension());
+            $fileName    = $file->getFileName();
+            $fileAbsPath = $file->getPathname();
+            $fileRelPath = $this->getRelativePath($fileAbsPath);
+
+            // Skip unchanged files
+            $photo = $knownPhotos->get($fileName);
+            if ($photo && $photo->updated_at->timestamp > filemtime($fileAbsPath))
+            {
+                Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
+                continue;
+            }
+
+            // Process relevant files
+            $extension = Str::lower($file->getExtension());
             if (in_array($extension, self::PHOTO_EXTENSIONS))
             {
-                $foundFilenames[] = $file->getFilename();
-                $relativeFile = str_replace(resource_path() . DIRECTORY_SEPARATOR, '', $file->getPathname());
+                Log::channel(self::LOG_CHANNEL)->info("Requesting photo scan: $fileRelPath");
+                ProcessPhotoJob::dispatch($folderId, $fileAbsPath)->onQueue('photos');
 
-                Log::channel('scanner')->info("Requesting photo scan: $relativeFile");
-                ProcessPhotoJob::dispatch($folderId, $file->getPathname())->onQueue('photos');
+                $foundFilenames[] = $fileName;
             }
         }
 
@@ -122,16 +139,28 @@ class TraverseFolderJob implements ShouldQueue
             ->whereNotIn('filename', $foundFilenames)
             ->delete();
     }
+    
+    protected function getKnownPhotos(int $folderId): Collection
+    {
+        return Photo::where('folder_id', $folderId)
+            ->get()
+            ->keyBy('filename');
+    }
+    
+    protected function getRelativePath(string $path): string
+    {
+        return Str::after($path, resource_path() . DIRECTORY_SEPARATOR);
+    }
 
     protected function getIgnorePatterns(string $dir, string $rootDir): array
     {
         return array_unique(array_merge(
-            $this->getIgnoreLines($rootDir) ?? [],
-            $this->getIgnoreLines($dir) ?? []
+            $this->getIgnoreLines($rootDir),
+            $this->getIgnoreLines($dir)
         ));
     }
 
-    protected function getIgnoreLines(String $dir) : array
+    protected function getIgnoreLines(string $dir) : array
     {
         $ignoreFile = $dir . DIRECTORY_SEPARATOR . '.ignore';
 
@@ -154,7 +183,7 @@ class TraverseFolderJob implements ShouldQueue
         {
             if (fnmatch($pattern, $normalized, FNM_PATHNAME))
             {
-                Log::channel('scanner')->info("Ignoring file: $path");
+                Log::channel(self::LOG_CHANNEL)->info("Ignoring file: $path");
                 return true;
             }
         }

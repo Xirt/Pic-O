@@ -25,6 +25,8 @@ class ProcessPhotoJob implements ShouldQueue
 
     protected string $relativePath;
 
+    private const LOG_CHANNEL = 'scanner';
+
     /**
      * Constructor
      */
@@ -34,7 +36,7 @@ class ProcessPhotoJob implements ShouldQueue
         $this->path         = $path;
 
         $this->filename     = basename($path);
-        $this->relativePath = str_replace(resource_path(), '', $path);
+        $this->relativePath = Str::after($path, resource_path() . DIRECTORY_SEPARATOR);
     }
 
     /**
@@ -42,46 +44,35 @@ class ProcessPhotoJob implements ShouldQueue
      */
     public function handle(PhotoService $photoService): void
     {
+        Log::channel(self::LOG_CHANNEL)->info("Processing photo: $this->relativePath");
 
-        Log::channel('scanner')->info("Processing photo: $this->relativePath");
-
-        if (file_exists($this->path) && is_readable($this->path))
+        if (!file_exists($this->path) || !is_readable($this->path))
         {
-            $photo = Photo::where('folder_id', $this->folderId)
-                ->where('filename', $this->filename)
-                ->first();
-
-            $fileModifiedTime = filemtime($this->path);
-            if ($photo && $photo->updated_at->timestamp > $fileModifiedTime)
-            {
-                Log::channel('scanner')->info("Processed (no change): $this->relativePath");
-                return;
-            }
-
-            // Gather photo metadata
-            $dims = @getimagesize($this->path);
-            $metadata = array_merge($this->getEXIFData($fileModifiedTime), [
-                'size' => filesize($this->path),
-            ]);
-
-            // Store the photo
-            $photo = Photo::updateOrCreate([
-                'folder_id' => $this->folderId,
-                'filename'  => $this->filename,
-            ], array_merge([
-                'height'    => $dims ? $dims[1] : null,
-                'width'     => $dims ? $dims[0] : null,
-            ], $metadata));
-
-
-            // Attempt to create thumbnails
-            $photoService->thumbnail($photo);
-            $photo->blurhash = $photoService->blurhash($photo);
-            $photo->save();
-
+            Log::channel(self::LOG_CHANNEL)->warning("Photo inaccessible: $this->relativePath");
+            return;
         }
 
-        Log::channel('scanner')->info("Processed: $this->relativePath");
+        // Gather photo metadata
+        $dims = @getimagesize($this->path);
+        $metadata = array_merge($this->getEXIFData($filemtime($this->path)), [
+            'size' => filesize($this->path),
+        ]);
+
+        // Store the photo
+        $photo = Photo::updateOrCreate([
+            'folder_id' => $this->folderId,
+            'filename'  => $this->filename,
+        ], array_merge([
+            'height'    => $dims ? $dims[1] : null,
+            'width'     => $dims ? $dims[0] : null,
+        ], $metadata));
+
+        // Attempt to create thumbnails
+        $photoService->thumbnail($photo);
+        $photo->blurhash = $photoService->blurhash($photo);
+        $photo->save();
+
+        Log::channel(self::LOG_CHANNEL)->info("Processed: $this->relativePath");
     }
 
     /**
@@ -95,7 +86,7 @@ class ProcessPhotoJob implements ShouldQueue
         }
 
         // Attempt to retrieve EXIF data
-        $exif = @exif_read_data($this->fullPath, 'IFD0');
+        $exif = @exif_read_data($this->path, 'IFD0');
         if ($exif === false)
         {
             return [];
@@ -128,7 +119,7 @@ class ProcessPhotoJob implements ShouldQueue
 
             try
             {
-                $metadata['taken_at'] = Carbon::parse($dateString);
+                $metadata['taken_at'] = Carbon::parse($dateString, 'UTC');
             } catch (\Exception $e) {}
         }
 
@@ -158,7 +149,7 @@ class ProcessPhotoJob implements ShouldQueue
     /**
      * Interprets a given EXIF value based on its specific format
      */
-    private function interpretValue(?string $value): mixed
+    private function interpretValue(?string $value): ?float
     {
         if (is_null($value))
         {
