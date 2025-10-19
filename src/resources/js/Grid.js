@@ -338,7 +338,7 @@ export const GridItemFactory = {
 
         let hash = photo.blurhash;
 
-        const fallbackHash = 'UOOGF~WB~qWB~qWB~qWB~qWB~qWB';
+        const fallbackHash = 'LFRf8~-;?.OF?Hf8ShkB%vWrIEs9';
         hash = (typeof hash === 'string' && hash.length >= 6) ? hash : fallbackHash;
 
         const img = await blurhash.getImageDataAsImageWithOnloadPromise(
