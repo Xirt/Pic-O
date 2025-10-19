@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 use Carbon\Carbon;
 use App\Models\Photo;
@@ -43,7 +44,7 @@ class ProcessPhotoJob implements ShouldQueue
      * Process a photo for later use
      */
     public function handle(PhotoService $photoService): void
-    {
+    {  
         Log::channel(self::LOG_CHANNEL)->info("Processing photo: $this->relativePath");
 
         if (!file_exists($this->path) || !is_readable($this->path))
@@ -54,7 +55,7 @@ class ProcessPhotoJob implements ShouldQueue
 
         // Gather photo metadata
         $dims = @getimagesize($this->path);
-        $metadata = array_merge($this->getEXIFData($filemtime($this->path)), [
+        $metadata = array_merge($this->getEXIFData(filemtime($this->path)), [
             'size' => filesize($this->path),
         ]);
 

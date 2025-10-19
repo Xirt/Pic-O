@@ -70,7 +70,7 @@ class TraverseFolderJob implements ShouldQueue
     private function scanSubdirectories(int $folderId, array $ignorePatterns): void
     {
         $subfolders = collect(File::directories($this->path))
-            ->filter(function ($subfolder) use ($ignorePatterns, $this) {
+            ->filter(function ($subfolder) use ($ignorePatterns) {
                 $relative = $this->getRelativePath($subfolder);
                 return !$this->isIgnored($relative, $ignorePatterns);
             });
@@ -102,7 +102,7 @@ class TraverseFolderJob implements ShouldQueue
     {
         $foundFilenames = [];
         $files = collect(File::files($this->path))
-            ->filter(function ($file) use ($ignorePatterns, $this) {
+            ->filter(function ($file) use ($ignorePatterns) {
                 $relative = $this->getRelativePath($file->getPathname());
                 return !$this->isIgnored($relative, $ignorePatterns);
             });
@@ -114,10 +114,11 @@ class TraverseFolderJob implements ShouldQueue
             $fileName    = $file->getFileName();
             $fileAbsPath = $file->getPathname();
             $fileRelPath = $this->getRelativePath($fileAbsPath);
+            $fileUpdate  = Carbon::createFromTimestamp(filemtime($fileAbsPath));
 
             // Skip unchanged files
             $photo = $knownPhotos->get($fileName);
-            if ($photo && $photo->updated_at?->timestamp > filemtime($fileAbsPath))
+            if ($photo && $fileUpdate->gt($photo->updated_at))
             {
                 Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
                 continue;
