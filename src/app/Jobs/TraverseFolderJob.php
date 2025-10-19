@@ -70,8 +70,8 @@ class TraverseFolderJob implements ShouldQueue
     private function scanSubdirectories(int $folderId, array $ignorePatterns): void
     {
         $subfolders = collect(File::directories($this->path))
-            ->filter(function ($subfolder) use ($ignorePatterns) {
-                $relative = str_replace(resource_path() . DIRECTORY_SEPARATOR, '', $subfolder);
+            ->filter(function ($subfolder) use ($ignorePatterns, $this) {
+                $relative = $this->getRelativePath($subfolder);
                 return !$this->isIgnored($relative, $ignorePatterns);
             });
 
@@ -102,8 +102,8 @@ class TraverseFolderJob implements ShouldQueue
     {
         $foundFilenames = [];
         $files = collect(File::files($this->path))
-            ->filter(function ($file) use ($ignorePatterns) {
-                $relative = str_replace(resource_path() . DIRECTORY_SEPARATOR, '', $file->getPathname());
+            ->filter(function ($file) use ($ignorePatterns, $this) {
+                $relative = $this->getRelativePath($file->getPathname());
                 return !$this->isIgnored($relative, $ignorePatterns);
             });
 
