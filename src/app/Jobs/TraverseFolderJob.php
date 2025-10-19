@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 
 use App\Jobs\ProcessPhotoJob;
 use App\Models\Folder;
@@ -118,7 +119,7 @@ class TraverseFolderJob implements ShouldQueue
 
             // Skip unchanged files
             $photo = $knownPhotos->get($fileName);
-            if ($photo && $fileUpdate->gt($photo->updated_at))
+            if ($photo && $fileUpdate->lte($photo->updated_at))
             {
                 Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
                 continue;
