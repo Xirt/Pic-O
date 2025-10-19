@@ -108,31 +108,35 @@ class TraverseFolderJob implements ShouldQueue
                 return !$this->isIgnored($relative, $ignorePatterns);
             });
 
-        // Scan found files
-        $knownPhotos = $this->getKnownPhotos($folderId);
-        foreach ($files as $file)
+        if ($files)
         {
-            $fileName    = $file->getFileName();
-            $fileAbsPath = $file->getPathname();
-            $fileRelPath = $this->getRelativePath($fileAbsPath);
-            $fileUpdate  = Carbon::createFromTimestamp(filemtime($fileAbsPath));
-
-            // Skip unchanged files
-            $photo = $knownPhotos->get($fileName);
-            if ($photo && $fileUpdate->lte($photo->updated_at))
+            $knownPhotos = $this->getKnownPhotos($folderId);
+            foreach ($files as $file)
             {
-                Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
-                continue;
-            }
+                $fileName    = $file->getFileName();
+                $fileAbsPath = $file->getPathname();
+                $fileRelPath = $this->getRelativePath($fileAbsPath);
+                $fileUpdate  = Carbon::createFromTimestamp(filemtime($fileAbsPath));
 
-            // Process relevant files
-            $extension = Str::lower($file->getExtension());
-            if (in_array($extension, self::PHOTO_EXTENSIONS))
-            {
-                Log::channel(self::LOG_CHANNEL)->info("Requesting photo scan: $fileRelPath");
-                ProcessPhotoJob::dispatch($folderId, $fileAbsPath)->onQueue('photos');
+                // Skip unchanged files
+                if ($photo = $knownPhotos->get($fileName))
+                {
+                    $foundFilenames[] = $fileName;
 
-                $foundFilenames[] = $fileName;
+                    if ($fileUpdate->lte($photo->updated_at))
+                    {
+                        Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
+                        continue;
+                    }
+                }
+
+                // Process relevant files
+                $extension = Str::lower($file->getExtension());
+                if (in_array($extension, self::PHOTO_EXTENSIONS))
+                {
+                    Log::channel(self::LOG_CHANNEL)->info("Requesting photo scan: $fileRelPath");
+                    ProcessPhotoJob::dispatch($folderId, $fileAbsPath)->onQueue('photos');
+                }
             }
         }
 
