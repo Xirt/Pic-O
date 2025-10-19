@@ -121,9 +121,17 @@ class Timeline {
 
         }
 
-        photoGroup.forEach(async (photo) => {
-            this.grid.add(await GridItemFactory.photo(photo, false), entries.length == 1);
-        });
+        for (const photo of [...photoGroup]) {
+
+            const gridItem = await GridItemFactory.photo(photo, false);
+            this.grid.add(gridItem, entries.length === 1);
+
+            const photoIndex = photoGroup.indexOf(photo);
+            if (photoIndex > -1) {
+                photoGroup.splice(photoIndex, 1);
+            }
+
+        }
 
     }
 
