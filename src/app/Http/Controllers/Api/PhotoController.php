@@ -35,7 +35,7 @@ class PhotoController extends Controller
         $this->authorize('view', $album);
 
         $photos = $album->photos()
-            ->orderBy('taken_at', 'desc')
+            ->orderBy('taken_at', 'asc')
             ->paginate(50);
 
         return PhotoResource::collection($photos);
@@ -50,7 +50,7 @@ class PhotoController extends Controller
         $this->authorize('view', $folder);
 
         $photos = $folder->photos()
-            ->orderBy('taken_at', 'desc')
+            ->orderBy('taken_at', 'asc')
             ->paginate(50);
 
         return PhotoResource::collection($photos);

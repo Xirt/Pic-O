@@ -87,7 +87,7 @@ class ProcessPhotoJob implements ShouldQueue
         }
 
         // Attempt to retrieve EXIF data
-        $exif = @exif_read_data($this->path, 'IFD0');
+        $exif = @exif_read_data($this->path);
         if ($exif === false)
         {
             return [];
@@ -101,7 +101,7 @@ class ProcessPhotoJob implements ShouldQueue
             'iso'           => $exif['ISOSpeedRatings'] ?? null,
             'focal_length'  => $this->interpretValue($exif['FocalLength'] ?? null),
             'exposure_time' => $this->interpretValue($exif['ExposureTime'] ?? null),
-            'taken_at'      => Carbon::createFromTimestamp($fileModifiedTime),
+            'taken_at'      => $this->getTakenAt($exif, Carbon::createFromTimestamp($fileModifiedTime)),
         ];
 
         // Attempt to determine shutter speed
@@ -111,17 +111,6 @@ class ProcessPhotoJob implements ShouldQueue
             if (is_numeric($apex)) {
                 $metadata['shutter_speed'] = 1 / pow(2, (float) $apex);
             }
-        }
-
-        // Fallback for 'taken at'
-        if (!empty($exif['DateTime']))
-        {
-            $dateString = str_replace(':', '-', substr($exif['DateTime'], 0, 10)) . substr($exif['DateTime'], 10);
-
-            try
-            {
-                $metadata['taken_at'] = Carbon::parse($dateString, 'UTC');
-            } catch (\Exception $e) {}
         }
 
         // Formatting for focal length (in mm)
@@ -146,6 +135,28 @@ class ProcessPhotoJob implements ShouldQueue
 
         return $metadata;
     }
+	
+	
+	/**
+	 * Checks various EXIF values to determine date/time taken
+	 */
+	private function getTakenAt(array $exif, Carbon $fallback): Carbon
+	{
+		$dateTaken = $exif['DateTimeOriginal'] ?? $exif['DateTimeDigitized'] ?? $exif['DateTime'] ?? null;
+
+		if ($dateTaken && strlen($dateTaken) >= 10)
+		{
+			$dateString = str_replace(':', '-', substr($dateTaken, 0, 10)) . substr($dateTaken, 10);
+
+			try
+			{
+				return Carbon::parse($dateString, 'UTC');
+			} catch (\Exception $e) {}
+		}
+		
+		return $fallback;
+	}
+	
 
     /**
      * Interprets a given EXIF value based on its specific format
