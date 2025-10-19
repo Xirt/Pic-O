@@ -5,7 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\http\Request;
+use Illuminate\Support\Facades\Request;
 
 use App\Models\Setting;
 use App\Policies\AdminPolicy;
