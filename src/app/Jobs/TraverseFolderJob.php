@@ -117,7 +117,7 @@ class TraverseFolderJob implements ShouldQueue
 
             // Skip unchanged files
             $photo = $knownPhotos->get($fileName);
-            if ($photo && $photo->updated_at->timestamp > filemtime($fileAbsPath))
+            if ($photo && $photo->updated_at?->timestamp > filemtime($fileAbsPath))
             {
                 Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
                 continue;
