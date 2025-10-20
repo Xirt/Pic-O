@@ -6,34 +6,45 @@
 
 <div class="container-lg px-4">
 
-    <div class="mb-3 ms-1">
-        <h1 class="mb-0">Administration</h1>
-    </div>
+    <h1 class="bs-1 mb-4">Administration</h1>
 
-    <div class="d-flex align-items-start w-100 h-100 ">
+    <div class="d-flex flex-column flex-lg-row w-100 h-100">
 
-        <div class="nav flex-column nav-pills me-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-            <button class="nav-link mb-2 px-5 active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</button>
-            <button class="nav-link mb-2 px-5" id="v-pills-users-tab" data-bs-toggle="pill" data-bs-target="#v-pills-users" type="button" role="tab" aria-controls="v-pills-users" aria-selected="false">Users</button>
-            <button class="nav-link mb-2 px-5" id="v-pills-scanner-tab" data-bs-toggle="pill" data-bs-target="#v-pills-scanner" type="button" role="tab" aria-controls="v-pills-scanner" aria-selected="false">Scanner</button>
-            <button class="nav-link px-5" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Config</button>
-        </div>
+        <ul class="nav nav-tabs flex-row flex-lg-column w-100 w-lg-auto mb-3" id="adminTab" role="tablist">
 
-        <div class="tab-content w-100 p-2 border-start" id="v-pills-tabContent">
+            <li class="nav-item flex-fill text-center" role="presentation">
+                <button class="nav-link w-100 text-dark active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+            </li>
 
-            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
+            <li class="nav-item flex-fill text-center" role="presentation">
+                <button class="nav-link w-100 text-dark" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false">Users</button>
+            </li>
+
+            <li class="nav-item flex-fill text-center" role="presentation">
+                <button class="nav-link w-100 text-dark" id="scanner-tab" data-bs-toggle="tab" data-bs-target="#scanner" type="button" role="tab" aria-controls="scanner" aria-selected="false">Scanner</button>
+            </li>
+
+            <li class="nav-item flex-fill text-center" role="presentation">
+                <button class="nav-link w-100 text-dark" id="config-tab" data-bs-toggle="tab" data-bs-target="#config" type="button" role="tab" aria-controls="config" aria-selected="false">Config</button>
+            </li>
+
+        </ul>
+
+        <div class="tab-content flex-grow-1 pt-3 pt-lg-0 ps-lg-3">
+
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                 Home
             </div>
 
-            <div class="tab-pane fade" id="v-pills-users" role="tabpanel" aria-labelledby="v-pills-users-tab" tabindex="0">
+            <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab" tabindex="0">
                 @include('partials.section_users')
             </div>
 
-            <div class="tab-pane fade" id="v-pills-scanner" role="tabpanel" aria-labelledby="v-pills-scanner-tab" tabindex="0">
+            <div class="tab-pane fade" id="scanner" role="tabpanel" aria-labelledby="scanner-tab" tabindex="0">
                 @include('partials.section_scanner')
             </div>
 
-            <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" tabindex="0">
+            <div class="tab-pane fade" id="config" role="tabpanel" aria-labelledby="messages-tab" tabindex="0">
                 @include('partials.section_settings')
             </div>
 

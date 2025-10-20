@@ -10,11 +10,10 @@
         </button>
     </div>
 
-    <table class="table table-striped table-hover align-middle">
+    <table class="table table-striped table-hover align-middle small">
         <thead>
             <tr>
-                <th scope="col" class="col-id text-center">#</th>
-                <th scope="col">Name</th>
+                <th scope="col" class="d-none d-sm-table-cell">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col" class="col-role text-center">Role</th>
                 <th scope="col" class="col-actions text-end">&nbsp;</th>
@@ -23,18 +22,21 @@
         <tbody>
             @forelse ($users as $user)
                 <tr>
-                    <th scope="row" class="text-center">{{ $user->id }}</th>
-                    <td>{{ $user->name }}</td>
+                    <td class="d-none d-sm-table-cell">{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td class="text-center">{{ ucfirst($user->role->value) }}</td>
                     <td class="text-end">
+
                         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-modify-user" data-user-id="{{ $user->id }}">
-                            <i class="bi bi-pencil me-1"></i> Modify
+                            <i class="bi bi-pencil m-0 me-sm-1"></i>
+                            <span class="d-none d-sm-inline">Modify</span>
                         </button>
 
                         <button type="button" class="btn btn-sm btn-secondary" onclick="confirmUserDelete({{ $user->id }})">
-                            <i class="bi bi-trash me-1"></i> Delete
+                            <i class="bi bi-trash m-0 me-sm-1"></i>
+                            <span class="d-none d-sm-inline">Delete</span>
                         </button>
+
                     </td>
                 </tr>
             @empty
@@ -61,8 +63,8 @@
             @csrf
 
                 <div class="mb-1 row align-items-center">
-                    <label for="userName" class="col-4 col-form-label">Display name</label>
-                    <div class="col-8">
+                    <label for="userName" class="col-sm-3 col-form-label">Display name</label>
+                    <div class="col-sm-9">
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-fonts"></i>
@@ -73,8 +75,8 @@
                 </div>
 
                 <div class="mb-1 row align-items-center">
-                    <label for="userEmail" class="col-4 col-form-label">Email address</label>
-                    <div class="col-8">
+                    <label for="userEmail" class="col-sm-3 col-form-label">Email address</label>
+                    <div class="col-sm-9">
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-fonts"></i>
@@ -85,8 +87,8 @@
                 </div>
 
                 <div class="mb-1 row align-items-center">
-                    <label for="userPassword" class="col-4 col-form-label">Password</label>
-                    <div class="col-8">
+                    <label for="userPassword" class="col-sm-3 col-form-label">Password</label>
+                    <div class="col-sm-9">
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-key"></i>
@@ -97,8 +99,8 @@
                 </div>
 
                 <div class="mb-1 row align-items-center">
-                    <label for="userPasswordConfirm" class="col-4 col-form-label">Password (check)</label>
-                    <div class="col-8">
+                    <label for="userPasswordConfirm" class="col-sm-3 col-form-label">Password</label>
+                    <div class="col-sm-9">
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-key"></i>
@@ -109,12 +111,17 @@
                 </div>
 
                 <div class="mb-1 row align-items-center">
-                    <label for="userRole" class="col-4 col-form-label">Role</label>
-                    <div class="col-4">
-                        <select class="form-select" id="userRole" name="role" required>
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
+                    <label for="userRole" class="col-sm-3 col-form-label">Role</label>
+                    <div class="col-sm-5">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-list"></i>
+                            </span>
+                            <select class="form-select" id="userRole" name="role" required>
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -123,6 +130,7 @@
                 <hr />
 
                 <div class="d-flex justify-content-center mt-4 mb-3">
+
                     <button type="submit" class="btn btn-primary w-50 mx-4">
                         <i class="bi bi-person-plus me-1"></i> Create
                     </button>
@@ -130,6 +138,7 @@
                     <button type="button" class="btn btn-secondary w-50 mx-4" data-bs-dismiss="offcanvas">
                         <i class="bi bi-x-lg me-1"></i> Cancel
                     </button>
+
                 </div>
 
             </form>
@@ -155,8 +164,8 @@
                 @method('PUT')
 
                 <div class="mb-1 row align-items-center">
-                    <label for="modifyUserName" class="col-4 col-form-label">Display name</label>
-                    <div class="col-8">
+                    <label for="modifyUserName" class="col-sm-3 col-form-label">Display name</label>
+                    <div class="col-sm-9">
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-fonts"></i>
@@ -167,8 +176,8 @@
                 </div>
 
                 <div class="mb-1 row align-items-center">
-                    <label for="modifyUserEmail" class="col-4 col-form-label">Email address</label>
-                    <div class="col-8">
+                    <label for="modifyUserEmail" class="col-sm-3 col-form-label">Email address</label>
+                    <div class="col-sm-9">
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-envelope"></i>
@@ -179,12 +188,17 @@
                 </div>
 
                 <div class="mb-1 row align-items-center">
-                    <label for="modifyUserRole" class="col-4 col-form-label">Role</label>
-                    <div class="col-4">
-                        <select class="form-select" id="modifyUserRole" name="role" required>
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
+                    <label for="modifyUserRole" class="col-sm-3 col-form-label">Role</label>
+                    <div class="col-sm-5">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-list"></i>
+                            </span>
+                            <select class="form-select" id="modifyUserRole" name="role" required>
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -203,6 +217,7 @@
                     <button type="button" class="btn btn-secondary w-50 mx-4" data-bs-dismiss="offcanvas">
                         <i class="bi bi-x-lg me-1"></i> Cancel
                     </button>
+
                 </div>
 
             </form>

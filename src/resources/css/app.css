@@ -476,11 +476,47 @@ footer {
 /**
  * Admin page
  */
+ @media (min-width: 992px) {
+    .w-lg-auto {
+        width: auto !important;
+    }
+
+    .w-lg-m500 {
+         max-width: 500px;
+     }
+
+    .nav-tabs {
+        border-bottom: none !important;
+        border-right: 1px solid #dee2e6;
+    }
+
+    .nav-tabs .nav-item {
+        flex: 0 0 auto !important;
+        width: 200px;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+        border-left: 4px solid transparent;
+        border-radius: 0;
+        margin-right: -1px;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #f8f9fa;
+        border-left-color: var(--bs-primary);
+        font-weight: 600 !important;
+        color: #0d6efd;
+    }
+
+}
+
 .progress-container {
-    float: right;   
+    float: right;
     overflow: hidden;
     max-height: 0;
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
     opacity: 0;
     transition:
         opacity 1s ease,

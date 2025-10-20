@@ -27,7 +27,7 @@
 
         </div>
 
-        <div class="flex-grow-1 ms-5">
+        <div class="flex-grow-1 ms-5 small">
 
             <div class="job-progress position-relative my-3" data-job-type="TraverseFolderJob">
                 <span class="job-count"></span> folder(s) remaining
