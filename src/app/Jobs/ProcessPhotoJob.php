@@ -55,14 +55,16 @@ class ProcessPhotoJob implements ShouldQueue
 
         // Gather photo metadata
         $dims = @getimagesize($this->path);
-        $metadata = array_merge($this->getEXIFData(filemtime($this->path)), [
-            'size' => filesize($this->path),
-        ]);
+        $metadata = array_merge([
+            'size'     => @filesize($this->path),
+            'taken_at' => Carbon::createFromTimestamp(@filectime($this->path))
+        ], $this->getEXIFData());
 
         // Store the photo
         $photo = Photo::updateOrCreate([
             'folder_id' => $this->folderId,
             'filename'  => $this->filename,
+            'blurhash'  => $photoService->blurhash($photo),
         ], array_merge([
             'height'    => $dims ? $dims[1] : null,
             'width'     => $dims ? $dims[0] : null,
@@ -70,8 +72,6 @@ class ProcessPhotoJob implements ShouldQueue
 
         // Attempt to create thumbnails
         $photoService->thumbnail($photo);
-        $photo->blurhash = $photoService->blurhash($photo);
-        $photo->save();
 
         Log::channel(self::LOG_CHANNEL)->info("Processed: $this->relativePath");
     }
@@ -79,16 +79,16 @@ class ProcessPhotoJob implements ShouldQueue
     /**
      * Returns all retrieved EXIF metadata of the current photo
      */
-    private function getEXIFData(int $fileModifiedTime): array
+    private function getEXIFData(): array
     {
-        if (!in_array(strtolower(pathinfo($this->filename, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'tiff']))
+        $extension = strtolower(pathinfo($this->filename, PATHINFO_EXTENSION));
+        if (!in_array($extension, ['jpg', 'jpeg', 'tiff']))
         {
             return [];
         }
 
         // Attempt to retrieve EXIF data
-        $exif = @exif_read_data($this->path);
-        if ($exif === false)
+        if (!$exif = @exif_read_data($this->path))
         {
             return [];
         }
@@ -101,7 +101,7 @@ class ProcessPhotoJob implements ShouldQueue
             'iso'           => $exif['ISOSpeedRatings'] ?? null,
             'focal_length'  => $this->interpretValue($exif['FocalLength'] ?? null),
             'exposure_time' => $this->interpretValue($exif['ExposureTime'] ?? null),
-            'taken_at'      => $this->getTakenAt($exif, Carbon::createFromTimestamp($fileModifiedTime)),
+            'taken_at'      => $this->getTakenAt($exif),
         ];
 
         // Attempt to determine shutter speed
@@ -140,7 +140,7 @@ class ProcessPhotoJob implements ShouldQueue
 	/**
 	 * Checks various EXIF values to determine date/time taken
 	 */
-	private function getTakenAt(array $exif, Carbon $fallback): Carbon
+	private function getTakenAt(array $exif): Carbon
 	{
 		$dateTaken = $exif['DateTimeOriginal'] ?? $exif['DateTimeDigitized'] ?? $exif['DateTime'] ?? null;
 
@@ -154,7 +154,7 @@ class ProcessPhotoJob implements ShouldQueue
 			} catch (\Exception $e) {}
 		}
 		
-		return $fallback;
+		return Carbon::createFromTimestamp(@filectime($this->path));
 	}
 	
 
