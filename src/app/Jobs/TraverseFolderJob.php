@@ -110,7 +110,7 @@ class TraverseFolderJob implements ShouldQueue
 
         if ($files)
         {
-            $knownPhotos = $this->getKnownPhotos($folderId);
+            $existingPhotos = $this->getExistingPhotos($folderId);
             foreach ($files as $file)
             {
                 $fileName    = $file->getFileName();
@@ -119,10 +119,11 @@ class TraverseFolderJob implements ShouldQueue
                 $fileUpdate  = Carbon::createFromTimestamp(filemtime($fileAbsPath));
 
                 // Skip unchanged files
-                if ($photo = $knownPhotos->get($fileName))
+                if ($photo = $existingPhotos->get($fileName))
                 {
-                    $foundFilenames[] = $fileName;
+                    unset($existingPhotos[$fileName];
 
+                    Log::channel(self::LOG_CHANNEL)->info("Time check: $fileUpdate vs. $photo->updated_at");
                     if ($fileUpdate->lte($photo->updated_at))
                     {
                         Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
@@ -141,12 +142,13 @@ class TraverseFolderJob implements ShouldQueue
         }
 
         // Remove obsolete photo entries
-        Photo::where('folder_id', $folderId)
-            ->whereNotIn('filename', $foundFilenames)
-            ->delete();
+        if ($existingPhotos->isNotEmpty())
+        {
+            Photo::destroy($existingPhotos->pluck('id'));
+        }
     }
     
-    protected function getKnownPhotos(int $folderId): Collection
+    protected function getExistingPhotos(int $folderId): Collection
     {
         return Photo::where('folder_id', $folderId)
             ->get()
