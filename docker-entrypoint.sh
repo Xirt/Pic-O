@@ -38,7 +38,7 @@ fi
 # -----------------------------------------------------------------------------
 # 0. Set PHP Memory limit
 # -----------------------------------------------------------------------------
-PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-256M}"
+PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-512M}"
 echo "memory_limit = ${PHP_MEMORY_LIMIT}" > /usr/local/etc/php/conf.d/99-memory-limit.ini
 echo "Setting PHP Memory limit to $PHP_MEMORY_LIMIT"
 
