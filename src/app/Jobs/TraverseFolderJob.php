@@ -101,44 +101,42 @@ class TraverseFolderJob implements ShouldQueue
 
     private function scanFiles(int $folderId, array $ignorePatterns): void
     {
-        $foundFilenames = [];
-        $files = collect(File::files($this->path))
-            ->filter(function ($file) use ($ignorePatterns) {
-                $relative = $this->getRelativePath($file->getPathname());
-                return !$this->isIgnored($relative, $ignorePatterns);
-            });
+        $files = [];
+        foreach (self::PHOTO_EXTENSIONS as $ext)
+        {
+            $files = array_merge($files, glob($this->path . '/*' . $ext));
+        }
 
-        if ($files)
+        if (count($files))
         {
             $existingPhotos = $this->getExistingPhotos($folderId);
-            foreach ($files as $file)
+        }
+
+        foreach ($files as $fileAbsPath)
+        {
+            $fileRelPath = $this->getRelativePath($fileAbsPath);
+            if ($this->isIgnored($fileRelPath, $ignorePatterns))
             {
-                $fileName    = $file->getFileName();
-                $fileAbsPath = $file->getPathname();
-                $fileRelPath = $this->getRelativePath($fileAbsPath);
+                continue;
+            }
+
+            $fileName = basename($fileAbsPath);
+            if ($photo = $existingPhotos->get($fileName))
+            {
+                unset($existingPhotos[$fileName]);
+
                 $fileUpdate  = Carbon::createFromTimestamp(filemtime($fileAbsPath));
-
-                // Skip unchanged files
-                if ($photo = $existingPhotos->get($fileName))
+                Log::channel(self::LOG_CHANNEL)->info("Change check: $fileUpdate vs. $photo->updated_at");
+                if ($fileUpdate->lte($photo->updated_at))
                 {
-                    unset($existingPhotos[$fileName];
-
-                    Log::channel(self::LOG_CHANNEL)->info("Time check: $fileUpdate vs. $photo->updated_at");
-                    if ($fileUpdate->lte($photo->updated_at))
-                    {
-                        Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
-                        continue;
-                    }
-                }
-
-                // Process relevant files
-                $extension = Str::lower($file->getExtension());
-                if (in_array($extension, self::PHOTO_EXTENSIONS))
-                {
-                    Log::channel(self::LOG_CHANNEL)->info("Requesting photo scan: $fileRelPath");
-                    ProcessPhotoJob::dispatch($folderId, $fileAbsPath)->onQueue('photos');
+                    Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
+                    continue;
                 }
             }
+
+            // Process file (in separate job)
+            Log::channel(self::LOG_CHANNEL)->info("Requesting photo scan: $fileRelPath");
+            ProcessPhotoJob::dispatch($folderId, $fileAbsPath)->onQueue('photos');
         }
 
         // Remove obsolete photo entries
