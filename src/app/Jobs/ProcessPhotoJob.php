@@ -64,7 +64,6 @@ class ProcessPhotoJob implements ShouldQueue
         $photo = Photo::updateOrCreate([
             'folder_id' => $this->folderId,
             'filename'  => $this->filename,
-            'blurhash'  => $photoService->blurhash($photo),
         ], array_merge([
             'height'    => $dims ? $dims[1] : null,
             'width'     => $dims ? $dims[0] : null,
@@ -72,6 +71,8 @@ class ProcessPhotoJob implements ShouldQueue
 
         // Attempt to create thumbnails
         $photoService->thumbnail($photo);
+        $photo->blurhash = $photoService->blurhash($photo);
+        $photo->save();
 
         Log::channel(self::LOG_CHANNEL)->info("Processed: $this->relativePath");
     }

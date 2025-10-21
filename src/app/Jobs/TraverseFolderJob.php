@@ -101,17 +101,13 @@ class TraverseFolderJob implements ShouldQueue
 
     private function scanFiles(int $folderId, array $ignorePatterns): void
     {
+        $existingPhotos = $this->getExistingPhotos($folderId);
+
         $files = [];
         foreach (self::PHOTO_EXTENSIONS as $ext)
         {
             $files = array_merge($files, glob($this->path . '/*' . $ext));
         }
-
-        if (count($files))
-        {
-            $existingPhotos = $this->getExistingPhotos($folderId);
-        }
-
         foreach ($files as $fileAbsPath)
         {
             $fileRelPath = $this->getRelativePath($fileAbsPath);
