@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Middleware\OptionalAuth;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\{
     PhotoController,
     FolderController,
@@ -11,6 +12,11 @@ use App\Http\Controllers\{
 };
 
 Route::get('/', function () {
+
+    if (Auth::check()) {
+        return redirect('/home');
+    }
+
     return redirect()->route('login');
 });
 
