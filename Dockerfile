@@ -18,12 +18,13 @@ RUN apt-get update && apt-get install -y \
         libzip-dev \
         libssl-dev \
         mariadb-client \
+         postgresql-client \
         libmagickwand-dev \
         libmagickcore-dev \
         build-essential \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd \
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql mbstring exif pcntl bcmath gd \
     && apt-get purge -y build-essential \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
