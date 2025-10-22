@@ -6,26 +6,26 @@ FROM php:8.2-fpm
 # 1. Install dependencies
 # -----------------------------------------------------------------------------
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    zip \
-    unzip \
-    nginx \
-    supervisor \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    libssl-dev \
-    libpq-dev \
-    mariadb-client \
-    postgresql-client \
-    && docker-php-ext-configure gd \
-        --with-freetype \
-        --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql mbstring exif pcntl bcmath gd \
+        git \
+        curl \
+        zip \
+        unzip \
+        nginx \
+        supervisor \
+        libpng-dev \
+        libonig-dev \
+        libxml2-dev \
+        libzip-dev \
+        libssl-dev \
+        mariadb-client \
+        libmagickwand-dev \
+        libmagickcore-dev \
+        build-essential \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd \
+    && apt-get purge -y build-essential \
+    && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
 # -----------------------------------------------------------------------------

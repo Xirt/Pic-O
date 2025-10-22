@@ -4,7 +4,8 @@ namespace App\Services;
 
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -78,7 +79,7 @@ class PhotoService
             return $image;
         }
 
-        $manager = new ImageManager(new Driver());
+        $manager = $this->getImageManager();
         $image = $manager->read($fullPath);
 
         if ($image->width() > $maxDimensions || $image->height() > $maxDimensions) {
@@ -111,7 +112,7 @@ class PhotoService
             count($fullPaths)
         );
 
-        $manager = new ImageManager(new Driver());
+        $manager = $this->getImageManager();
         $canvas = $manager->create(self::CANVAS_WIDTH, self::CANVAS_HEIGHT)->fill(self::CANVAS_COLOR);
 
 		// TODO :: Make this configurable
@@ -213,7 +214,7 @@ class PhotoService
      */
     private function pixels(Photo $photo): array
     {
-        $manager  = new ImageManager(new Driver());
+        $manager  = $this->getImageManager();
         $fullPath = $this->getFilePath($photo);
 
         $image  = $manager->read($fullPath);
@@ -297,6 +298,15 @@ class PhotoService
         }
 
         return true;
+    }
+
+    /**
+     * Returns image manager based on available drivers
+     */
+    private function getImageManager(): ImageManager
+    {
+        $driver = class_exists('Imagick') ? new ImagickDriver() : new GdDriver();
+        return new ImageManager($driver);
     }
 
 }
