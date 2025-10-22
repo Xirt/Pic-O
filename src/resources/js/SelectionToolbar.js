@@ -73,6 +73,11 @@ export const SelectionToolbar = (() => {
 
     function refresh() {
 
+        const singleActionButtons = toolbar.querySelectorAll('.select-action-single');
+        singleActionButtons.forEach((btn) => {
+            btn.disabled = selectedCount != 1;
+        });
+
         const actionButtons = toolbar.querySelectorAll('.select-action');
         actionButtons.forEach((btn) => {
             btn.disabled = selectedCount <= 0;
