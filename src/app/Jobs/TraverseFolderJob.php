@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use FilesystemIterator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,7 +32,7 @@ class TraverseFolderJob implements ShouldQueue
 
     private const LOG_CHANNEL = 'scanner';
 
-    private const PHOTO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+    private const PHOTO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
     /**
      * Constructor
@@ -101,13 +102,23 @@ class TraverseFolderJob implements ShouldQueue
 
     private function scanFiles(int $folderId, array $ignorePatterns): void
     {
+        $files = [];
         $existingPhotos = $this->getExistingPhotos($folderId);
 
-        $files = [];
-        foreach (self::PHOTO_EXTENSIONS as $ext)
+        // Retrieve relevant files
+        $iterator = new FilesystemIterator($this->path, FilesystemIterator::SKIP_DOTS);
+        foreach ($iterator as $fileInfo)
         {
-            $files = array_merge($files, glob($this->path . '/*' . $ext));
+            if ($fileInfo->isFile())
+            {
+                $ext = Str::lower($fileInfo->getExtension());
+                if (in_array($ext, self::PHOTO_EXTENSIONS, true)) {
+                    $files[] = $fileInfo->getPathname();
+                }
+            }
         }
+
+        // Check file processing needs
         foreach ($files as $fileAbsPath)
         {
             $fileRelPath = $this->getRelativePath($fileAbsPath);
@@ -121,9 +132,9 @@ class TraverseFolderJob implements ShouldQueue
             {
                 unset($existingPhotos[$fileName]);
 
-                $fileUpdate  = Carbon::createFromTimestamp(filemtime($fileAbsPath));
-                Log::channel(self::LOG_CHANNEL)->info("Change check: $fileUpdate vs. $photo->updated_at");
-                if ($fileUpdate->lte($photo->updated_at))
+                $fileTime = @filemtime($fileAbsPath);
+                $fileUpdate = Carbon::createFromTimestamp($fileTime);
+                if ($fileTime !== false && $fileUpdate->lte($photo->updated_at))
                 {
                     Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
                     continue;

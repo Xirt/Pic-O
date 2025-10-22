@@ -95,8 +95,8 @@ class ProcessPhotoJob implements ShouldQueue
         }
 
         $metadata = [
-            'camera'        => $exif['Model'] ?? null,
-            'make'          => $exif['Make'] ?? null,
+            'camera'        => Str::trim($exif['Model']) ?? null,
+            'make'          => Str::trim($exif['Make']) ?? null,
             'orientation'   => $exif['Orientation'] ?? null,
             'aperture'      => $exif['COMPUTED']['ApertureFNumber'] ?? null,
             'iso'           => $exif['ISOSpeedRatings'] ?? null,
@@ -136,28 +136,49 @@ class ProcessPhotoJob implements ShouldQueue
 
         return $metadata;
     }
-	
-	
+
+
 	/**
 	 * Checks various EXIF values to determine date/time taken
 	 */
 	private function getTakenAt(array $exif): Carbon
 	{
-		$dateTaken = $exif['DateTimeOriginal'] ?? $exif['DateTimeDigitized'] ?? $exif['DateTime'] ?? null;
-
-		if ($dateTaken && strlen($dateTaken) >= 10)
-		{
-			$dateString = str_replace(':', '-', substr($dateTaken, 0, 10)) . substr($dateTaken, 10);
+        $candidates = ['DateTimeOriginal', 'DateTimeDigitized', 'CreateDate', 'ModifyDate'];
+        foreach ($candidates as $candidate)
+        {
+            if (empty($exif[$candidate]) || preg_match('/^0{4}:0{2}:0{2}/', $exif[$candidate]))
+            {
+                continue;
+            }
 
 			try
-			{
+            {
+                $dateString = preg_replace('/^(\d{4}):(\d{2}):(\d{2})/', '$1-$2-$3', $exif[$candidate]);
 				return Carbon::parse($dateString, 'UTC');
 			} catch (\Exception $e) {}
-		}
-		
-		return Carbon::createFromTimestamp(@filectime($this->path));
+
+        }
+
+        return $this->getBestKnownDate();
 	}
-	
+
+
+	/**
+	 * Fallback function to determine date/time taken
+	 */
+	private function getBestKnownDate(): Carbon
+    {
+        $ctime = @filectime($this->path);
+        $mtime = @filemtime($this->path);
+
+        if ($timestamp = $ctime && $ctime > 0 ? $ctime : ($mtime && $mtime > 0 ? $mtime : null))
+        {
+            return Carbon::createFromTimestamp($timestamp);
+        }
+
+        return Carbon::create(1, 1, 1, 0, 0, 0, 'UTC');
+    }
+
 
     /**
      * Interprets a given EXIF value based on its specific format
