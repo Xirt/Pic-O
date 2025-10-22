@@ -95,8 +95,8 @@ class ProcessPhotoJob implements ShouldQueue
         }
 
         $metadata = [
-            'camera'        => Str::trim($exif['Model']) ?? null,
-            'make'          => Str::trim($exif['Make']) ?? null,
+            'camera'        => $exif['Model'] ?? null,
+            'make'          => $exif['Make'] ?? null,
             'orientation'   => $exif['Orientation'] ?? null,
             'aperture'      => $exif['COMPUTED']['ApertureFNumber'] ?? null,
             'iso'           => $exif['ISOSpeedRatings'] ?? null,
@@ -104,6 +104,11 @@ class ProcessPhotoJob implements ShouldQueue
             'exposure_time' => $this->interpretValue($exif['ExposureTime'] ?? null),
             'taken_at'      => $this->getTakenAt($exif),
         ];
+
+        // Remove obsolete spaces
+        $metadata = array_map(function ($value) {
+            return is_string($value) ? Str::trim($value) : $value;
+        }, $metadata);
 
         // Attempt to determine shutter speed
         if (empty($exif['ExposureTime']) && !empty($exif['ShutterSpeedValue']))
