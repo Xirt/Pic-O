@@ -249,7 +249,7 @@ export const GridItemFactory = {
         card.appendChild(photoCount);
 
         const overlay = document.createElement('div');
-        overlay.className = 'card-img-overlay top bg-dark text-light fw-semibold p-2';
+        overlay.className = 'card-img-overlay top bg-dark text-light fw-semibold text-truncate p-2';
         overlay.textContent = album.name;
         card.appendChild(overlay);
 

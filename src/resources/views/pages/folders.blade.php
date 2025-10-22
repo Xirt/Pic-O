@@ -12,19 +12,23 @@
             <div class="toolbar text-end pe-1">
 
                 <button type="button" class="btn btn-sm btn-primary select-start">
-                    <i class="bi bi-check2-all"></i> Selection Mode
+                    <i class="bi bi-grid-3x3-gap-fill m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Selection Mode</span>
                 </button>
 
-                <button type="button" class="btn btn-sm btn-primary select-action mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-create-album" aria-controls="offcanvas-create-album">
-                    <i class="bi bi-stars"></i> Create album
+                <button type="button" class="btn btn-sm btn-primary select-action" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-create-album" aria-controls="offcanvas-create-album">
+                    <i class="bi bi-stars m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Create album</span>
                 </button>
 
                 <button type="button" class="btn btn-sm btn-primary select-action mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-update-album" aria-controls="offcanvas-update-album">
-                    <i class="bi bi-plus-lg"></i> Add to album
+                    <i class="bi bi-plus-lg m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Add to album</span>
                 </button>
 
                 <button type="button" class="btn btn-sm btn-secondary select-stop">
-                    <i class="bi bi-x-lg"></i> Cancel
+                    <i class="bi bi-x-diamond-fill m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Cancel</span>
                 </button>
 
             </div>

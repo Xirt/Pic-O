@@ -35,17 +35,20 @@
                         <li class="dropdown-header text-muted">Sort by</li>
                         <li>
                             <a class="dropdown-item selected" href="#" data-order="name">
-                                <i class="bi bi-check-lg me-1"></i> Name
+                                <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                                <span class="d-none d-sm-inline">Name</span>
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" data-order="created_at">
-                                <i class="bi bi-check-lg me-1"></i> Creation Date
+                                <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                                <span class="d-none d-sm-inline">Creation Date</span>
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" data-order="photos_count">
-                                <i class="bi bi-check-lg me-1"></i> Photo count
+                                <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                                <span class="d-none d-sm-inline">Photo count</span>
                             </a>
                         </li>
 
@@ -54,12 +57,14 @@
                         <li class="dropdown-header text-muted">Direction</li>
                         <li>
                             <a class="dropdown-item selected" href="#" data-direction="ASC">
-                                <i class="bi bi-check-lg me-1"></i> Ascending
+                                <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                                <span class="d-none d-sm-inline">Ascending</span>
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" data-direction="DESC">
-                                <i class="bi bi-check-lg me-1"></i> Descending
+                                <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                                <span class="d-none d-sm-inline">Descending</span>
                             </a>
                         </li>
 
@@ -68,23 +73,28 @@
                 </div>
 
                 <button type="button" class="btn btn-sm btn-primary flex-shrink-0 me-2 no-select" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-create-album" aria-controls="offcanvas-create-album">
-                    <i class="bi bi-stars"></i> Create album
+                    <i class="bi bi-stars m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Create album</span>
                 </button>
 
-                <button type="button" class="btn btn-sm btn-primary select-action">
-                    <i class="bi bi-pencil"></i> Modify
+                <button type="button" class="btn btn-sm btn-primary select-action-single" id="modifyButton">
+                    <i class="bi bi-pencil m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Modify</span>
                 </button>
 
-                <button type="button" class="btn btn-sm btn-primary select-action mx-2">
-                    <i class="bi bi-trash3-fill"></i> Remove
+                <button type="button" class="btn btn-sm btn-primary select-action mx-2" id="deleteButton">
+                    <i class="bi bi-trash3-fill m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Remove</span>
                 </button>
 
                 <button type="button" class="btn btn-sm btn-secondary flex-shrink-0 select-stop">
-                    <i class="bi bi-x-lg"></i> Cancel
+                    <i class="bi bi-x-lg m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Cancel</span>
                 </button>
 
                 <button type="button" class="btn btn-sm btn-primary flex-shrink-0 select-start">
-                    <i class="bi bi-check2-all"></i> Selection Mode
+                    <i class="bi bi-check2-all m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Selection Mode</span>
                 </button>
 
             </div>
@@ -244,7 +254,7 @@
             </div>
 
             <div class="offcanvas-body py-2 small">
-                Are you sure you want to delete this album? This action cannot be undone.
+                You're about to delete <span id="delCount"></span> item(s). This action cannot be undone. Continue?
             </div>
 
             <hr />

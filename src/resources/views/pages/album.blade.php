@@ -8,32 +8,36 @@
 
         <div class="d-flex align-items-center justify-content-between mb-2 ms-1">
 
-            <h1>
+            <a href="{{ route("albums.index") }}" class="text-start btn btn-sm btn-secondary no-share" aria-label="Back to albums">
+                <i class="bi bi-caret-left-fill"></i>
+            </a>
 
-                <a href="{{ route("albums.index") }}" class="btn btn-secondary m-1 mt-0 p-1 ps-2 no-share" style="aspect-ratio: 1 / 1;" aria-label="Back to albums">
-                    <i class="bi bi-caret-left-fill"></i>
-                </a>
+            <h1 class="flex-grow-1 text-truncate m-0 px-2 pb-1">
 
                 {{ $album->name }}
 
             </h1>
 
-            <div class="toolbar text-end pe-1 no-share">
+            <div class="toolbar flex-shrink-0 text-end pe-1 no-share">
 
-                <button type="button" class="btn btn-sm btn-primary no-select" id="shareButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-share-album" aria-controls="offcanvas-share-album">
-                    <i class="bi bi-share-fill"></i> Share
+                <button type="button" class="btn btn-sm btn-primary me-1 no-select" id="shareButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-share-album" aria-controls="offcanvas-share-album">
+                    <i class="bi bi-share-fill m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Share</span>
                 </button>
 
-                <button type="button" class="btn btn-sm btn-primary select-start">
-                    <i class="bi bi-check2-all"></i> Selection Mode
+                <button type="button" class="btn btn-sm btn-secondary select-start">
+                    <i class="bi bi-grid-3x3-gap-fill m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Selection Mode</span>
                 </button>
 
-                <button type="button" class="btn btn-sm btn-primary select-action mx-1" id="btn-remove-selection-multi" disabled>
-                    <i class="bi bi-trash3-fill"></i> Remove
+                <button type="button" class="btn btn-sm btn-primary me-1 select-action" id="btn-remove-selection-multi" disabled>
+                    <i class="bi bi-trash3-fill m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Remove</span>
                 </button>
 
                 <button type="button" class="btn btn-sm btn-secondary select-stop">
-                    <i class="bi bi-x-lg"></i> Cancel
+                    <i class="bi bi-x-diamond-fill m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Cancel</span>
                 </button>
 
             </div>

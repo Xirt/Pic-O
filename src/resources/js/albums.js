@@ -15,6 +15,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     const manager = new Albums();
     manager.init();
 
+    const modifyButton = document.getElementById('modifyButton');
+    modifyButton.addEventListener('click', async (e) => {
+
+        const card = document.querySelector('.card.selected');
+        manager.showModifyAlbum(card);
+
+        e.preventDefault();
+
+    });
+
+
+    const deleteButton = document.getElementById('deleteButton');
+    deleteButton.addEventListener('click', async (e) => {
+
+        const cards = document.querySelectorAll('.card.selected');
+        manager.showRemovalconfirmation(cards);
+
+        e.preventDefault();
+
+    });
+
     const createForm = document.getElementById('createAlbumForm');
     createForm.addEventListener('submit', async function (e) {
 
@@ -157,7 +178,15 @@ class Albums {
 
     }
 
-    showRemovalconfirmation(card) {
+    showRemovalconfirmation(cards) {
+
+        let cardArray = [cards];
+        if (cards instanceof NodeList) {
+            cardArray = Array.from(cards);
+        }
+
+        const countEl = document.getElementById('delCount');
+        countEl.textContent = cardArray.length;
 
         const offcanvas = openCanvas('offcanvas-remove-album');
 
@@ -166,12 +195,17 @@ class Albums {
 
             try {
 
-                 const url = route('api.albums.destroy', { album: card.getAttribute('data-id') });
-                 AppRequest.request(url, 'DELETE');
+                for (const card of cardArray) {
+
+                    const url = route('api.albums.destroy', { album: card.getAttribute('data-id') });
+                    AppRequest.request(url, 'DELETE');
+
+                    this.grid.remove(card);
+
+                }
 
             } catch (e) { console.log(e); }
 
-            this.grid.remove(card);
             offcanvas.hide();
 
         });

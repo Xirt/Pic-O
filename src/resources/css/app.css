@@ -20,6 +20,16 @@ header {
     width: 33.333%;
 }
 
+
+@media screen and (max-width: 768px) {
+
+    .grid-large .grid-sizer,
+    .grid-large .grid-item {
+        width: 50% !important;
+    }
+
+}
+
 @media screen and (min-width: 768px) {
 
     .grid-large .grid-sizer,
@@ -148,7 +158,15 @@ header {
     top: auto !important;
 }
 
+h1 {
+    font-size: 1.75em;
+}
+
 @media (max-width: 992px) {
+
+    h1 {
+        font-size: 1.25em;
+    }
 
     .album-thumbnail {
         max-width: 30%;
@@ -210,7 +228,8 @@ header {
 }
 
 .toolbar .select-stop,
-.toolbar .select-action {
+.toolbar .select-action,
+.toolbar .select-action-single {
     display: none;
 }
 
@@ -219,7 +238,8 @@ header {
     display: none;
 }
 .toolbar.selection-mode .select-stop,
-.toolbar.selection-mode .select-action {
+.toolbar.selection-mode .select-action,
+.toolbar.selection-mode .select-action-single {
     display: inline-block;
 }
 
