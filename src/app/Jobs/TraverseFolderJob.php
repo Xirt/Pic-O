@@ -73,6 +73,13 @@ class TraverseFolderJob implements ShouldQueue
     {
         $subfolders = collect(File::directories($this->path))
             ->filter(function ($subfolder) use ($ignorePatterns) {
+
+                if (@is_link($subfolder))
+                {
+                    Log::channel(self::LOG_CHANNEL)->info("Skipping symlink: $subfolder");
+                    return false;
+                }
+
                 $relative = $this->getRelativePath($subfolder);
                 return !$this->isIgnored($relative, $ignorePatterns);
             });
@@ -159,7 +166,7 @@ class TraverseFolderJob implements ShouldQueue
             ->get()
             ->keyBy('filename');
     }
-    
+
     protected function getRelativePath(string $path): string
     {
         return Str::after($path, resource_path() . DIRECTORY_SEPARATOR);
