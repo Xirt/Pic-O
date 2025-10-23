@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     activateToggles();
 
+    const emailInp = document.getElementById('email');
+    emailInp.focus();
+
     const form = document.getElementById('loginForm');
     form.addEventListener('submit', async (e) => {
 
