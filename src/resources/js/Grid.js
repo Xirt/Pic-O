@@ -222,7 +222,7 @@ export const GridItemFactory = {
     async album(album) {
 
         const card = document.createElement('a');
-        card.className = 'card selectable position-relative ratio ratio-4x3 p-0 clickable';
+        card.className = 'card selectable position-relative rounded-0 ratio ratio-4x3 p-0 clickable';
         card.href = route('albums.show', {id: album.id});
         card.setAttribute('data-id', album.id);
 
@@ -249,7 +249,7 @@ export const GridItemFactory = {
         card.appendChild(photoCount);
 
         const overlay = document.createElement('div');
-        overlay.className = 'card-img-overlay top bg-dark text-light fw-semibold text-truncate p-2';
+        overlay.className = 'card-img-overlay top rounded-0 bg-dark text-light fw-semibold text-truncate p-2';
         overlay.textContent = album.name;
         card.appendChild(overlay);
 
