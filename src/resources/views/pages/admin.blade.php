@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="container-lg px-4 mt-3">
+<div class="container-lg px-1 px-md-4 mt-3">
 
     <h1 class="bs-1 mb-4">Administration</h1>
 

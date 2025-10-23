@@ -17,7 +17,7 @@
 
 @section('content')
 
-    <div class="container-lg px-4 mt-3" data-album-id="{{ $album->id }}" id="album">
+    <div class="container-lg px-1 px-md-4 mt-3" data-album-id="{{ $album->id }}" id="album">
 
         <div class="d-flex align-items-center justify-content-between mb-2 ms-1">
 

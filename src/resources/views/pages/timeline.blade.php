@@ -18,7 +18,7 @@
 
     </div>
 
-    <div class="container-lg position-relative px-4 mt-3" id="container">
+    <div class="container-lg position-relative px-1 px-md-4 mt-3" id="container">
         <nav id="dummy-nav" class="d-none"></nav>
     </div>
 
