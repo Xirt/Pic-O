@@ -94,14 +94,7 @@ header {
 
 .grid .card {
     text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
-}
-
-.grid .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08),
-                0 2px 3px rgba(0, 0, 0, 0.06);
 }
 
 .grid .card-footer {
@@ -259,12 +252,30 @@ h1 {
     border-width: 1px;
 }
 
+.selection-mode .grid {
+    outline: 1px dashed #7873f5;
+    border-radius: 0.05em;
+    outline-offset: 5px;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 110, 196, 0.08),
+        rgba(120, 115, 245, 0.08)
+    );
+    transition: all 0.6s ease;
+}
+                                   
 .grid-item i.bi-check-circle-fill {
-    display: none;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 0.3s ease;
+    font-size: 0;
+    opacity: 0;
 }
 
 .grid-item .selected .bi-check-circle-fill {
-    display: block;
+    font-size: 4em;
+    opacity: 0.85;
 }
 
 .selection-mode .grid-item .selected .card-footer {

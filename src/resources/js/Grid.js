@@ -180,7 +180,7 @@ export const GridItemFactory = {
         card.style.cssText = `width: 100%; aspect-ratio: ${newWidth} / ${newHeight};`;
         card.className = 'clickable selectable thumbnail position-relative d-block align-items-center text-center m-1 mb-0';
 
-        const icon = createIcon('check-circle-fill', 'text-light opacity-75 position-absolute top-50 start-50 translate-middle fs-1');
+        const icon = createIcon('check-circle-fill', 'position-absolute top-50 start-50 translate-middle');
         card.appendChild(icon);
 
         const body = document.createElement('div');
@@ -222,7 +222,7 @@ export const GridItemFactory = {
     async album(album) {
 
         const card = document.createElement('a');
-        card.className = 'card selectable position-relative rounded-0 ratio ratio-4x3 p-0 clickable';
+        card.className = 'card selectable position-relative rounded-0 ratio ratio-4x3 p-0 m-1 border-0 clickable';
         card.href = route('albums.show', {id: album.id});
         card.setAttribute('data-id', album.id);
 
@@ -240,11 +240,11 @@ export const GridItemFactory = {
 
         }
 
-        const icon = createIcon('check-circle-fill', 'text-light opacity-75 h-auto w-auto position-absolute top-50 start-50 translate-middle fs-1');
+        const icon = createIcon('check-circle-fill', 'opacity-75 h-auto w-auto position-absolute top-50 start-50 translate-middle');
         card.appendChild(icon);
 
         const photoCount = document.createElement('div');
-        photoCount.className = 'card-img-overlay bottom badge rounded-pill bg-secondary text-light fw-bold px-2 py-1 m-1';
+        photoCount.className = 'card-img-overlay bottom badge rounded-pill bg-secondary text-light fw-bold px-2 py-1 m-1 me-2';
         photoCount.textContent = album.photos;
         card.appendChild(photoCount);
 
@@ -254,7 +254,7 @@ export const GridItemFactory = {
         card.appendChild(overlay);
 
         const toolbar = document.createElement('div');
-        toolbar.className = 'd-block quick-actions p-1';
+        toolbar.className = 'd-block quick-actions p-1 pe-2';
         card.appendChild(toolbar);
 
         toolbar.appendChild(this.createModifyButton(card));
