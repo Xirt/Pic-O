@@ -3,7 +3,7 @@
 @section('title', 'Gallery')
 
 @section('content')
-    <div class="container-lg px-4">
+    <div class="container-lg px-4 mt-3">
 
         <div class="d-flex align-items-center justify-content-between mb-2 ms-1">
 

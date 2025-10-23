@@ -1,6 +1,6 @@
 <header class=" sticky-top">
 @auth
-<nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a href="{{ route('home') }}" class="navbar-brand">
             <img src="{{ asset('favicon.svg') }}" alt="Icon">
