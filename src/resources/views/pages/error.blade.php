@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="container px-1 px-md-4 mt-3">
+    <div class="container px-3 px-md-4 mt-3">
 
         <div class="row justify-content-center">
 
