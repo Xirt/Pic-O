@@ -3,14 +3,14 @@
 @section('meta')
     <!-- Open Graph -->
     <meta property="og:title" content="{{ $album->name }}">
-    <meta property="og:image" content="{{ route('albums.thumbnail', ['album' => $album->id, 'token' => request('token')->token ?? '' ]) }}">
+    <meta property="og:image" content="{{ route('albums.preview', ['album' => $album->id, 'token' => request('token')->token ?? '' ]) }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $album->name }}">
-    <meta name="twitter:image" content="{{ route('albums.thumbnail', ['album' => $album->id, 'token' => request('token')->token ?? '' ]) }}">
+    <meta name="twitter:image" content="{{ route('albums.preview', ['album' => $album->id, 'token' => request('token')->token ?? '' ]) }}">
 @endsection
 
 @section('title', 'Album: ' . $album->name)

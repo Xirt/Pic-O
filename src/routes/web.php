@@ -48,6 +48,7 @@ Route::middleware([
     Route::prefix('albums')->as('albums.')->group(function () {
         Route::get('/', [AlbumController::class, 'index'])->name('index');
         Route::get('{album}', [AlbumController::class, 'show'])->name('show');
+        Route::get('{album}/preview', [AlbumController::class, 'showPreview'])->name('preview');
         Route::get('{album}/thumbnail', [AlbumController::class, 'showThumbnail'])->name('thumbnail');
     });
 

@@ -70,17 +70,22 @@ class PhotoService
     /**
      * Returns a downscaled version of the provided photo
      */
-    public function thumbnail(Photo $photo, int $maxDimensions = 500): BinaryFileResponse
+    public function thumbnail(Photo $photo, int $maxDimensions = 500, ?float $ratio = null): BinaryFileResponse
     {
         $fullPath = $this->getFilePath($photo);
 
-        $cacheName = md5_file($fullPath) . $maxDimensions;
+        $cacheName = md5_file($fullPath) . $maxDimensions . ($ratio ? '_ratio' . $ratio : '');
         if ($image = $this->retrieveFromCache($cacheName)) {
             return $image;
         }
 
         $manager = $this->getImageManager();
         $image = $manager->read($fullPath);
+
+        if ($ratio !== null)
+        {
+            $image = $this->cropToRatio($image, $ratio);
+        }
 
         if ($image->width() > $maxDimensions || $image->height() > $maxDimensions) {
             $image = $this->resizeImage($image, $maxDimensions);
@@ -207,6 +212,31 @@ class PhotoService
         $newHeight = (int) round($image->height() * $ratio);
 
         return $image->resize($newWidth, $newHeight);
+    }
+
+    /**
+     * Crops an image to a given width / height ratio (from the center)
+     */
+    protected function cropToRatio(Image $image, float $ratio): Image
+    {
+        $currentWidth  = $image->width();
+        $currentHeight = $image->height();
+        $currentRatio  = $currentWidth / $currentHeight;
+
+        if ($currentRatio > $ratio)
+        {
+            $newWidth = intval($currentHeight * $ratio);
+            $x = intval(($currentWidth - $newWidth) / 2);
+            $image->crop($newWidth, $currentHeight, $x, 0);
+        }
+        elseif ($currentRatio < $ratio)
+        {
+            $newHeight = intval($currentWidth / $ratio);
+            $y = intval(($currentHeight - $newHeight) / 2);
+            $image->crop($currentWidth, $newHeight, 0, $y);
+        }
+
+        return $image;
     }
 
     /**

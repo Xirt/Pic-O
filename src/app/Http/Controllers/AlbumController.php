@@ -47,4 +47,20 @@ class AlbumController extends Controller
 
         return $photoService->thumbnail($photo);
     }
+
+    /**
+     * Show thumbnail for a given Album
+     * GET /albums/{id}/thumbnail
+     */
+    public function showPreview(Album $album, PhotoService $photoService)
+    {
+        $this->authorize('view', $album);
+
+        // TODO :: Create default thumbnail in case of no album cover
+        if (!($photo = $album->coverPhoto()->with('folder')->first())) {
+            abort(404, 'No cover photo set');
+        }
+
+        return $photoService->thumbnail($photo, 750, 4/3);
+    }
 }
