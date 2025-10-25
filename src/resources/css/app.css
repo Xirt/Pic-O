@@ -39,11 +39,6 @@ header {
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.grid-item.show {
-    opacity: 1;
-    transform: scale(1);
-}
-
 /* Check required */
 .grid:has(.grid-item) .message-empty {
     display: none;
@@ -425,9 +420,11 @@ body.slideshow-mode .slideshow-hide {
 
 .spinner-overlay {
     position: absolute;
-    inset: 0; /* covers full lightbox-inner */
-    background: rgba(255, 255, 255, 0.7); /* semi-transparent */
-    z-index: 15; /* above images, below toolbar/buttons */
+    inset: 0;
+    opacity: 0;
+    transform: scale(0.25);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 15;
 }
 
 /**
@@ -508,6 +505,9 @@ body.slideshow-mode .slideshow-hide {
     font-size: 0.9em;
 }
 
+/**
+ * Pic-O Spinner
+ */
 .spinner {
     width: 100px;
 }
@@ -551,4 +551,12 @@ body.slideshow-mode .slideshow-hide {
     100% {
         transform: translate(-50%, -50%) rotate(-360deg);
     }
+}
+
+/**
+ * Shared animations
+ */  
+.show {
+    opacity: 1;
+    transform: scale(1);
 }

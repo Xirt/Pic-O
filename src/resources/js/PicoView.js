@@ -146,14 +146,14 @@ export class PicoView extends EventTarget {
         this.currentIndex = index;
 
         this.picoViewInner.appendChild(wrapper);
-        this.spinner.classList.remove('d-none');
+        this.spinner.classList.add('show');
         this.picoView.classList.remove('d-none');
         this.picoView.classList.add('show-bg');
         this.picoView.offsetHeight;
 
         img.onload = () => {
 
-            this.spinner.classList.add('d-none');
+            this.spinner.classList.remove('show');
             wrapper.offsetHeight;
 
             requestAnimationFrame(() => {
@@ -234,7 +234,7 @@ export class PicoView extends EventTarget {
         setTimeout(() => {
 
             this.picoView.classList.add('d-none');
-            this.picoViewInner.innerHTML = '';
+            this.currentWrapper.remove();
             this.currentWrapper = null;
             this.stopSlideshow();
         

@@ -17,11 +17,21 @@
 
     <div id="picoViewInner" class="picoview-inner w-100 h-100 position-relative overflow-hidden">
 
-        <div class="spinner-overlay d-flex align-items-center justify-content-center d-none" id="spinner">
-            <div class="spinner-border text-secondary" role="status">
-                <span class="visually-hidden">Loading...</span>
+        <div class="spinner-overlay d-flex align-items-center justify-content-center show" id="spinner">
+
+            <div class="spinner position-relative ratio ratio-1x1">
+
+                <div class="spinner-custom position-absolute top-50 start-50 bg-transparent spinner-outer"></div>
+                <div class="spinner-custom position-absolute top-50 start-50 bg-transparent spinner-inner"></div>
+
+                <div class="spinner-text text-light position-absolute text-center d-flex justify-content-center align-items-center w-100 h-100">
+                    Loading
+                </div>
+
             </div>
+
         </div>
+
     </div>
 
     <button id="nextBtn" class="btn btn-secondary btn-swipe slideshow-hide position-absolute top-50 end-0 translate-middle-y m-3" style="z-index:2;"><i class="bi bi-chevron-right"></i></button>
