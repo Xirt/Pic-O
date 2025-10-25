@@ -16,16 +16,27 @@ export function createIcon(iconName, extraClasses = "") {
 
 }
 
-export function toggleFullscreen(toggle = null, element = document.documentElement) {
+export async function toggleFullscreen(toggle = null, element = document.documentElement) {
 
     const isFullscreen = !!document.fullscreenElement;
     toggle = (toggle === null) ? !isFullscreen : toggle;
 
     var elem = document.documentElement;
     if (elem.requestFullscreen) {
-        
-        toggle ? elem.requestFullscreen() : document.exitFullscreen();
-        document.body.classList.toggle('fullscreen-mode', toggle);
+
+        try {
+
+            if (toggle && !isFullscreen) {
+                await elem.requestFullscreen();
+            }
+
+            if (!toggle && isFullscreen) {
+                await document.exitFullscreen();
+            }
+
+            document.body.classList.toggle('fullscreen-mode', toggle);
+
+        } catch (e) { console.log(e); }
 
     }
 
@@ -95,17 +106,33 @@ export function activateToggles() {
 
 }
 
-export function toast(id, delay = 4000) {
+export function toast(message, delay = 2500) {
 
-    const instance = new bootstrap.Toast(document.getElementById(id), {
+    const tpl = document.getElementById('toastTpl');
+    const fragment = tpl.content.cloneNode(true);
+
+    const toastEl   = fragment.querySelector('.toast');
+    const toastBody = toastEl.querySelector('.toast-body');
+
+    document.body.appendChild(fragment);
+    toastBody.textContent = message;
+
+    const toast = new bootstrap.Toast(toastEl, {
         animation: true,
         autohide: true,
-        delay
+        delay,
     });
-    instance.show();
 
-    return instance;
+    toast.show();
 
+    toastEl.addEventListener('hidden.bs.toast', () => {
+
+        const container = toastEl.closest('.position-fixed');
+        if (container) container.remove();
+
+    });
+
+    return toast;
 }
 
 export function openCanvas(id) {

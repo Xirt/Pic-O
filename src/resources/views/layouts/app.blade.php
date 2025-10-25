@@ -19,6 +19,9 @@
     @vite('resources/css/app.css')
     @stack('styles')
     @routes(['only' => 'api.album.*,api.photo.*'])
+
+    @include('partials.template_toast')
+
 </head>
 <body data-bs-spy="scroll" data-bs-target="#dummy-nav" class="{{ ($sharedView ?? false) ? 'shared-view' : '' }}">
 
