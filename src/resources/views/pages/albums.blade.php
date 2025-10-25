@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="container-lg px-1 px-md-4 mt-3">
+    <div class="container-lg px-2 px-md-4 mt-3">
 
         <div class="d-flex align-items-center justify-content-between mb-3 ms-1">
 
@@ -101,11 +101,7 @@
 
         </div>
 
-        <div id="grid" class="grid grid-large row w-100 g-0">
-           <div class="grid-sizer"></div>
-           <div class="gutter-sizer"></div>
-           <div class="message-empty p-1">There are currently no items to display.</div>
-        </div>
+        <div class="grid row w-100 g-0" id="grid" data-cols="sm:2 lg:4"></div>
 
     </div>
 

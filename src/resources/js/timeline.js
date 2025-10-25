@@ -1,3 +1,4 @@
+import { Masonry } from './Masonry.js';
 import { PicoView } from './PicoView.js';
 import { AppRequest } from './AppRequest.js';
 import { Grid, GridItemFactory } from './Grid.js';
@@ -142,26 +143,14 @@ class Timeline {
     createGrid(id = '') {
 
         const grid = document.createElement("div");
-        grid.className = "grid row w-100 no-gutters";
-        if (id) grid.id = id;
+        grid.dataset.cols = "sm:3 lg:6";
+        grid.className = "grid row w-100 g-0";
         this.container.appendChild(grid);
 
-        const gridSizer = document.createElement("div");
-        gridSizer.className = "grid-sizer";
-        grid.appendChild(gridSizer);
-
-        const gridGutter = document.createElement("div");
-        gridGutter.className = "gutter-sizer";
-        grid.appendChild(gridGutter);
-
+        if (id) grid.id = id;
         this.grid = grid;
 
-        this.masonry = new Masonry(this.grid, {
-            itemSelector: '.grid-item',
-            columnWidth: '.grid-sizer',
-            transitionDuration: '0.4s',
-            percentPosition: true
-        });
+        this.masonry = new Masonry(this.grid);
 
         return grid;
 

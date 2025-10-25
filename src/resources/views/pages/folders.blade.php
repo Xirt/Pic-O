@@ -35,11 +35,7 @@
 
         </div>
 
-        <div id="grid" class="grid grid-small row w-100 g-0">
-           <div class="grid-sizer"></div>
-           <div class="gutter-sizer"></div>
-            <div class="message-empty p-1">There are currently no items to display.</div>
-        </div>
+         <div class="grid row w-100 g-0" id="grid" data-cols="sm:4 md:6 xl:9"></div>    
 
     </div>
 

@@ -1,3 +1,4 @@
+import { Masonry } from './Masonry.js';
 import { blurhash } from './blurhash.js';
 import { createIcon } from './domHelpers.js';
 import { AppRequest } from './AppRequest.js';
@@ -14,12 +15,7 @@ export class Grid {
         this.rendering    = false;
         this.items        = [];
 
-        this.masonry = new Masonry(this.container, {
-            itemSelector: itemSelector,
-            columnWidth: '.grid-sizer',
-            transitionDuration: '0.4s',
-            percentPosition: true
-        });
+        this.masonry = new Masonry(this.container);
 
     }
 
@@ -57,12 +53,7 @@ export class Grid {
 
     _append(element) {
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'col-sm-6 col-lg-4 grid-item overflow-hidden';
-        wrapper.appendChild(element);
-
-        this.container.appendChild(wrapper);
-        this.masonry.appended(wrapper);
+        this.masonry.queueItem(element);
 
         this.container.dispatchEvent(new CustomEvent('grid.refresh', {
             detail: { item: element }
@@ -72,21 +63,21 @@ export class Grid {
 
     remove(element) {
 
-        this.masonry.remove(element.parentElement);
-        this.masonry.layout();
+        this.masonry.removeItem(element);
 
     }
 
     clear() {
 
-        this.masonry.remove(this.container.children);
-        this.masonry.layout();
+        this.masonry.clear();
+        //this.masonry.remove(this.container.children);
+        //this.masonry.layout();
         this.items = [];
 
     }
 
     setupObserver() {
-
+          return;
         const items = this.container.querySelectorAll(this.masonry.options.itemSelector);
         if (!items.length) return;
 
@@ -110,21 +101,25 @@ export const GridItemFactory = {
     folder(folder) {
 
         const card = document.createElement('div');
-        card.className = 'card clickable p-0 m-1';
+        card.className = 'grid-item card selectable clickable w-100 p-0 my-1 overflow-hidden';
 
-        const body = document.createElement('div');
-        body.className = 'card-body text-primary position-relative d-inline-block align-items-center text-center p-4';
+/*        const body = document.createElement('div');
+        body.className = 'card-body text-primary position-relative w-100 h-100';
         card.appendChild(body);
+
+        const ratioBox = document.createElement('div');
+        ratioBox.className = 'ratio ratio-1x1 m-3';
+        card.appendChild(ratioBox);
 
         const icon = document.createElement('img');
         icon.className = 'img-fluid';
         icon.src = 'images/folder.png';
-        body.appendChild(icon);
+        ratioBox.appendChild(icon);
 
         const thumb = document.createElement('img');
         thumb.className = 'position-absolute folder-thumbnail w-75';
         thumb.src = `folders/${folder.id}/thumbnail`;
-        body.appendChild(thumb);
+        ratioBox.appendChild(thumb);*/
 
         const footer = document.createElement('div');
         footer.className = 'card-footer text-center text-truncate';
@@ -142,23 +137,29 @@ export const GridItemFactory = {
         card.href = photo.path_full;
         card.setAttribute('data-id', photo.id);
         card.setAttribute('data-type', 'image');
-        card.className = 'card selectable clickable thumbnail p-0 m-1';
+        card.className = 'grid-item card file selectable clickable p-0 my-1';
 
-        const body = document.createElement('div');
-        body.className = 'card-img-container text-primary position-relative d-inline-block align-items-center text-center p-4';
+/*        const body = document.createElement('div');
+        body.className = 'card-body text-primary position-relative w-100 p-3';
+        body.style.backgroundImage = `url(${photo.path_thumb})`;
         card.appendChild(body);
 
-        const thumb = document.createElement('img');
-        thumb.className = 'card-img-top';
-        thumb.src = photo.path_thumb;
-        body.appendChild(thumb);
+
+        //const body = document.createElement('div');
+        //body.className = 'card-img-container position-relative';
+        //card.appendChild(body);
+
+        //const thumb = document.createElement('img');
+        //thumb.className = 'card-img-top ratio ratio-1x1';
+        //thumb.src = photo.path_thumb;
+        //body.appendChild(thumb);
 
         const icon = createIcon('check-circle-fill', 'text-light opacity-75 position-absolute top-50 start-50 translate-middle fs-1 pb-4');
-        card.appendChild(icon);
+        body.appendChild(icon);*/
 
         const footer = document.createElement('div');
-        footer.className = 'card-footer text-center text-truncate';
-        footer.textContent = photo.filename;
+        footer.className = 'card-footer text-center text-truncate'
+        footer.textContent = photo.filename + photo.filename;
         footer.title = photo.filename;
         card.appendChild(footer);
 
@@ -178,7 +179,7 @@ export const GridItemFactory = {
         card.setAttribute('data-id', photo.id);
         card.setAttribute('data-type', 'image');
         card.style.cssText = `width: 100%; aspect-ratio: ${newWidth} / ${newHeight};`;
-        card.className = 'clickable selectable thumbnail position-relative d-block align-items-center text-center m-1 mb-0';
+        card.className = 'grid-item clickable selectable position-relative thumbnail w-100 p-0 my-1';
 
         const icon = createIcon('check-circle-fill', 'position-absolute top-50 start-50 translate-middle');
         card.appendChild(icon);
@@ -198,7 +199,7 @@ export const GridItemFactory = {
         card.appendChild(thumb);
 
         const toolbar = document.createElement('div');
-        toolbar.className = 'd-block card-img-overlay bg-dark text-light fw-semibold quick-actions top p-1 me-1';    // TODO :: me-1 is workaround and should not be required
+        toolbar.className = 'd-block card-img-overlay bg-dark text-light fw-semibold quick-actions top p-1';
         card.appendChild(toolbar);
 
         toolbar.appendChild(this.createInfoButton(card));
@@ -222,7 +223,7 @@ export const GridItemFactory = {
     async album(album) {
 
         const card = document.createElement('a');
-        card.className = 'card selectable position-relative rounded-0 ratio ratio-4x3 p-0 m-1 border-0 clickable';
+        card.className = 'grid-item card clickable selectable position-relative rounded-0 ratio ratio-4x3 w-100 p-0 my-1 border-0';
         card.href = route('albums.show', {id: album.id});
         card.setAttribute('data-id', album.id);
 

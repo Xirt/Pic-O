@@ -15,65 +15,36 @@ header {
     width: 45px;
 }
 
-.grid-sizer,
+/**
+* Masonry
+**/
+.grid {
+    margin-top: 15px;
+    transition: all 0.6s ease;
+    align-items: flex-start;
+}
+
+.col.flow {
+    display: flex;
+    flex-direction: column;
+}
+
 .grid-item {
-    width: 33.333%;
+    opacity: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transform: scale(0.75);
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-
-@media screen and (max-width: 768px) {
-
-    .grid-large .grid-sizer,
-    .grid-large .grid-item {
-        width: 50% !important;
-    }
-
+.grid-item.show {
+    opacity: 1;
+    transform: scale(1);
 }
 
-@media screen and (min-width: 768px) {
-
-    .grid-large .grid-sizer,
-    .grid-large .grid-item {
-        width: 25% !important;
-    }
-
-}
-
-@media screen and (min-width: 768px) {
-
-    .grid-sizer,
-    .grid-item {
-        width: 20%;
-    }
-
-}
-
-@media screen and (min-width: 1024px) {
-
-    .grid-small .grid-sizer,
-    .grid-small .grid-item {
-        width: 10%;
-    }
-
-}
-
-.no-gutters {
-    margin-right: 0;
-    margin-left: 0;
-
-    > .col,
-    > [class*="col-"] {
-        padding-right: 0;
-        padding-left: 0;
-    }
-}
-
+// Check required
 .grid:has(.grid-item) .message-empty {
     display: none;
-}
-
-.grid-item {
-    position: relative;
 }
 
 .grid-item .blurhash {
@@ -84,36 +55,34 @@ header {
 
 .grid-item .blurhash,
 .grid-item img {
-        transition: opacity 0.4s;
+    transition: opacity 0.4s;
 }
 
-.grid .card-body {
-    aspect-ratio: 1 / 1;
+.card.grid-item .card-body {
+    background-size: cover;
     overflow: hidden;
 }
 
-.grid .card {
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.grid .card-footer {
+.card.grid-item .card-footer {
+    display: block;
     font-size: 0.7em;
+    min-width: 0;
+    overflow: hidden;
 }
 
-.grid .card.clickable {
+.card.grid-item.clickable {
     cursor: pointer;
 }
 
-.grid .card-img-container {
+.card.grid-item .card-img-container {
     aspect-ratio: 1 / 1; /* Change to your desired ratio (e.g., 4/3, 1/1, etc.) */
     overflow: hidden;
     position: relative;
     width: 100%;
 }
 
-.grid .card-img-container img,
-.grid .card-img-container canvas {
+.card.grid-item .card-img-container img,
+.card.grid-item .card-img-container canvas {
     position: absolute;
     top: 0;
     left: 0;
@@ -171,49 +140,6 @@ h1 {
 
 }
 
-/* Change the GLightbox background */
-.glightbox-clean .gcontainer,
-.glightbox-clean .gslide,
-.glightbox-clean .gslide-inner-content {
-    background: rgba(255, 255, 255, 0.50) !important;   /* White background */
-    color: #000;                   /* Dark text for contrast */
-}
-
-/* Optional: adjust overlay */
-.goverlay {
-    background: rgba(255, 255, 255, 0.75) !important; /* white overlay instead of black */
-}
-
-/* Optional: make captions readable */
-.gdesc-inner, .gslide-title {
-    color: #000 !important;
-}
-
-/* Make slides full viewport */
-.glightbox-clean .gslide,
-.glightbox-clean .gslide-inner-content,
-.glightbox-clean .ginner-container,
-.glightbox-clean .gslide-media {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: none !important;
-    max-height: none !important;
-    margin: 0;
-    padding: 0;
-    box-shadow: none;
-}
-
-/* Image fills the screen but won't upscale beyond natural size */
-.glightbox-clean .gslide-image img {
-    display: block;
-    margin: auto;       /* center image */
-    max-width: 100%;    /* limit to viewport width */
-    max-height: 100%;   /* limit to viewport height */
-    width: auto;        /* keep natural size if smaller */
-    height: auto;       /* keep natural size if smaller */
-    object-fit: contain;
-}
-
 .wrapper-toolbox {
     float: right;
     overflow: 0;
@@ -261,24 +187,24 @@ h1 {
         rgba(255, 110, 196, 0.08),
         rgba(120, 115, 245, 0.08)
     );
-    transition: all 0.6s ease;
 }
-                                   
+
 .grid-item i.bi-check-circle-fill {
     background: linear-gradient(45deg, #ff6ec4, #7873f5);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     transition: all 0.3s ease;
     font-size: 0;
-    opacity: 0;
+    opacity: 1;
+    z-index: 10000000;
 }
 
-.grid-item .selected .bi-check-circle-fill {
+.grid-item.selected .bi-check-circle-fill {
     font-size: 4em;
     opacity: 0.85;
 }
 
-.selection-mode .grid-item .selected .card-footer {
+.selection-mode .grid-item.selected .card-footer {
     background: #dedede;
 }
 
