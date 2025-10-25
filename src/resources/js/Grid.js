@@ -5,12 +5,11 @@ import { AppRequest } from './AppRequest.js';
 
 export class Grid {
 
-    constructor(itemManager, container = 'grid', itemSelector = '.grid-item') {
+    constructor(itemManager, container = 'grid') {
 
         this.sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
         this.container    = typeof container === 'string'? document.getElementById(container) : container;
-        this.itemSelector = itemSelector;
         this.manager      = itemManager;
         this.rendering    = false;
         this.items        = [];
@@ -38,11 +37,10 @@ export class Grid {
                 this._append(this.items.shift());
                 this.container.dispatchEvent(new CustomEvent('grid.render.added', {}));
 
-                await this.sleep(25);
-
             }
 
             if (observe) this.setupObserver();
+
             this.rendering = false;
 
             this.container.dispatchEvent(new CustomEvent('grid.render.done', {}));
@@ -70,15 +68,13 @@ export class Grid {
     clear() {
 
         this.masonry.clear();
-        //this.masonry.remove(this.container.children);
-        //this.masonry.layout();
         this.items = [];
 
     }
 
     setupObserver() {
-          return;
-        const items = this.container.querySelectorAll(this.masonry.options.itemSelector);
+
+        const items = this.container.querySelectorAll('.grid-item');
         if (!items.length) return;
 
         const observer = new IntersectionObserver(async (entries, obs) => {
@@ -101,28 +97,29 @@ export const GridItemFactory = {
     folder(folder) {
 
         const card = document.createElement('div');
-        card.className = 'grid-item card selectable clickable w-100 p-0 my-1 overflow-hidden';
+        card.className = 'grid-item card folder selectable clickable my-1';
 
-/*        const body = document.createElement('div');
-        body.className = 'card-body text-primary position-relative w-100 h-100';
+        const body = document.createElement('div');
+        body.className = 'card-body text-primary position-relative w-100 ratio ratio-4x3 p-3';
         card.appendChild(body);
 
-        const ratioBox = document.createElement('div');
-        ratioBox.className = 'ratio ratio-1x1 m-3';
-        card.appendChild(ratioBox);
+        const iconWrapper = document.createElement('div');
+        iconWrapper.className = 'd-flex align-items-center justify-content-center';
 
-        const icon = document.createElement('img');
-        icon.className = 'img-fluid';
-        icon.src = 'images/folder.png';
-        ratioBox.appendChild(icon);
+            const icon = document.createElement('img');
+            icon.className = 'h-75 w-75';
+            icon.src = 'images/folder.png';
+            iconWrapper.appendChild(icon);
 
-        const thumb = document.createElement('img');
-        thumb.className = 'position-absolute folder-thumbnail w-75';
-        thumb.src = `folders/${folder.id}/thumbnail`;
-        ratioBox.appendChild(thumb);*/
+            const thumb = document.createElement('img');
+            thumb.className = 'position-absolute w-75 mt-2';
+            thumb.src = `folders/${folder.id}/thumbnail`;
+            iconWrapper.appendChild(thumb);
+
+        body.appendChild(iconWrapper);
 
         const footer = document.createElement('div');
-        footer.className = 'card-footer text-center text-truncate';
+        footer.className = 'card-footer text-center text-truncate overflow-hidden';
         footer.textContent = folder.name;
         footer.title = folder.name;
         card.appendChild(footer);
@@ -137,28 +134,24 @@ export const GridItemFactory = {
         card.href = photo.path_full;
         card.setAttribute('data-id', photo.id);
         card.setAttribute('data-type', 'image');
-        card.className = 'grid-item card file selectable clickable p-0 my-1';
+        card.className = 'grid-item card file selectable clickable thumbnail my-1';
 
-/*        const body = document.createElement('div');
-        body.className = 'card-body text-primary position-relative w-100 p-3';
+        const body = document.createElement('div');
+        body.className = 'card-body text-primary position-relative w-100 ratio ratio-4x3 p-3';
         body.style.backgroundImage = `url(${photo.path_thumb})`;
+        body.style.backgroundSize = 'cover';
         card.appendChild(body);
 
+        const iconWrapper = document.createElement('div');
+        iconWrapper.className = 'd-flex align-items-center justify-content-center';
 
-        //const body = document.createElement('div');
-        //body.className = 'card-img-container position-relative';
-        //card.appendChild(body);
+            const icon = createIcon('check-circle-fill', 'opacity-75');
+            iconWrapper.appendChild(icon);
 
-        //const thumb = document.createElement('img');
-        //thumb.className = 'card-img-top ratio ratio-1x1';
-        //thumb.src = photo.path_thumb;
-        //body.appendChild(thumb);
-
-        const icon = createIcon('check-circle-fill', 'text-light opacity-75 position-absolute top-50 start-50 translate-middle fs-1 pb-4');
-        body.appendChild(icon);*/
+        body.appendChild(iconWrapper);
 
         const footer = document.createElement('div');
-        footer.className = 'card-footer text-center text-truncate'
+        footer.className = 'card-footer text-center text-truncate overflow-hidden'
         footer.textContent = photo.filename + photo.filename;
         footer.title = photo.filename;
         card.appendChild(footer);
