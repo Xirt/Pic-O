@@ -1,4 +1,4 @@
-import { toggleFullscreen } from './domHelpers.js';
+import { toggleFullscreen, toast } from './domHelpers.js';
 
 export class PicoView extends EventTarget {
 
@@ -260,6 +260,8 @@ export class PicoView extends EventTarget {
         this.slideshowBtn.classList.add('playing');
         document.body.classList.add('slideshow-mode');
 
+        toast('Slideshow started');
+
         this.slideshowTimer = setInterval(() => {
             (this.currentIndex < this.gallery.length - 1) ? this.next() : this.stopSlideshow();
         }, interval);
@@ -274,6 +276,8 @@ export class PicoView extends EventTarget {
             this.slideshowBtn.classList.remove('playing');
             document.body.classList.remove('slideshow-mode');
             this.slideshowTimer = null;
+
+            toast('Slideshow stopped');
 
         }
 

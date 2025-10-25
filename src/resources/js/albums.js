@@ -5,7 +5,7 @@ import { Selection } from './Selection.js';
 import { AppRequest } from './AppRequest.js';
 import { Grid, GridItemFactory } from './Grid.js';
 import { SelectionManager } from './selectionManager.js';
-import { populateForm, getJSONFromForm, removeEventListeners, openCanvas, closeCanvas } from './domHelpers.js';
+import { populateForm, getJSONFromForm, removeEventListeners, openCanvas, closeCanvas, toast } from './domHelpers.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -200,6 +200,7 @@ class Albums {
                     const url = route('api.albums.destroy', { album: card.getAttribute('data-id') });
                     AppRequest.request(url, 'DELETE');
 
+                    toast('Album(s) deleted');
                     this.grid.remove(card);
 
                 }

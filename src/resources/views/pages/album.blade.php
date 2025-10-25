@@ -107,42 +107,6 @@
 
     <div class="position-fixed bottom-0 start-50 translate-middle-x p-3 mb-5" style="z-index: 110000000;">
 
-        <div id="coverToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-
-            <div class="toast-body text-center">
-                The photo has been set as cover photo.
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="position-fixed bottom-0 start-50 translate-middle-x p-3 mb-5" style="z-index: 110000000;">
-
-        <div id="clipboardToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-
-            <div class="toast-body text-center">
-                URL copied to clipboard.
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="position-fixed bottom-0 start-50 translate-middle-x p-3 mb-5" style="z-index: 110000000;">
-
-        <div id="deleteToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-
-            <div class="toast-body text-center">
-                URL has been deleted.
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="position-fixed bottom-0 start-50 translate-middle-x p-3 mb-5" style="z-index: 110000000;">
-
         <div id="removalToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 
         <div class="toast-header">

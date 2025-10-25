@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
 
             const response = await AppRequest.request(route('api.jobs.dispatch'), 'POST', { type: 'TraverseFolderJob' });
+            toast('Scan requested');
 
         } catch (e) { console.log(e); }
 

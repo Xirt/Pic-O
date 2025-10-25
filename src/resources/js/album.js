@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             }
 
-            toast('clipboardToast');
+            toast('Copied to clipboard');
 
         });
 
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const wrapper = deleteButton.closest(".token-wrapper");
             wrapper.remove();
 
-            toast('deleteToast');
+            toast('Share link has been deleted');
 
         });
 
@@ -245,7 +245,7 @@ class Album {
 
             const url = route('api.albums.update', { album: this.id });
             await AppRequest.request(url, 'PATCH', { 'photo_id' : id});
-            toast('coverToast');
+            toast('Album cover set');
 
         } catch (e) { console.error(e); }
 
