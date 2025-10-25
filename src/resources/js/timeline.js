@@ -102,11 +102,11 @@ class Timeline {
 
             const container = this.createGrid(`img_${photoGroup[0].id}`);
             this.grid = new Grid(this, container);
-            container.addEventListener("grid.render.added", () => {
+            container.addEventListener("grid.refresh", () => {
                 viewer.refresh();
             });
 
-            container.addEventListener("grid.render.done", () => {
+            container.addEventListener("grid.complete", () => {
 
                 this.scrollSpy.refresh();
                 this.addPhotoGroup();
