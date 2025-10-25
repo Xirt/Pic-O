@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+use App\Enums\DatePrecision;
+
 class Album extends Model
 {
     /**
@@ -16,6 +18,9 @@ class Album extends Model
     protected $fillable = [
         'name',
         'photo_id',
+        'start_date',
+        'end_date',
+        'date_precision',
     ];
 
     /**
@@ -26,8 +31,11 @@ class Album extends Model
     protected function casts(): array
     {
         return [
-            'created_at' => 'datetime:Y-m-d\TH:i:sP',
-            'updated_at' => 'datetime:Y-m-d\TH:i:sP',
+            'created_at'     => 'datetime:Y-m-d\TH:i:sP',
+            'updated_at'     => 'datetime:Y-m-d\TH:i:sP',
+            'start_date'     => 'date:Y-m-d',
+            'end_date'       => 'date:Y-m-d',
+            'date_precision' => DatePrecision::class
         ];
     }
 

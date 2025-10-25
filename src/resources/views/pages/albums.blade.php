@@ -205,10 +205,74 @@
 
                     <div class="mb-1 row align-items-center">
 
-                        <label for="albumTitleUpdate" class="col-4 col-form-label">Album Title</label>
+                        <label for="name" class="col-sm-3 col-form-label">Album Title</label>
 
-                        <div class="col-8">
-                            <input type="text" class="form-control" id="albumTitleUpdate" name="name" placeholder="Album title" value="" required>
+                        <div class="col-sm-9">
+
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-fonts"></i>
+                                </span>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Album title" value="" required>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-1 row align-items-center">
+
+                        <label for="start_date" class="col-sm-3 col-form-label">Start Date</label>
+
+                        <div class="col-sm-9">
+
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-calendar"></i>
+                                </span>
+                                <input type="date" class="form-control" id="start_date" name="start_date" value="">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-1 row align-items-center">
+
+                        <label for="end_date" class="col-sm-3 col-form-label">End Date</label>
+
+                        <div class="col-sm-9">
+
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-calendar"></i>
+                                </span>
+                                <input type="date" class="form-control" id="end_date" name="end_date" value="">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-1 row align-items-center">
+
+                        <label for="date_precision" class="col-sm-3 col-form-label">Date Precision</label>
+
+                        <div class="col-sm-9">
+
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-list"></i>
+                                </span>
+                                <select class="form-select" id="date_precision" name="date_precision">
+                                    @foreach (\App\Enums\DatePrecision::cases() as $precision)
+                                        <option value="{{ $precision->value }}">
+                                            {{ ucfirst($precision->value) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                         </div>
 
                     </div>

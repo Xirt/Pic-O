@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Enum;
 
+use App\Enums\DatePrecision;
 use App\Http\Resources\AlbumResource;
 use App\Models\Album;
 use App\Models\Photo;
@@ -127,17 +129,21 @@ class AlbumController extends Controller
         $this->authorize('update', $album);
 
         $validated = $request->validate([
-            'name'     => 'sometimes|string|max:255',
-            'photo_id' => 'sometimes|integer|exists:photos,id',
+            'name'           => 'sometimes|string|max:255',
+            'photo_id'       => 'sometimes|integer|exists:photos,id',
+            'start_date'     => 'nullable|date',
+            'end_date'       => 'nullable|date|after_or_equal:start_date',
+            'date_precision' => ['sometimes', new Enum(DatePrecision::class)],
         ]);
 
-        if (isset($validated['name'])) {
-            $album->name = $validated['name'];
-        }
+        $album->fill($validated);
 
-        if (isset($validated['photo_id'])) {
-            $album->photo_id = $validated['photo_id'];
-        }
+            if (!isset($validated['date_precision']))
+            {
+                $album->date_precision = $album->start_date && $album->end_date
+                    ? ($album->start_date->equalTo($album->end_date) ? DatePrecision::DAY : DatePrecision::RANGE)
+                    : DatePrecision::UNKNOWN;
+            }
 
         $album->save();
 

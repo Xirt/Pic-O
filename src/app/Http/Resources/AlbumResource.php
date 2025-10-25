@@ -15,12 +15,15 @@ class AlbumResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'     	 => $this->id,
-            'name'   	 => $this->name,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'photos'     => $this->photos_count,
-            'cover'      => $this->when($this->coverPhoto, fn () => new PhotoResource($this->coverPhoto)),
+            'id'     	     => $this->id,
+            'name'   	     => $this->name,
+            'start_date'     => $this->start_date?->toDateString(),
+            'end_date'       => $this->end_date?->toDateString(),
+            'date_precision' => $this->date_precision?->value,
+            'created_at'     => $this->created_at,
+            'updated_at'     => $this->updated_at,
+            'photos'         => $this->photos_count,
+            'cover'          => $this->when($this->coverPhoto, fn () => new PhotoResource($this->coverPhoto)),
         ];
     }
 }
