@@ -37,7 +37,7 @@
 
         </div>
 
-        <button id="prevBtn" class="btn btn-secondary position-absolute top-50 start-0 translate-middle-y m-3" style="z-index:2;"><i class="bi bi-chevron-left"></i></button>
+        <button id="prevBtn" class="btn btn-secondary btn-swipe slideshow-hide position-absolute top-50 start-0 translate-middle-y m-3" style="z-index:2;"><i class="bi bi-chevron-left"></i></button>
 
         <div id="picoViewInner" class="picoview-inner w-100 h-100 position-relative overflow-hidden">
 
@@ -48,9 +48,9 @@
             </div>
         </div>
 
-        <button id="nextBtn" class="btn btn-secondary position-absolute top-50 end-0 translate-middle-y m-3" style="z-index:2;"><i class="bi bi-chevron-right"></i></button>
+        <button id="nextBtn" class="btn btn-secondary btn-swipe slideshow-hide position-absolute top-50 end-0 translate-middle-y m-3" style="z-index:2;"><i class="bi bi-chevron-right"></i></button>
 
-        <div id="toolbar" class="toolbar bg-light position-absolute bottom-0 start-50 translate-middle-x d-flex gap-2 m-2 p-2 rounded" style="z-index:2; --bs-bg-opacity: .5;">
+        <div id="toolbar" class="toolbar slideshow-hide bg-light position-absolute bottom-0 start-50 translate-middle-x d-flex gap-2 m-2 p-2 rounded" style="z-index:2; --bs-bg-opacity: .5;">
 
             <button class="btn btn-secondary action" data-action="photo.info" title="Details">
                 <i class="bi bi-info-circle-fill"></i>
@@ -61,6 +61,7 @@
             </button>
 
         </div>
+
     </div>
 
     @include('partials.photo-info-form')

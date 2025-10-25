@@ -1,3 +1,5 @@
+import { toggleFullscreen } from './domHelpers.js';
+
 export class PicoView extends EventTarget {
 
     constructor(container) {
@@ -172,6 +174,7 @@ export class PicoView extends EventTarget {
             });
         };
 
+        toggleFullscreen(true);
         this.preloadAdjacent(index);
         this.updateNavButtons();
         this.loadMore();
@@ -226,13 +229,15 @@ export class PicoView extends EventTarget {
     close() {
 
         this.picoView.classList.remove('show-bg');
+        toggleFullscreen(false);
+
         setTimeout(() => {
 
             this.picoView.classList.add('d-none');
             this.picoViewInner.innerHTML = '';
             this.currentWrapper = null;
             this.stopSlideshow();
-
+        
         }, 400);
 
     }
@@ -249,11 +254,11 @@ export class PicoView extends EventTarget {
 
     }
 
-    startSlideshow(interval = 3000) {
+    startSlideshow(interval = 4000) {
 
         this.stopSlideshow();
         this.slideshowBtn.classList.add('playing');
-        console.log(this.slideshowBtn.classList);
+        document.body.classList.add('slideshow-mode');
 
         this.slideshowTimer = setInterval(() => {
             (this.currentIndex < this.gallery.length - 1) ? this.next() : this.stopSlideshow();
@@ -267,6 +272,7 @@ export class PicoView extends EventTarget {
 
             clearInterval(this.slideshowTimer);
             this.slideshowBtn.classList.remove('playing');
+            document.body.classList.remove('slideshow-mode');
             this.slideshowTimer = null;
 
         }

@@ -341,6 +341,23 @@ footer {
     z-index: 5000;
 }
 
+@media (max-width: 1024px) {
+
+   .btn-swipe {
+       display: none;
+   }
+
+}
+
+body.fullscreen-mode {
+    overflow: hidden;
+}
+
+body.slideshow-mode .slideshow-hide {
+    transition: opacity 0.4s ease;
+    fopacity: 0;
+}
+
 .picoview.show-bg {
     opacity: 1;
 }

@@ -16,6 +16,21 @@ export function createIcon(iconName, extraClasses = "") {
 
 }
 
+export function toggleFullscreen(toggle = null, element = document.documentElement) {
+
+    const isFullscreen = !!document.fullscreenElement;
+    toggle = (toggle === null) ? !isFullscreen : toggle;
+
+    var elem = document.documentElement;
+    if (elem.requestFullscreen) {
+        
+        toggle ? elem.requestFullscreen() : document.exitFullscreen();
+        document.body.classList.toggle('fullscreen-mode', toggle);
+
+    }
+
+}
+
 export function getJSONFromForm(form) {
 
     const data = new FormData(form);

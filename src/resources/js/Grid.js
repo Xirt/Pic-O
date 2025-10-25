@@ -9,21 +9,21 @@ export class Grid {
 
         this.sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        this.container    = typeof container === 'string'? document.getElementById(container) : container;
+        this.container    = typeof container === 'string' ? document.getElementById(container) : container;
         this.manager      = itemManager;
         this.rendering    = false;
-		this.observer     = true;
+        this.observer     = true;
         this.items        = [];
 
         this.masonry = new Masonry(this.container);
-		
-		this.container.addEventListener('grid.complete', () => {
-			
-			if (this.observer) {
-				this.setupObserver();
-			}	
-			
-		});
+        
+        this.container.addEventListener('grid.complete', () => {
+            
+            if (this.observer) {
+                this.setupObserver();
+            }    
+            
+        });
 
     }
 
@@ -46,7 +46,7 @@ export class Grid {
             }
 
             this.rendering = false;
-			
+            
         }
 
     }
