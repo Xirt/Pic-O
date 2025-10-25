@@ -12,39 +12,41 @@ export class Grid {
         this.container    = typeof container === 'string'? document.getElementById(container) : container;
         this.manager      = itemManager;
         this.rendering    = false;
+		this.observer     = true;
         this.items        = [];
 
         this.masonry = new Masonry(this.container);
+		
+		this.container.addEventListener('grid.complete', () => {
+			
+			if (this.observer) {
+				this.setupObserver();
+			}	
+			
+		});
 
     }
 
-    add(items, observe = true) {
+    add(items) {
 
         const itemsList = Array.isArray(items) ? items : [items];
         this.items = this.items.concat(itemsList);
-        this.render(observe);
+        this.render();
 
     }
 
-    async render(observe) {
+    async render() {
 
         if (!this.rendering) {
 
             this.rendering = true;
 
             while (this.items.length) {
-
                 this._append(this.items.shift());
-                this.container.dispatchEvent(new CustomEvent('grid.render.added', {}));
-
             }
 
-            if (observe) this.setupObserver();
-
             this.rendering = false;
-
-            this.container.dispatchEvent(new CustomEvent('grid.render.done', {}));
-
+			
         }
 
     }
@@ -53,7 +55,7 @@ export class Grid {
 
         this.masonry.queueItem(element);
 
-        this.container.dispatchEvent(new CustomEvent('grid.refresh', {
+        this.container.dispatchEvent(new CustomEvent('grid.queued_item', {
             detail: { item: element }
         }));
 
