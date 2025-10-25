@@ -44,7 +44,7 @@ header {
     transform: scale(1);
 }
 
-// Check required
+/* Check required */
 .grid:has(.grid-item) .message-empty {
     display: none;
 }
