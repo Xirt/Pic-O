@@ -355,7 +355,7 @@ body.fullscreen-mode {
 
 body.slideshow-mode .slideshow-hide {
     transition: opacity 0.4s ease;
-    fopacity: 0;
+    opacity: 0;
 }
 
 .picoview.show-bg {
