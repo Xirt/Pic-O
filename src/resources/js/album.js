@@ -263,8 +263,14 @@ class Album {
 
         } catch (e) { console.error(e); }
 
-        const toastEl = toast('removalToast');
+        const toast = new bootstrap.Toast(document.getElementById('removalToast'), {
+            animation: true,
+            autohide: true,
+            delay: 4000
+        });
+
         this.grid.remove(card);
+        toast.show();
 
         const undoButton = document.getElementById('btn-undo');
         removeEventListeners(undoButton).addEventListener('click', async () => {
@@ -277,7 +283,7 @@ class Album {
             } catch (e) { console.error(e); }
 
             this.grid.add(card);
-            toastEl.hide();
+            toast.hide();
 
         });
 
