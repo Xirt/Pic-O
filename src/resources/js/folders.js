@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function attachContainerEvents(container, viewer) {
 
         const containerEvents = {
-            'grid.refresh'    : e => viewer.refresh(),
+            'grid.refresh'    : e => viewer.refresh(e.detail),
             'selection.start' : e => viewer.disable(),
             'selection.stop'  : e => viewer.enable()
         };

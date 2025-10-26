@@ -30,8 +30,11 @@ export class Grid {
     add(items) {
 
         const itemsList = Array.isArray(items) ? items : [items];
+        itemsList.forEach((item) => {
+            this._append(item);
+        });
+        
         this.items = this.items.concat(itemsList);
-        this.render();
 
     }
 

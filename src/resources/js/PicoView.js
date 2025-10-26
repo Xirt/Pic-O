@@ -114,9 +114,13 @@ export class PicoView extends EventTarget {
         this.enabled = false;
     }
 
-    refresh() {
+    refresh(items = null) {
 
-        this.gallery = Array.from(this.container.querySelectorAll('a.thumbnail'));
+        this.gallery = items;
+        if (!Array.isArray(this.gallery)) {
+            this.gallery = Array.from(this.container.querySelectorAll('a.thumbnail'));
+        }
+
         this.updateNavButtons();
 
     }

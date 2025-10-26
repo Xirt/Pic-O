@@ -121,7 +121,9 @@ export class Masonry {
         column.appendChild(item);
         this.items.push(item);
 
-        this.container.dispatchEvent(new CustomEvent('grid.refresh', {}));
+        this.container.dispatchEvent(new CustomEvent('grid.refresh', {
+			'detail' : this.items
+		}));
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 item.classList.add('show');

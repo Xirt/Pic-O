@@ -39,6 +39,8 @@ class Timeline {
         this.container   = document.getElementById(id);
         this.currentDate = null;
         this.photoGroups = {};
+        this.currentGrid = null;
+        this.grids       = [];
 
         this.container = document.getElementById('container');
         this.scrollSpy = new bootstrap.ScrollSpy(document.body, {
@@ -85,7 +87,7 @@ class Timeline {
 
     }
 
-    async addPhotoGroup() {
+    addPhotoGroup() {
 
         const entries = Object.entries(this.photoGroups);
         if (!entries.length) {
@@ -95,65 +97,103 @@ class Timeline {
         const [date, photoGroup] = entries[0];
         delete this.photoGroups[date];
 
-        if (this.currentDate !== date) {
+        if (this.currentDate != date) {
 
-            this.currentDate = date;
-            this.container.append(GridItemFactory.separator(date, this));
+            const groupId = `img_${photoGroup[0].id}`;
 
-            const container = this.createGrid(`img_${photoGroup[0].id}`);
-            this.grid = new Grid(this, container);
-            container.addEventListener("grid.refresh", () => {
-                viewer.refresh();
+            this.createNavItem(groupId, photoGroup[0].taken_age);
+            this.createGridSeparator(date);
+            this.createGrid(groupId);
+
+        }
+
+        this.addPhotoGroupPhotos(this.currentGrid, photoGroup, entries.length == 1);
+
+    }
+
+    async addPhotoGroupPhotos(targetGrid, photoGroup, isLast) {
+
+        const itemPromises = photoGroup.map(async (photo) => {
+
+            const item = await GridItemFactory.photo(photo, false);
+
+            const infoButton = item.querySelector('.btn-info');
+            infoButton.addEventListener('click', (event) => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                this.viewInfo(photo.id);
+
             });
 
-            container.addEventListener("grid.complete", () => {
+            const downloadButton = item.querySelector('.btn-download');
+            downloadButton.addEventListener('click', (event) => {
 
-                this.scrollSpy.refresh();
-                this.addPhotoGroup();
+                event.preventDefault();
+                event.stopPropagation();
+
+                this.forceDownload(photo.id);
 
             });
+        
+            return item;
+        
+        });
 
-            const nav = document.getElementById('dummy-nav');
+        const items = await Promise.all(itemPromises);
+        for (const item of items) {
+            targetGrid.add(item, isLast);
+        }
+
+    }
+
+    createNavItem(link, label) {
+
+        const nav = document.getElementById('dummy-nav');
 
             const a = document.createElement('a');
-            a.href = `#img_${photoGroup[0].id}`;
-            a.textContent = photoGroup[0].taken_age;
-            nav.appendChild(a);
+            a.textContent = label;
+            a.href = `#${link}`;
 
-        }
-
-        await this.addPhotoGroupPhotos(photoGroup, entries.length == 1);
-
+        nav.appendChild(a);
+        
     }
 
-    async addPhotoGroupPhotos(photoGroup, isLast) {
-
-        for (const photo of [...photoGroup]) {
-            const gridItem = await GridItemFactory.photo(photo, false);
-            this.grid.add(gridItem, isLast);
-
-            const photoIndex = photoGroup.indexOf(photo);
-            if (photoIndex > -1) {
-                photoGroup.splice(photoIndex, 1);
-            }
-        }
+    createGridSeparator(date) {
+        
+        this.container.append(GridItemFactory.separator(date, this));
+        this.currentDate = date;
 
     }
-
+    
     createGrid(id = '') {
+        
+        const gridEl = document.createElement("div");
+        gridEl.dataset.cols = "sm:3 lg:6";
+        gridEl.className = "grid row w-100 g-0";
+        this.container.appendChild(gridEl);
 
-        const grid = document.createElement("div");
-        grid.dataset.cols = "sm:3 lg:6";
-        grid.className = "grid row w-100 g-0";
-        this.container.appendChild(grid);
+        if (id) gridEl.id = id;
 
-        if (id) grid.id = id;
-        this.grid = grid;
+        this.masonry = new Masonry(gridEl);
+        this.currentGrid = new Grid(this, gridEl);
+        this.grids.push(this.currentGrid);
 
-        this.masonry = new Masonry(this.grid);
+        gridEl.addEventListener("grid.refresh", () => {
 
-        return grid;
+            const items = this.grids.flatMap(grid => grid.items);
+            viewer.refresh(items);
 
+        });
+
+        gridEl.addEventListener("grid.complete", async () => {
+
+            this.scrollSpy.refresh();
+            this.addPhotoGroup();
+
+        });
+        
     }
 
     async viewInfo(id) {
