@@ -86,10 +86,11 @@ class AlbumController extends Controller
 
         $validated = Validator::make($request->all(), [
             'name' => 'required|string|max:255'
+            'type'      => ['required', new Enum(AlbumType::class)],
         ])->validate();
 
         $photoIds = $this->getPhotoIds($request);
-        return $this->createAlbum($validated['name'], $photoIds);
+        return $this->createAlbum($validated['name'], $validated['type'], $photoIds);
     }
 
     /**
@@ -102,6 +103,7 @@ class AlbumController extends Controller
 
         $validated = Validator::make($request->all(), [
             'name'      => 'required|string|max:255',
+            'type'      => ['required', new Enum(AlbumType::class)],
             'folder_id' => 'required|integer|min:1',
         ])->validate();
 
@@ -118,7 +120,7 @@ class AlbumController extends Controller
         }
 
         $photoIds = Photo::whereIn('folder_id', $folderIds)->pluck('id')->toArray();
-        return $this->createAlbum($validated['name'], $photoIds);
+        return $this->createAlbum($validated['name'], $validated['type'], $photoIds);
     }
 
     /**
@@ -206,10 +208,11 @@ class AlbumController extends Controller
         return response()->json(['message' => 'Album deleted']);
     }
 
-    private function createAlbum(String $name, array $photoIds): AlbumResource
+    private function createAlbum(String $name, String $type, array $photoIds): AlbumResource
     {
         $album = Album::create([
             'name'     => $name,
+            'type'     => $type,
             'photo_id' => $this->getRandomCover($photoIds),
         ]);
 

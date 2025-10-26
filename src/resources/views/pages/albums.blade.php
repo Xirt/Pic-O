@@ -151,6 +151,29 @@
 
                     <div class="mb-1 row align-items-center">
 
+                        <label for="type" class="col-4 col-form-label">Type</label>
+
+                        <div class="col-8">
+
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-list"></i>
+                                </span>
+                                <select class="form-select" id="type" name="type">
+                                    @foreach (\App\Enums\AlbumType::cases() as $type)
+                                        <option value="{{ $type->value }}">
+                                            {{ ucfirst($type->value) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+
+                    <div class="mb-1 row align-items-center">
+
                         <label class="col-4 col-form-label">Folder</label>
 
                         <div class="col-8">
