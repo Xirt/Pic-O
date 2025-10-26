@@ -23,6 +23,10 @@ class SettingController extends Controller
             'rules' => 'required|string|max:255',
         ],
 
+        'downscale_renders' => [
+            'rules' => 'required|in:0,1',
+        ],
+
         'session_persistent' => [
             'rules' => 'required|in:0,1',
         ],

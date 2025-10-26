@@ -4,8 +4,10 @@ namespace App\Services;
 
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Encoders\JpegEncoder;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Illuminate\Http\Response as BinaryStreamResponse;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -17,6 +19,8 @@ use kornrunner\Blurhash\Blurhash;
 
 class PhotoService
 {
+    private const RENDER_DIMS = 1920;
+
     // Collection configuration
     private const CANVAS_WIDTH  = 1200;
     private const CANVAS_HEIGHT = 800;
@@ -50,11 +54,23 @@ class PhotoService
     /**
      * Returns the original file of the provided photo
      */
-    public function render(Photo $photo): BinaryFileResponse
+    public function render(Photo $photo): BinaryFileResponse|BinaryStreamResponse
     {
         $fullPath = $this->getFilePath($photo);
 
-        return Response::file($fullPath);
+        if (!config('settings.downscale_renders'))
+        {
+            return Response::file($fullPath);
+        }
+
+        $manager = $this->getImageManager();
+        $image = $manager->read($fullPath);
+
+        if ($image->width() > self::RENDER_DIMS || $image->height() > self::RENDER_DIMS) {
+            $image = $this->resizeImage($image, self::RENDER_DIMS);
+        }
+
+        return response((string) $image->encode(new JpegEncoder(80)))->header('Content-Type', 'image/jpeg');
     }
 
     /**
@@ -97,7 +113,7 @@ class PhotoService
     /**
      * Returns an image file with the provided photos on it
      */
-    public function collection(Collection $photos): \Illuminate\Http\Response
+    public function collection(Collection $photos): BinaryStreamResponse
     {
         $fullPaths = [];
         foreach ($photos as $photo)

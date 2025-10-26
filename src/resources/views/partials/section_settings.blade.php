@@ -41,11 +41,33 @@
 
         <div class="mb-3 row align-items-center">
 
+            <label for="image_rendering" class="col-sm-3 col-form-label">Image rendering</label>
+
+            <div class="col-sm-9">
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-list"></i>
+                    </span>
+                    <select class="form-select" id="image_rendering" name="downscale_renders" required>
+                        <option value="1" {{ config('settings.downscale_renders')  ? 'selected' : '' }}>Downscaled</option>
+                        <option value="0" {{ !config('settings.downscale_renders') ? 'selected' : '' }}>Original</option>
+                    </select>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+
             <label for="session_persistent" class="col-sm-3 col-form-label">Login Type</label>
 
             <div class="col-sm-9">
 
                 <div class="input-group">
+
                     <span class="input-group-text">
                         <i class="bi bi-list"></i>
                     </span>
