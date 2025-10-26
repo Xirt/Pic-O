@@ -85,7 +85,7 @@ class AlbumController extends Controller
         $this->authorize('create', Album::class);
 
         $validated = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|max:255',
             'type'      => ['required', new Enum(AlbumType::class)],
         ])->validate();
 
