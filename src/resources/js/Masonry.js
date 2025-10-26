@@ -58,13 +58,14 @@ export class Masonry {
 
     setupColumns() {
 
-        this.container.innerHTML = '';
-        const colCount = this.getColumnCount();
-        this.currentColCount = colCount;
-        
-        const colWidthPercent = (100 / colCount).toFixed(6) + '%';
+        this.container.querySelectorAll('.flow').forEach(
+            el => el.remove()
+        );
 
-        for (let i = 0; i < colCount; i++) {
+        this.currentColCount = this.getColumnCount();
+        const colWidthPercent = (100 / this.currentColCount).toFixed(6) + '%';
+
+        for (let i = 0; i < this.currentColCount; i++) {
 
             const col = document.createElement('div');
             col.className = 'col flow p-1';
@@ -87,6 +88,7 @@ export class Masonry {
 
         }
 
+        this.toggleMessageBox();
     }
 
     queueItem(item) {
@@ -124,12 +126,14 @@ export class Masonry {
         this.container.dispatchEvent(new CustomEvent('grid.refresh', {
 			'detail' : this.items
 		}));
+
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 item.classList.add('show');
             });
         });
 
+        this.toggleMessageBox();
     }
 
     removeItem(item) {
@@ -160,6 +164,16 @@ export class Masonry {
         this.queue = [];
         const cols = this.container.querySelectorAll('.flow');
         cols.forEach(col => (col.innerHTML = ''));
+
+        this.toggleMessageBox();
+
+    }
+
+    toggleMessageBox() {
+
+        const box = this.container.querySelector('.empty-grid');
+        if (box) box.classList.toggle('d-none', !(this.items.length === 0));
+        //if (box) box.classList.toggle('show', !(this.items.length === 0));
 
     }
 

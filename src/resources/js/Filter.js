@@ -1,12 +1,14 @@
 export const Filter = {
 
     searchQuery   : '',
+    searchType    : '',
     direction     : 'ASC',
     order         : 'name',
     debounceTimer : null,
     debounceDelay : 300,
 
-    searchInput    : document.getElementById('inp-search'),
+    queryEl        : document.getElementById('inp-search'),
+    typeEl         : document.getElementById('sel-type'),
     orderItems     : document.querySelectorAll('.dropdown-item[data-order]'),
     directionItems : document.querySelectorAll('.dropdown-item[data-direction]'),
 
@@ -14,17 +16,30 @@ export const Filter = {
 
         this.callback = callback;
 
+        this.bindType();
         this.bindSearch();
         this.bindOrdering();
         this.bindDirection();
 
     },
 
+    bindType() {
+
+        this.typeEl.addEventListener('change', () => {
+
+            const query = this.typeEl.value;
+            this.searchType = query;
+            this.reload();
+
+        });
+
+    },
+
     bindSearch() {
 
-        this.searchInput.addEventListener('input', () => {
+        this.queryEl.addEventListener('input', () => {
 
-            const query = this.searchInput.value.trim();
+            const query = this.queryEl.value.trim();
 
             clearTimeout(this.debounceTimer);
             this.debounceTimer = setTimeout(() => {

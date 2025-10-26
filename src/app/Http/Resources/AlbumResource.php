@@ -17,6 +17,7 @@ class AlbumResource extends JsonResource
         return [
             'id'     	     => $this->id,
             'name'   	     => $this->name,
+            'type'           => $this->type?->value,
             'start_date'     => $this->start_date?->toDateString(),
             'end_date'       => $this->end_date?->toDateString(),
             'date_precision' => $this->date_precision?->value,

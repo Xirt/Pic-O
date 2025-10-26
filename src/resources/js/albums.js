@@ -257,7 +257,7 @@ class AlbumsLoader {
         try {
 
             const filter = this.filter;
-            const url    = `/api/albums/search?q=${encodeURIComponent(filter.searchQuery)}&order=${encodeURIComponent(filter.order)}&direction=${filter.direction}&page=${pageNum}`;
+            const url    = `/api/albums/search?q=${encodeURIComponent(filter.searchQuery)}&type=${encodeURIComponent(filter.searchType)}&order=${encodeURIComponent(filter.order)}&direction=${filter.direction}&page=${pageNum}`;
             const result = await AppRequest.request(url, 'GET', null, 'albums');
 
             this.currentPage = result.meta.current_page;

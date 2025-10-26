@@ -24,6 +24,11 @@ header {
     align-items: flex-start;
 }
 
+/*.grid .empty-grid {
+    opacity: 0;
+    transition: opacity 0.4s;
+}*/
+
 .col.flow {
     display: flex;
     flex-direction: column;
@@ -555,8 +560,8 @@ body.slideshow-mode .slideshow-hide {
 
 /**
  * Shared animations
- */  
+ */
 .show {
-    opacity: 1;
-    transform: scale(1);
+    opacity: 1 !important;
+    transform: scale(1) !important;
 }

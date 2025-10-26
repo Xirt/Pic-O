@@ -14,64 +14,6 @@
 
             <div class="toolbar text-end pe-1 d-flex align-items-center">
 
-                <div class="input-group input-group-sm  no-select">
-
-                    <span class="input-group-text" id="search-label-addon1">
-                        <i class="bi bi-search"></i>
-                    </span>
-
-                    <input type="text" class="form-control" placeholder="Search term" aria-label="Search" aria-describedby="search-label-addon1" id="inp-search">
-
-                </div>
-
-                <div class="dropdown mx-2 no-select">
-
-                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="sortDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-gear"></i>
-                    </button>
-
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdownButton">
-
-                        <li class="dropdown-header text-muted">Sort by</li>
-                        <li>
-                            <a class="dropdown-item selected" href="#" data-order="name">
-                                <i class="bi bi-check-lg m-0 me-sm-1"></i>
-                                <span class="d-none d-sm-inline">Name</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#" data-order="created_at">
-                                <i class="bi bi-check-lg m-0 me-sm-1"></i>
-                                <span class="d-none d-sm-inline">Creation Date</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#" data-order="photos_count">
-                                <i class="bi bi-check-lg m-0 me-sm-1"></i>
-                                <span class="d-none d-sm-inline">Photo count</span>
-                            </a>
-                        </li>
-
-                        <li><hr class="dropdown-divider"></li>
-
-                        <li class="dropdown-header text-muted">Direction</li>
-                        <li>
-                            <a class="dropdown-item selected" href="#" data-direction="ASC">
-                                <i class="bi bi-check-lg m-0 me-sm-1"></i>
-                                <span class="d-none d-sm-inline">Ascending</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#" data-direction="DESC">
-                                <i class="bi bi-check-lg m-0 me-sm-1"></i>
-                                <span class="d-none d-sm-inline">Descending</span>
-                            </a>
-                        </li>
-
-                    </ul>
-
-                </div>
-
                 <button type="button" class="btn btn-sm btn-primary flex-shrink-0 me-2 no-select" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-create-album" aria-controls="offcanvas-create-album">
                     <i class="bi bi-stars m-0 me-sm-1"></i>
                     <span class="d-none d-sm-inline">Create album</span>
@@ -101,7 +43,82 @@
 
         </div>
 
-        <div class="grid row w-100 g-0" id="grid" data-cols="sm:2 lg:4"></div>
+        <div class="toolbar text-end pe-1 d-flex justify-content-end align-items-center">
+
+            <div class="input-group input-group-sm me-2 no-select" style="max-width: 400px;">
+
+                <span class="input-group-text" id="search-label-addon1">
+                    <i class="bi bi-search"></i>
+                </span>
+
+                <input type="text" class="form-control" placeholder="Search term" aria-label="Search" aria-describedby="search-label-addon1" id="inp-search">
+
+                <select class="form-select text-center" id="sel-type" name="type" style="max-width: 150px;">
+                        <option value="" selected></option>
+                    @foreach (\App\Enums\AlbumType::cases() as $type)
+                        <option value="{{ $type->value }}">
+                            {{ ucfirst($type->value) }}
+                        </option>
+                    @endforeach
+                </select>
+
+            </div>
+
+            <div class="dropdown input-group-append">
+
+                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="sortDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-gear"></i>
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdownButton">
+
+                    <li class="dropdown-header text-muted">Sort by</li>
+                    <li>
+                        <a class="dropdown-item selected" href="#" data-order="name">
+                            <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                            <span class="d-none d-sm-inline">Name</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#" data-order="created_at">
+                            <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                            <span class="d-none d-sm-inline">Creation Date</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#" data-order="photos_count">
+                            <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                            <span class="d-none d-sm-inline">Photo count</span>
+                        </a>
+                    </li>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <li class="dropdown-header text-muted">Direction</li>
+                    <li>
+                        <a class="dropdown-item selected" href="#" data-direction="ASC">
+                            <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                            <span class="d-none d-sm-inline">Ascending</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#" data-direction="DESC">
+                            <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                            <span class="d-none d-sm-inline">Descending</span>
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div class="grid row w-100 g-0" id="grid" data-cols="sm:2 lg:4">
+            <div class="empty-grid text-muted text-center py-4">
+                Nothing to show at the moment...
+            </div>
+        </div>
 
     </div>
 
@@ -214,6 +231,29 @@
                                     <i class="bi bi-fonts"></i>
                                 </span>
                                 <input type="text" class="form-control" id="name" name="name" placeholder="Album title" value="" required>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-1 row align-items-center">
+
+                        <label for="type" class="col-sm-3 col-form-label">Type</label>
+
+                        <div class="col-sm-9">
+
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-list"></i>
+                                </span>
+                                <select class="form-select" id="type" name="type">
+                                    @foreach (\App\Enums\AlbumType::cases() as $type)
+                                        <option value="{{ $type->value }}">
+                                            {{ ucfirst($type->value) }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                         </div>

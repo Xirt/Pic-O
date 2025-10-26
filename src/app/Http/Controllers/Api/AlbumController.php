@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
+use App\Enums\AlbumType;
 use App\Enums\DatePrecision;
 use App\Http\Resources\AlbumResource;
 use App\Models\Album;
@@ -41,23 +43,22 @@ class AlbumController extends Controller
     {
         $this->authorize('viewAny', Album::class);
 
-        $query     = $request->query('q', '');
-        $order     = $request->query('order', 'name');
-        $direction = $request->query('direction', 'ASC');
+        $validated = $request->validate([
+            'q'         => ['nullable', 'string', 'max:255'],
+            'type'      => ['nullable', Rule::enum(AlbumType::class)],
+            'order'     => ['nullable', Rule::in(['name', 'created_at', 'photos_count'])],
+            'direction' => ['nullable', Rule::in(['ASC', 'DESC', 'asc', 'desc'])],
+        ]);
 
-        $validOrders = ['name', 'created_at', 'photos_count'];
-        if (!in_array($order, $validOrders)) {
-            $order = 'name';
-        }
-
-        $validDirections = ['ASC', 'DESC'];
-        if (!in_array($direction, $validDirections)) {
-            $direction = 'ASC';
-        }
+        $query     = $validated['q'] ?? '';
+        $type      = $validated['type'] ?? null;
+        $order     = $validated['order'] ?? 'name';
+        $direction = strtoupper($validated['direction'] ?? 'ASC');
 
         $albums = Album::with(['coverPhoto'])
             ->withCount('photos')
             ->when($query, fn($q) => $q->where('name', 'like', "%{$query}%"))
+            ->when($type, fn($q) => $q->where('type', $type))
             ->orderBy($order, $direction)
             ->paginate(10);
 
@@ -130,6 +131,7 @@ class AlbumController extends Controller
 
         $validated = $request->validate([
             'name'           => 'sometimes|string|max:255',
+            'type'           => ['sometimes', new Enum(AlbumType::class)],
             'photo_id'       => 'sometimes|integer|exists:photos,id',
             'start_date'     => 'nullable|date',
             'end_date'       => 'nullable|date|after_or_equal:start_date',
@@ -138,12 +140,12 @@ class AlbumController extends Controller
 
         $album->fill($validated);
 
-            if (!isset($validated['date_precision']))
-            {
-                $album->date_precision = $album->start_date && $album->end_date
-                    ? ($album->start_date->equalTo($album->end_date) ? DatePrecision::DAY : DatePrecision::RANGE)
-                    : DatePrecision::UNKNOWN;
-            }
+        if (!isset($validated['date_precision']))
+        {
+            $album->date_precision = $album->start_date && $album->end_date
+                ? ($album->start_date->equalTo($album->end_date) ? DatePrecision::DAY : DatePrecision::RANGE)
+                : DatePrecision::UNKNOWN;
+        }
 
         $album->save();
 

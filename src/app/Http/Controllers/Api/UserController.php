@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
+
 use App\Enums\UserRole;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 
 class UserController extends Controller
 {
