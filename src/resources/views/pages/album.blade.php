@@ -64,8 +64,8 @@
     @include('partials.module-picoview', [
         'showInfoButton'     => true,
         'showDownloadButton' => true,
-        'showCoverButton'    => true,
-        'showRemoveButton'   => true,
+        'showCoverButton'    => ($sharedView ?? false) ? false : true,
+        'showRemoveButton'   => ($sharedView ?? false) ? false : true,
     ]);
 
     @include('partials.photo-info-form')
