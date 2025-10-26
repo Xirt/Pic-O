@@ -23,26 +23,6 @@ use Illuminate\Support\Facades\Auth;
 
 Route::middleware([
 
-    EnsureFrontendRequestsAreStateful::class
-
-])->group(function ()
-{
-
-    Route::get('/debug-auth', function (Request $request) {
-        return response()->json([
-            'authenticated_via_sanctum' => Auth::guard('sanctum')->check(),
-            'authenticated_via_web' => Auth::guard('web')->check(),
-            'sanctum_user' => Auth::guard('sanctum')->user(),
-            'web_user' => Auth::guard('web')->user(),
-            'session' => session()->all(),
-            'cookies' => $request->cookies->all(),
-        ]);
-    });
-
-});
-
-Route::middleware([
-
     EnsureFrontendRequestsAreStateful::class,
     OptionalAuth::class,
 

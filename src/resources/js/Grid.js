@@ -157,7 +157,7 @@ export const GridItemFactory = {
 
         const footer = document.createElement('div');
         footer.className = 'card-footer text-center text-truncate overflow-hidden'
-        footer.textContent = photo.filename + photo.filename;
+        footer.textContent = photo.filename;
         footer.title = photo.filename;
         card.appendChild(footer);
 
