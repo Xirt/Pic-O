@@ -16,6 +16,12 @@ export function createIcon(iconName, extraClasses = "") {
 
 }
 
+export function toggleBodyClass(className, active = true) {
+
+    document.body.classList.toggle(className, active);
+
+}
+
 export async function toggleFullscreen(toggle = null, element = document.documentElement) {
 
     const isFullscreen = !!document.fullscreenElement;
@@ -34,7 +40,7 @@ export async function toggleFullscreen(toggle = null, element = document.documen
                 await document.exitFullscreen();
             }
 
-            document.body.classList.toggle('fullscreen-mode', toggle);
+            toggleBodyClass('fullscreen-mode', toggle);
 
         } catch (e) { console.log(e); }
 
