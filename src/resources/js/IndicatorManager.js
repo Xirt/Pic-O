@@ -8,8 +8,8 @@ export const IndicatorManager = (function () {
 
         if (indicator) {
 
-            indicator.classList.toggle('d-none', (loadingCount === 0 && !errorOccurred));
-            indicator.classList.toggle('text-danger', errorOccurred);
+            indicator.classList.toggle('show', (loadingCount !== 0 || errorOccurred));
+            indicator.classList.toggle('error', errorOccurred);
 
         }
 

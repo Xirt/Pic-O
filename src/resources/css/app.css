@@ -512,6 +512,10 @@ body.slideshow-mode .slideshow-hide {
     width: 100px;
 }
 
+.spinner-small {
+    width: 30px;
+}
+
 .spinner-custom {
     transform: translate(-50%, -50%);
     border-style: solid;
@@ -527,6 +531,10 @@ body.slideshow-mode .slideshow-hide {
     animation: spin 1s linear infinite;
 }
 
+.spinner-small .spinner-outer {
+	border-width: 0.25em;
+}
+
 .spinner-inner {
     width: 65%;
     height: 65%;
@@ -534,6 +542,10 @@ body.slideshow-mode .slideshow-hide {
     color: #7873f5;
     border-color: currentColor currentColor currentColor transparent;
     animation: spin-reverse 0.8s linear infinite;
+}
+
+.spinner-small .spinner-inner {
+	border-width: 0.15em;
 }
 
 .spinner-text {
@@ -553,10 +565,20 @@ body.slideshow-mode .slideshow-hide {
     }
 }
 
+#indicator-loading {
+    opacity: 0;
+    transform: scale(0.25);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#indicator-loading:not(.error) .spinner-text {
+	display: none !important;
+}
+
 /**
  * Shared animations
  */  
 .show {
-    opacity: 1;
-    transform: scale(1);
+    opacity: 1 !important;
+    transform: scale(1) !important;
 }
