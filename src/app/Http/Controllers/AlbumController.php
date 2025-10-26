@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\Album;
 use App\Services\PhotoService;
 
@@ -27,7 +29,7 @@ class AlbumController extends Controller
         $this->authorize('view', $album);
 
         return view('pages.album', [
-            'sharedView' => (bool) request()->token,
+            'sharedView' => !Auth::check() && (bool) request()->token,
             'album'      => $album,
         ]);
     }
