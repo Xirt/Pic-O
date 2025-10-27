@@ -41,10 +41,11 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # -----------------------------------------------------------------------------
-# 3. Configure Nginx
+# 3. Configure Nginx / PHP-FPM
 # -----------------------------------------------------------------------------
 RUN rm /etc/nginx/sites-enabled/default
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY www.override.conf /usr/local/etc/php-fpm.d/
 
 # -----------------------------------------------------------------------------
 # 4. Configure Supervisor
