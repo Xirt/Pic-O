@@ -217,6 +217,7 @@ class AlbumController extends Controller
         ]);
 
         $album->photos()->attach($photoIds);
+        $album->fill($this->getDateRange($album))->save();
 
         return new AlbumResource($album);
     }
@@ -235,6 +236,14 @@ class AlbumController extends Controller
         ])->validate();
 
         return Photo::whereIn('id', $validated['pictures'])->pluck('id')->toArray();
+    }
+
+    private function getDateRange(Album $album): array
+    {
+        return $album->photos()
+            ->selectRaw('MIN(taken_at) as start_date, MAX(taken_at) as end_date')
+            ->first()
+            ->toArray();
     }
 
     private function getRandomCover($list): ?int
