@@ -28,10 +28,10 @@ header {
     align-items: flex-start;
 }
 
-/*.grid .empty-grid {
+.grid .empty-grid {
     opacity: 0;
-    transition: opacity 0.4s;
-}*/
+    transition: opacity 2s;
+}
 
 .col.flow {
     display: flex;
@@ -564,7 +564,7 @@ body:not(.slideshow-mode) .picoview .bi-stop-fill {
 /**
  * Shared animations
  */
-.show {
+.show:not(.offcanvas-backdrop) {
     opacity: 1 !important;
     transform: scale(1) !important;
 }

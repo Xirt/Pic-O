@@ -57,7 +57,11 @@
 
         </div>
 
-        <div class="grid row w-100 g-0" id="grid" data-cols="sm:3 lg:6"></div>
+        <div class="grid row w-100 g-0" id="grid" data-cols="sm:3 lg:6">
+            <div class="empty-grid text-muted text-center py-4">
+                Nothing to show at the moment.
+            </div>
+        </div>
 
     </div>
 
@@ -70,7 +74,7 @@
 
     @include('partials.photo-info-form')
 
-    <div class="position-fixed bottom-0 start-50 translate-middle-x p-3 mb-5" style="z-index: 110000000;">
+    <div class="position-fixed bottom-0 start-50 translate-middle-x mb-5" style="z-index: 110000000;">
 
         <div id="removalToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 

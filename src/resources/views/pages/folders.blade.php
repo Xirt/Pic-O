@@ -35,7 +35,11 @@
 
         </div>
 
-        <div class="grid row w-100 g-0" id="grid" data-cols="sm:4 md:6 xl:9"></div>
+        <div class="grid row w-100 g-0" id="grid" data-cols="sm:4 md:6 xl:9">
+            <div class="empty-grid text-muted text-center py-4">
+                Nothing to show at the moment.
+            </div>
+        </div>
 
     </div>
 

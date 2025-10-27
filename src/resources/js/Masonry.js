@@ -5,6 +5,7 @@ export class Masonry {
         this.sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
         this.container = container;
+        this.emptyBoxTime = null;
         this.processing = false;
         this.queue = [];
         this.items = [];
@@ -65,14 +66,17 @@ export class Masonry {
         this.currentColCount = this.getColumnCount();
         const colWidthPercent = (100 / this.currentColCount).toFixed(6) + '%';
 
+        const fragment = document.createDocumentFragment();
         for (let i = 0; i < this.currentColCount; i++) {
 
             const col = document.createElement('div');
             col.className = 'col flow p-1';
             col.style.width = colWidthPercent;
-            this.container.appendChild(col);
+            fragment.appendChild(col);
 
         }
+
+        this.container.prepend(fragment);
 
     }
 
@@ -172,8 +176,25 @@ export class Masonry {
     toggleMessageBox() {
 
         const box = this.container.querySelector('.empty-grid');
-        if (box) box.classList.toggle('d-none', !(this.items.length === 0));
-        //if (box) box.classList.toggle('show', !(this.items.length === 0));
+        if (!box) return;
+
+        if (this.items.length === 0 && !this.emptyBoxTimer) {
+
+            box.classList.remove('d-none');
+            this.emptyBoxTimer = setTimeout(() => {
+                box.classList.add('show');
+            }, 400);
+
+        } else if (this.items.length !== 0) {
+
+            box.classList.remove('show');
+            box.offsetHeight;
+            box.classList.add('d-none');
+
+            clearTimeout(this.emptyBoxTimer);
+            this.emptyBoxTimer = null;
+
+        }
 
     }
 

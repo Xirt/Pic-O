@@ -116,7 +116,7 @@
 
         <div class="grid row w-100 g-0" id="grid" data-cols="sm:2 lg:4">
             <div class="empty-grid text-muted text-center py-4">
-                Nothing to show at the moment...
+                Nothing to show at the moment.
             </div>
         </div>
 
