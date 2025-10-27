@@ -10,6 +10,11 @@ header {
     z-index: 2500 !important;
 }
 
+.toast {
+    --bs-toast-max-width: auto;
+    margin-bottom: 40px;
+}
+
 .offcanvas {
     z-index: 7500 !important;
 }
