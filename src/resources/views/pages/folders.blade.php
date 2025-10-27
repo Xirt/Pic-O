@@ -65,9 +65,9 @@
 
                     <div class="mb-1 row align-items-center">
 
-                        <label for="name" class="col-3 col-form-label">Album Title</label>
+                        <label for="name" class="col-4 col-form-label">Album Title</label>
 
-                        <div class="col-4">
+                        <div class="col-8">
 
                             <div class="input-group">
                                 <span class="input-group-text">
@@ -114,7 +114,7 @@
                                     <i class="bi bi-image"></i>
                                 </span>
                                 <div class="form-control">
-                                    <span class="picture-count">0</span> picture(s) selected.
+                                    <span class="picture-count">0</span> picture(s)
                                 </div>
                             </div>
 
