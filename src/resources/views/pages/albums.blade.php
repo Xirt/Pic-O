@@ -80,9 +80,15 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#" data-order="created_at">
+                        <a class="dropdown-item" href="#" data-order="type">
                             <i class="bi bi-check-lg m-0 me-sm-1"></i>
-                            <span class="d-none d-sm-inline">Creation Date</span>
+                            <span class="d-none d-sm-inline">Type</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#" data-order="start_date">
+                            <i class="bi bi-check-lg m-0 me-sm-1"></i>
+                            <span class="d-none d-sm-inline">Date</span>
                         </a>
                     </li>
                     <li>

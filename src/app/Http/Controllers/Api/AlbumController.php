@@ -46,7 +46,7 @@ class AlbumController extends Controller
         $validated = $request->validate([
             'q'         => ['nullable', 'string', 'max:255'],
             'type'      => ['nullable', Rule::enum(AlbumType::class)],
-            'order'     => ['nullable', Rule::in(['name', 'created_at', 'photos_count'])],
+            'order'     => ['nullable', Rule::in(['name', 'type', 'start_date', 'photos_count'])],
             'direction' => ['nullable', Rule::in(['ASC', 'DESC', 'asc', 'desc'])],
         ]);
 
