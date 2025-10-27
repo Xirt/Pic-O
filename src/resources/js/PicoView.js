@@ -1,60 +1,52 @@
-import { toggleFullscreen, toast } from './domHelpers.js';
+import { toggleFullscreen, toggleBodyClass, toast } from './domHelpers.js';
+import Panzoom from "@panzoom/panzoom";
 
 export class PicoView extends EventTarget {
 
-    constructor(container) {
+    constructor(container, selector = 'a.thumbnail') {
 
         super();
 
+        if (!(container instanceof HTMLElement)) {
+            throw new Error('PicoView: container must be a DOM element.');
+        }
+
         this.container = container;
-        this.picoView = document.getElementById('picoView');
-        this.picoViewInner = document.getElementById('picoViewInner');
-        this.closeBtn = document.getElementById('closeBtn');
-        this.slideshowBtn = document.getElementById('slideshowBtn');
-        this.prevBtn = document.getElementById('prevBtn');
-        this.nextBtn = document.getElementById('nextBtn');
-        this.toolbar = document.getElementById('toolbar');
-        this.spinner = document.getElementById('spinner');
+        this.selector  = selector;
 
-        this.gallery = Array.from(this.container.querySelectorAll('a.thumbnail'));
-        this.currentIndex = 0;
-        this.currentWrapper = null;
-        this.keysEnabled = true;
-        this.slideshowTimer = null;
-        this.enabled = true;
+        this.init();
+        this.activate();
 
-        this.initEvents();
+        this.reset();
+        this.enable();
+        this.refresh();
 
     }
 
-    initEvents() {
+    init() {
+
+        this.picoView  = document.getElementById("picoView");
+
+        this.stage     = this.picoView.querySelector('.picoview-stage');
+        this.indicator = this.picoView.querySelector('.spinner-overlay');
+
+    }
+
+    activate() {
 
         this.container.addEventListener('click', e => {
 
-            const aTag = e.target.closest('a');
-            if (aTag && this.gallery.includes(aTag) && this.enabled) {
+            const candidate = e.target.closest('a');
+            if (!candidate || !this.enabled) return;
+
+            const index = this.items.findIndex(item =>
+                (item.id && item.id === candidate.dataset.id)
+            );
+
+            if (index !== -1) {
 
                 e.preventDefault();
-                const index = this.gallery.indexOf(aTag);
                 this.show(index);
-
-            }
-
-        });
-
-        this.slideshowBtn.addEventListener('click', () => this.toggleSlideshow());
-        this.closeBtn.addEventListener('click', () => this.close());
-        this.prevBtn.addEventListener('click', () => this.prev());
-        this.nextBtn.addEventListener('click', () => this.next());
-
-        this.toolbar.addEventListener('click', e => {
-
-            const btn = e.target.closest('.action');
-            if (btn && btn.dataset.action) {
-
-                this.dispatchEvent(new CustomEvent(btn.dataset.action, {
-                    detail: { id: this.gallery[this.currentIndex].dataset.id, index: this.currentIndex }
-                }));
 
             }
 
@@ -62,162 +54,262 @@ export class PicoView extends EventTarget {
 
         document.addEventListener('keydown', e => {
 
-            if (!this.keysEnabled || !this.picoView.classList.contains('show-bg')) {
-                return;
-            }
+            if (!this.picoView.classList.contains('show')) return;
 
-            if (e.key === 'Escape') {
-                this.close();
-            }
+            switch (e.key) {
 
-            if (e.key === 'ArrowLeft' && this.currentIndex > 0) {
-                this.prev();
-            }
+                case 'ArrowLeft':
+                    this.prev();
+                    break;
 
-            if (e.key === 'ArrowRight' && this.currentIndex < this.gallery.length - 1) {
-                this.next();
+                case 'ArrowRight':
+                    this.next();
+                    break;
+
+                case 'Escape':
+                    this.close();
+                break;
+
+            }
+        });
+
+        const toolbar = document.getElementById('toolbar');
+        toolbar.addEventListener('click', e => {
+
+            const btn = e.target.closest('.action');
+            if (btn && btn.dataset.action) {
+
+                this.dispatchEvent(new CustomEvent(btn.dataset.action, {
+                    detail: { id: this.items[this.currentIndex].id, index: this.currentIndex }
+                }));
+
             }
 
         });
 
-        let startX = 0, startY = 0;
-        this.picoView.addEventListener('touchstart', e => {
-            const t = e.changedTouches[0]; startX = t.screenX; startY = t.screenY;
-        }, { passive:true });
+        const slideshowBtn = document.getElementById('slideshowBtn');
+        slideshowBtn.addEventListener('click', () => {
+            this.toggleSlideshow();
+        });
 
-        this.picoView.addEventListener('touchend', e => {
+        const closeBtn = document.getElementById('closeBtn');
+        closeBtn.addEventListener('click', () => {
+            this.close();
+        });
 
-            const t = e.changedTouches[0];
-            const dx = t.screenX - startX, dy = t.screenY - startY;
+        const prevBtn = document.getElementById('prevBtn');
+        prevBtn.addEventListener('click', () => {
+            this.prev();
+        });
 
-            if (Math.abs(dx) > Math.abs(dy)) {
+        const nextBtn = document.getElementById('nextBtn');
+        nextBtn.addEventListener('click', () => {
+            this.next();
+        });
 
-                if (Math.abs(dx) > 50) {
-                    dx > 0 ? this.prev() : this.next();
-                }
+    }
 
-            } else if (dy > 50) {
+    refresh(anchorElements = null) {
 
-                this.close();
+        if (!Array.isArray(anchorElements)) {
+            anchorElements = this.container.querySelectorAll(this.selector);
+        }
 
-            }
-
-        }, { passive:true });
+        this.items = Array.from(anchorElements, el => ({
+            href: el.getAttribute('href'),
+            id: el.dataset.id || null,
+        }));
 
     }
 
     enable() {
+
         this.enabled = true;
+
     }
 
     disable() {
+
         this.enabled = false;
+
     }
 
-    refresh(items = null) {
+    reset(items = null) {
 
-        this.gallery = items;
-        if (!Array.isArray(this.gallery)) {
-            this.gallery = Array.from(this.container.querySelectorAll('a.thumbnail'));
+        this.slideshowTimer = null;
+        this.currentImage = null;
+        this.currentIndex = -1;
+        this.items = [];
+
+    }
+
+    show(index) {
+
+        const oldImage = this.currentImage;
+
+        if (index < 0 || index >= this.items.length) {
+            console.warn('PicoView: Index out of bounds.');
+            return;
         }
 
-        this.updateNavButtons();
+        this.currentImage = this._getImage(index);
+        const transition = this._getTransition(index);
 
-    }
-
-    reset() {
-
-        this.close();
-        this.refresh();
-
-    }
-
-    show (index, direction = null) {
-
-        const images = this.gallery[index];
-        if (!images) return;
-
-        const wrapper = document.createElement('div');
-        wrapper.className = 'picoview-img-wrapper';
-        wrapper.classList.add(!direction ? 'open' : direction === 'next' ? 'next' : 'prev');
-
-        const img = document.createElement('img');
-        img.src = images.href;
-        wrapper.appendChild(img);
-
-        const oldWrapper = this.currentWrapper;
-        this.currentWrapper = wrapper;
+        this._setTransition(this.currentImage, transition);
+        this._setTransition(oldImage, transition);
         this.currentIndex = index;
 
-        this.picoViewInner.appendChild(wrapper);
-        this.spinner.classList.add('show');
-        this.picoView.classList.remove('d-none');
-        this.picoView.classList.add('show-bg');
-        this.picoView.offsetHeight;
-
-        img.onload = () => {
-
-            this.spinner.classList.remove('show');
-            wrapper.offsetHeight;
-
-            requestAnimationFrame(() => {
-
-                if (!direction) {
-
-                    wrapper.classList.remove('open');
-
-                } else {
-
-                    wrapper.classList.remove('prev', 'next');
-                    oldWrapper?.classList.add(direction === 'next' ? 'prev' : 'next');
-
-                }
-
-                oldWrapper && setTimeout(() => oldWrapper.remove(), 5000);
-
-            });
-        };
-
         toggleFullscreen(true);
-        this.preloadAdjacent(index);
-        this.updateNavButtons();
-        this.loadMore();
+
+        this._preloadAdjacent(index);
+        this._show(oldImage);
 
     }
 
-    preloadAdjacent(index) {
+    _toggleLoadingIndicator(toggle) {
 
-        const prevIndex = index > 0 ? index - 1 : null;
-        const nextIndex = index < this.gallery.length - 1 ? index + 1 : null;
+        this.indicator.classList.toggle('show', toggle);
 
-        [prevIndex, nextIndex].forEach(i => {
-            if (i !== null) {
-                const img = new Image();
-                img.src = this.gallery[i].href;
+    }
+
+    _show(oldImage) {
+
+        this.picoView.classList.remove('d-none');
+        this.picoView.offsetHeight;
+        this.picoView.classList.add('show');
+
+        const finishShow = () => {
+
+            this._toggleLoadingIndicator(false);
+            this.currentImage.classList.add('show');
+            oldImage?.classList.remove('show');
+            oldImage?.classList.add('bye');
+
+            this.oldImage?._panzoom?.destroy();
+
+        };
+
+        const img = this.currentImage.querySelector('img');
+        if (img.complete && img.naturalHeight !== 0) {
+
+            finishShow();
+
+        } else {
+
+            this._toggleLoadingIndicator(true);
+            img.onload = finishShow;
+
+        }
+
+    }
+
+    _setTransition(el, transition) {
+
+        el?.classList.remove('transition-open', 'transition-left', 'transition-right');
+        el?.classList.add(transition);
+
+    }
+
+    _getTransition(futureIndex) {
+
+        if (this.currentIndex == -1) return 'transition-open';
+        return futureIndex < this.currentIndex ? 'transition-left' : 'transition-right';
+
+    }
+
+    _getImage(index) {
+
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('picoview-img-wrapper', 'overflow-hidden');
+
+        const img = document.createElement('img');
+        img.src = this.items[index].href;
+        wrapper.appendChild(img);
+
+        this.stage.appendChild(wrapper);
+
+        setTimeout(() => {
+            this._activateImage(img, wrapper);
+        }, 400);
+
+        return wrapper;
+
+    }
+
+    _activateImage(image, wrapper) {
+
+        let touchStartX = 0;
+        let touchEndX   = 0;
+        let paused      = false;
+
+
+        image._panzoom = Panzoom(image, {
+            maxScale: 5,
+            minScale: 1,
+            cursor: 'auto',
+            contain: 'outside',
+        });
+
+        wrapper.addEventListener("wheel", e => {
+            image._panzoom.zoomWithWheel(e);
+        });
+
+        wrapper.addEventListener('touchstart', e => {
+
+            touchStartX = e.changedTouches[0].screenX;
+
+        });
+
+        image.addEventListener('panzoomzoom', (event) => {
+
+            const { scale } = event.detail;
+            if (Math.abs(scale - 1) < 0.01) {
+                image._panzoom.zoom(1);
             }
+
+        });
+
+        wrapper.addEventListener('touchend', e => {
+
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchEndX - touchStartX;
+
+            const isBaseScale = Math.abs(image._panzoom.getScale() - 1) < 0.01;
+            if (!paused && isBaseScale && Math.abs(diff) > 50) {
+
+                paused = true;
+                (diff > 0) ? this.prev() : this.next();
+                setTimeout(() => paused = false, 300);
+
+            }
+
         });
 
     }
 
-    updateNavButtons() {
+    _preloadAdjacent(index) {
 
-        this.prevBtn.disabled = (this.currentIndex === 0);
-        this.nextBtn.disabled = (this.currentIndex === this.gallery.length - 1);
+        if (index < this.items.length - 1) {
+            this._preloadImage(this.items[index + 1].href);
+        }
+
+        if (index > 0) {
+            this._preloadImage(this.items[index - 1].href);
+        }
 
     }
 
-    loadMore() {
+    _preloadImage(href) {
 
-        if (this.currentIndex === this.gallery.length - 1) {
-            this.dispatchEvent(new CustomEvent('photo.more', {}));
-        }
+        const img = new Image();
+        img.src = href;
 
     }
 
     next() {
 
-        if (this.currentIndex < this.gallery.length - 1) {
-            this.show(this.currentIndex + 1, 'next');
+        if (this.currentIndex < this.items.length - 1) {
+            this.show(this.currentIndex + 1);
         }
 
     }
@@ -225,50 +317,36 @@ export class PicoView extends EventTarget {
     prev() {
 
         if (this.currentIndex > 0) {
-            this.show(this.currentIndex - 1, 'prev');
+            this.show(this.currentIndex - 1);
         }
 
     }
 
     close() {
 
-        this.picoView.classList.remove('show-bg');
+        this.picoView.classList.remove('show');
         toggleFullscreen(false);
+        this.stopSlideshow();
 
         setTimeout(() => {
 
             this.picoView.classList.add('d-none');
-            this.currentWrapper.remove();
-            this.currentWrapper = null;
-            this.stopSlideshow();
-        
+            this.currentImage.remove();
+            this.currentIndex = -1;
+
         }, 400);
-
-    }
-
-    enableKeys() {
-
-        this.keysEnabled = true;
-
-    }
-
-    disableKeys() {
-
-        this.keysEnabled = false;
 
     }
 
     startSlideshow(interval = 4000) {
 
-        this.stopSlideshow();
-        this.slideshowBtn.classList.add('playing');
-        document.body.classList.add('slideshow-mode');
-
-        toast('Slideshow started');
+        toggleBodyClass('slideshow-mode', true);
 
         this.slideshowTimer = setInterval(() => {
-            (this.currentIndex < this.gallery.length - 1) ? this.next() : this.stopSlideshow();
+            (this.currentIndex < this.items.length - 1) ? this.next() : this.stopSlideshow();
         }, interval);
+
+        toast('Slideshow started');
 
     }
 
@@ -276,9 +354,9 @@ export class PicoView extends EventTarget {
 
         if (this.slideshowTimer) {
 
+            toggleBodyClass('slideshow-mode', false);
+
             clearInterval(this.slideshowTimer);
-            this.slideshowBtn.classList.remove('playing');
-            document.body.classList.remove('slideshow-mode');
             this.slideshowTimer = null;
 
             toast('Slideshow stopped');
@@ -287,7 +365,7 @@ export class PicoView extends EventTarget {
 
     }
 
-    toggleSlideshow(interval = 3000) {
+    toggleSlideshow(interval = 4000) {
 
         this.slideshowTimer ? this.stopSlideshow() : this.startSlideshow(interval);
 

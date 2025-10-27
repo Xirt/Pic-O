@@ -2,6 +2,10 @@ body {
     margin-bottom: 40px;
 }
 
+body.fullscreen-mode {
+    overflow: hidden;
+}
+
 header {
     z-index: 2500 !important;
 }
@@ -341,28 +345,17 @@ footer {
     z-index: 5000;
 }
 
-@media (max-width: 1024px) {
-
-   .btn-swipe {
-       display: none;
-   }
-
-}
-
-body.fullscreen-mode {
-    overflow: hidden;
-}
-
-body.slideshow-mode .slideshow-hide {
-    transition: opacity 0.4s ease;
+.picoview .spinner-overlay {
+    position: absolute;
+    inset: 0;
     opacity: 0;
+    transform: scale(0.25);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    z-index: 15;
 }
 
-.picoview.show-bg {
-    opacity: 1;
-}
-
-.picoview-img-wrapper {
+.picoview .picoview-img-wrapper {
     position: absolute;
     top: 0;
     left: 0;
@@ -372,64 +365,51 @@ body.slideshow-mode .slideshow-hide {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    transition: transform 1s linear, opacity 1s linear;
-    transform: none;
-    opacity: 1;
-}
-
-.picoview-img-wrapper.prev,
-.picoview-img-wrapper.next,
-.picoview-img-wrapper.open {
-    transition: opacity 1s linear;
+    transform: scale(0);
     opacity: 0;
+    transition: transform 0.5s linear, opacity 0.5s linear;
 }
 
-.picoview-img-wrapper.prev {
+.picoview .picoview-img-wrapper.transition-left,
+.picoview .picoview-img-wrapper.transition-right.bye {
     transform: translateX(-75%) scale(0.5);
     transition: transform 1s linear, opacity 1s linear;
 }
 
-.picoview-img-wrapper.next {
+.picoview .picoview-img-wrapper.transition-right,
+.picoview .picoview-img-wrapper.transition-left.bye {
     transform: translateX(75%) scale(0.5);
     transition: transform 1s linear, opacity 1s linear;
 }
 
-.picoview-img-wrapper img {
+.picoview .picoview-img-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    display: block;
-    transform: none;
-    transition: transform 0.5s ease;
-}
-
-.picoview-img-wrapper.open img {
-    transform: scale(0.7);
-}
-
-.picoview-img-wrapper img.old {
-    object-fit: contain;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
+    touch-action: none;
     display: block;
 }
 
-.picoview .btn.playing .bi-play-fill {
-    display: none;
-}
-
-.picoview .btn:not(.playing) .bi-stop-fill {
-    display: none;
-}
-
-.spinner-overlay {
-    position: absolute;
-    inset: 0;
+body.slideshow-mode .slideshow-hide {
+    transition: opacity 0.4s ease;
     opacity: 0;
-    transform: scale(0.25);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    z-index: 15;
+}
+
+
+body.slideshow-mode .picoview .bi-play-fill {
+    display: none;
+}
+
+body:not(.slideshow-mode) .picoview .bi-stop-fill {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+
+   .btn-swipe {
+       display: none;
+   }
+
 }
 
 /**
@@ -514,6 +494,7 @@ body.slideshow-mode .slideshow-hide {
  * Pic-O Spinner
  */
 .spinner {
+    pointer-events: none;
     width: 100px;
 }
 

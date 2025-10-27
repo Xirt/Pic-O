@@ -42,7 +42,7 @@
     @include('partials.module-picoview', [
         'showInfoButton'     => true,
         'showDownloadButton' => true
-    ]);
+    ])
 
     @include('partials.photo-info-form')
 
