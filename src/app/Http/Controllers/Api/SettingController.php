@@ -27,6 +27,10 @@ class SettingController extends Controller
             'rules' => 'required|in:0,1',
         ],
 
+        'cache_renders' => [
+            'rules' => 'required|in:0,1',
+        ],
+
         'session_persistent' => [
             'rules' => 'required|in:0,1',
         ],

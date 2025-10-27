@@ -52,7 +52,7 @@ class PhotoService
     }
 
     /**
-     * Returns the original file of the provided photo
+     * Returns a large render of the provided photo
      */
     public function render(Photo $photo): BinaryFileResponse|BinaryStreamResponse
     {
@@ -63,14 +63,7 @@ class PhotoService
             return Response::file($fullPath);
         }
 
-        $manager = $this->getImageManager();
-        $image = $manager->read($fullPath);
-
-        if ($image->width() > self::RENDER_DIMS || $image->height() > self::RENDER_DIMS) {
-            $image = $this->resizeImage($image, self::RENDER_DIMS);
-        }
-
-        return response((string) $image->encode(new JpegEncoder(80)))->header('Content-Type', 'image/jpeg');
+        return $this->downScaledRender($fullPath);
     }
 
     /**
@@ -169,6 +162,34 @@ class PhotoService
     function blurhash(Photo $photo, $width = 4, $height = 3)
     {
         return Blurhash::encode($this->pixels($photo), $width, $height);
+    }
+
+    /**
+     * Returns a downscaled render of the provided photo
+     */
+    private function downScaledRender(String $fullPath): BinaryFileResponse|BinaryStreamResponse
+    {
+
+        $cacheName = 'render_' . md5_file($fullPath) . self::RENDER_DIMS;
+        if (config('settings.cache_renders') && $image = $this->retrieveFromCache($cacheName) )
+        {
+            return $image;
+        }
+
+        $manager = $this->getImageManager();
+        $image = $manager->read($fullPath);
+
+        if ($image->width() > self::RENDER_DIMS || $image->height() > self::RENDER_DIMS)
+        {
+            $image = $this->resizeImage($image, self::RENDER_DIMS);
+        }
+
+        if (config('settings.cache_renders'))
+        {
+             return $this->storeInCache($image, $cacheName);
+        }
+
+        return response((string) $image->encode(new JpegEncoder(80)))->header('Content-Type', 'image/jpeg');
     }
 
     /**

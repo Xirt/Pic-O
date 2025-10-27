@@ -31,6 +31,11 @@ class SettingsSeeder extends Seeder
 		);
 
 		Setting::firstOrCreate(
+			['key'   => 'cache_renders'],
+			['value' => '0']
+		);
+
+		Setting::firstOrCreate(
 			['key'   => 'session_persistent'],
 			['value' => '0']
 		);

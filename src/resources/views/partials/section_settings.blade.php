@@ -6,7 +6,7 @@
     <form action="{{ route('api.settings.store') }}" method="POST" id="settingsForm">
     @csrf
 
-        <div class="mb-3 row align-items-center">
+        <div class="mb-1 row align-items-center">
 
             <label for="site_name" class="col-sm-3 col-form-label">Gallery Name</label>
 
@@ -23,7 +23,7 @@
 
         </div>
 
-        <div class="mb-3 row align-items-center">
+        <div class="mb-1 row align-items-center">
 
             <label for="media_root" class="col-sm-3 col-form-label">Photo directory</label>
 
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div class="mb-3 row align-items-center">
+        <div class="mb-1 row align-items-center">
 
             <label for="image_rendering" class="col-sm-3 col-form-label">Image rendering</label>
 
@@ -58,9 +58,32 @@
                 </div>
 
             </div>
+
         </div>
 
-        <div class="mb-3 row align-items-center">
+        <div class="mb-1 row align-items-center">
+
+            <label for="cache_renders" class="col-sm-3 col-form-label">Image caching</label>
+
+            <div class="col-sm-9">
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-list"></i>
+                    </span>
+                    <select class="form-select" id="cache_renders" name="cache_renders" required>
+                        <option value="0" {{ !config('settings.cache_renders')  ? 'selected' : '' }}>Thumbnails</option>
+                        <option value="1" {{ config('settings.cache_renders') ? 'selected' : '' }}>Thumbnails & Renders</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mb-1 row align-items-center">
 
             <label for="session_persistent" class="col-sm-3 col-form-label">Login Type</label>
 
@@ -79,13 +102,14 @@
                 </div>
 
             </div>
+
         </div>
 
-        <div class="mb-3 alert form-message" id="form-message" aria-live="polite"></div>
+        <div class="mt-3 alert form-message" id="form-message" aria-live="polite"></div>
 
         <hr />
 
-        <div class="d-flex justify-content-center mt-4 mb-3 w-lg-m500 mx-auto">
+        <div class="d-flex justify-content-center mt-4 mb-1 w-lg-m500 mx-auto">
 
             <button type="submit" class="btn btn-primary w-50 mx-4">
                 <i class="bi bi-box-arrow-in-right me-2"></i> Save
