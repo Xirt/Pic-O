@@ -33,7 +33,7 @@
         <div class="tab-content flex-grow-1 pt-3 pt-lg-0 ps-lg-3">
 
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                Home
+                @include('partials.section_statistics')    
             </div>
 
             <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab" tabindex="0">

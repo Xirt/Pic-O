@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 use App\Jobs\TraverseFolderJob;
-                            
+
 use App\Models\User;
+use App\Models\Folder;
+use App\Models\Photo;
+use App\Models\Album;
 use App\Policies\AdminPolicy;
 
 class AdminController extends Controller
@@ -33,7 +36,14 @@ class AdminController extends Controller
     {
         $users = User::all();
 
-        return view('pages.admin', compact('users'));
+        $statistics = [
+            'users'   => User::count(),
+            'folders' => Folder::count(),
+            'photos'  => Photo::count(),
+            'albums'  => Album::count(),
+        ];
+
+        return view('pages.admin', compact('users', 'statistics'));
     }
 
     public function getScannerLog()
