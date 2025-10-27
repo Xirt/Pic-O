@@ -40,7 +40,7 @@ header {
 
 .grid-item {
     flex: 1 1 0;
-    min-width: 0; 
+    min-width: 0;
     opacity: 0;
     cursor: pointer;
     text-decoration: none;
@@ -564,7 +564,7 @@ body:not(.slideshow-mode) .picoview .bi-stop-fill {
 /**
  * Shared animations
  */
-.show:not(.offcanvas-backdrop) {
+.show:not(.offcanvas):not(.offcanvas-backdrop) {
     opacity: 1 !important;
     transform: scale(1) !important;
 }
