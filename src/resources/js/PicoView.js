@@ -179,6 +179,10 @@ export class PicoView extends EventTarget {
         this.picoView.classList.add('show');
 
         const finishShow = () => {
+            
+            this.dispatchEvent(new CustomEvent('photo.shown', {
+                detail: { id: this.items[this.currentIndex].id, index: this.currentIndex }
+            }));
 
             this._toggleLoadingIndicator(false);
             this.currentImage.classList.add('show');

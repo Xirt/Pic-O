@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+use App\Traits\RecordsStats;
+
 class Photo extends Model
 {
+    use RecordsStats;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -27,7 +31,9 @@ class Photo extends Model
         'exposure_time',
         'focal_length',
         'taken_at',
-        'size'
+        'size',
+        'impressions',
+        'downloads',
     ];
 
     /**

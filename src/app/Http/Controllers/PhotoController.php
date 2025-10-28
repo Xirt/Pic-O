@@ -33,6 +33,8 @@ class PhotoController extends Controller
     {
         $this->authorize('view', $photo);
 
+        $photo->recordImpression();
+
         return $photoService->render($photo);
     }
 
@@ -54,6 +56,8 @@ class PhotoController extends Controller
     public function download(Photo $photo, PhotoService $photoService)
     {
         $this->authorize('view', $photo);
+
+        $photo->recordDownload();
 
         return $photoService->download($photo);
     }

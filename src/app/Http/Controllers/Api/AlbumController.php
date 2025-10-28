@@ -73,6 +73,8 @@ class AlbumController extends Controller
     {
         $this->authorize('view', $album);
 
+        $album->recordImpression();
+
         return new AlbumResource($album);
     }
 

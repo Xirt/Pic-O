@@ -5,12 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Auth;
 
 use App\Enums\AlbumType;
 use App\Enums\DatePrecision;
+use App\Enums\UserRole;
+use App\Traits\RecordsStats;
 
 class Album extends Model
 {
+    use RecordsStats;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -23,6 +28,7 @@ class Album extends Model
         'start_date',
         'end_date',
         'date_precision',
+        'impressions',
     ];
 
     /**
@@ -39,6 +45,7 @@ class Album extends Model
             'end_date'       => 'date:Y-m-d',
             'date_precision' => DatePrecision::class,
             'type'           => AlbumType::class,
+            'impressions'    => 'integer',
         ];
     }
 

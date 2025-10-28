@@ -28,6 +28,8 @@ class AlbumController extends Controller
     {
         $this->authorize('view', $album);
 
+        $album->recordImpression();
+
         return view('pages.album', [
             'sharedView' => !Auth::check() && (bool) request()->token,
             'album'      => $album,

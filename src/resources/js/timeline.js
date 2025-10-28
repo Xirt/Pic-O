@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             'photo.more'     : e => manager.showMore(),
             'photo.info'     : e => manager.viewInfo(e.detail.id),
             'photo.download' : e => manager.forceDownload(e.detail.id),
+            'photo.shown'    : e => manager.recordView(e.detail.id),
         };
 
         for (const [event, handler] of Object.entries(viewerEvents)) {
@@ -194,6 +195,17 @@ class Timeline {
 
         });
         
+    }
+
+    async recordView(id) {
+
+        try {
+
+            const url = route('api.photos.impression', { photo: id });
+            await AppRequest.request(url, 'POST');
+
+        } catch (e) { console.error(e); }
+
     }
 
     async viewInfo(id) {

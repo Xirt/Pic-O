@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PhotoResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 use App\Models\Album;
 use App\Models\Photo;
@@ -65,5 +66,18 @@ class PhotoController extends Controller
         $this->authorize('view', $photo);
 
         return new PhotoResource($photo);
+    }
+
+    /**
+     * Record an impression for a photo
+     * GET /api/photos/{id}/impression
+     */
+    public function recordImpression(Photo $photo): Response
+    {
+        $this->authorize('view', $photo);
+
+        $photo->recordImpression();
+
+        return response()->noContent();
     }
 }

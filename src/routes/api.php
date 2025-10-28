@@ -55,6 +55,7 @@ Route::middleware([
     {
         Route::get('/', [PhotoController::class, 'index'])->name('index');
         Route::get('{photo}', [PhotoController::class, 'show'])->name('show');
+        Route::post('{photo}/impression', [PhotoController::class, 'recordImpression'])->name('impression');
     });
 
     // Tokens

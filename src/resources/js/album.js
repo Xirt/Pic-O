@@ -111,7 +111,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             'photo.info'      : e => manager.viewInfo(e.detail.id),
             'photo.cover'     : e => manager.setCover(e.detail.id),
             'photo.download'  : e => manager.forceDownload(e.detail.id),
-            'photo.remove'    : e => { manager.remove(e.detail.id); viewer.next(); }
+            'photo.remove'    : e => { manager.remove(e.detail.id); viewer.next(); },
+            'photo.shown'     : e => manager.recordView(e.detail.id),
         };
 
         for (const [event, handler] of Object.entries(viewerEvents)) {
@@ -211,6 +212,17 @@ class Album {
             this.grid.add(elements);
 
         }
+
+    }
+
+    async recordView(id) {
+                   
+        try {
+
+            const url = route('api.photos.impression', { photo: id });
+            await AppRequest.request(url, 'POST');
+
+        } catch (e) { console.error(e); }
 
     }
 
