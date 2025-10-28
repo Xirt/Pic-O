@@ -297,6 +297,11 @@ export class PicoView extends EventTarget {
             this._preloadImage(this.items[index - 1].href);
         }
 
+
+        if (index === this.items.length - 1) {
+            this.dispatchEvent(new CustomEvent('photo.more', {}));
+        }
+
     }
 
     _preloadImage(href) {
