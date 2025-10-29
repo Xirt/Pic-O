@@ -111,10 +111,10 @@
 
         <div class="d-flex justify-content-center mt-4 mb-1 w-lg-m500 mx-auto">
 
-            <button type="submit" class="btn btn-primary w-50 mx-4">
+            <button type="submit" class="btn btn-primary w-50 w-lg-25 mx-4">
                 <i class="bi bi-box-arrow-in-right me-2"></i> Save
             </button>
-            <button type="reset" class="btn btn-secondary w-50 mx-4">
+            <button type="reset" class="btn btn-secondary w-50 w-lg-25 mx-4">
                 <i class="bi bi-skip-backward-fill me-2"></i> Reset
             </button>
 
