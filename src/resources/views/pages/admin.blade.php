@@ -8,9 +8,9 @@
 
     <h1 class="bs-1 mb-4">Administration</h1>
 
-    <div class="d-flex flex-column flex-lg-row w-100 h-100">
+    <div class="d-flex flex-column flex-xl-row w-100 h-100">
 
-        <ul class="nav nav-tabs flex-row flex-lg-column w-100 w-lg-auto mb-3" id="adminTab" role="tablist">
+        <ul class="nav nav-tabs flex-row flex-xl-column w-100 w-xl-auto mb-3" id="adminTab" role="tablist">
 
             <li class="nav-item flex-fill text-center" role="presentation">
                 <button class="nav-link w-100 text-dark active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
@@ -30,7 +30,7 @@
 
         </ul>
 
-        <div class="tab-content flex-grow-1 pt-3 pt-lg-0 ps-lg-3">
+        <div class="tab-content flex-grow-1 pt-3 pt-xl-0 ps-lg-3">
 
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                 @include('partials.section_statistics')

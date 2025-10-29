@@ -37,10 +37,13 @@ class AdminController extends Controller
         $users = User::all();
 
         $statistics = [
-            'users'   => User::count(),
-            'folders' => Folder::count(),
-            'photos'  => Photo::count(),
-            'albums'  => Album::count(),
+            'users'             => User::count(),
+            'folders'           => Folder::count(),
+            'photos'            => Photo::count(),
+            'photo_impressions' => Photo::sum('impressions'),
+            'photo_downloads'   => Photo::sum('downloads'),
+            'albums'            => Album::count(),
+            'album_impressions' => Album::sum('impressions'),
         ];
 
         return view('pages.admin', compact('users', 'statistics'));

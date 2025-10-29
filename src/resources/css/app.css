@@ -439,14 +439,14 @@ body:not(.slideshow-mode) .picoview .bi-stop-fill {
 /**
  * Admin page
  */
- @media (min-width: 992px) {
-    .w-lg-auto {
+ @media (min-width: 1200px) {
+    .w-xl-auto {
         width: auto !important;
     }
 
-    .w-lg-m500 {
-         max-width: 500px;
-     }
+    .w-lg-25 {
+        width: 25% !important;
+    }
 
     .nav-tabs {
         border-bottom: none !important;
@@ -472,6 +472,10 @@ body:not(.slideshow-mode) .picoview .bi-stop-fill {
         color: #0d6efd;
     }
 
+}
+
+.text-purple {
+    color: #6f42c1 !important;
 }
 
 .progress-container {
