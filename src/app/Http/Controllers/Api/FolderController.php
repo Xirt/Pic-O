@@ -33,15 +33,16 @@ class FolderController extends Controller
     {
         $this->authorize('viewAny', Folder::class);
 
-        $query = $request->query('q', '');
-        if (Str::of($query)->trim()->length() < 2) {
-            return response()->json([], 200);
-        }
+        $validated = $request->validate([
+            'q' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $query = $validated['q'] ?? '';
 
         $folders = Folder::query()
             ->where('path', 'like', '%' . $query . '%')
             ->orderBy('name')
-            ->paginate(10);
+            ->paginate(25);
 
         return FolderResource::collection($folders);
     }

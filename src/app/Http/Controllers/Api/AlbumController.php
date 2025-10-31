@@ -60,7 +60,7 @@ class AlbumController extends Controller
             ->when($query, fn($q) => $q->where('name', 'like', "%{$query}%"))
             ->when($type, fn($q) => $q->where('type', $type))
             ->orderBy($order, $direction)
-            ->paginate(10);
+            ->paginate(25);
 
         return AlbumResource::collection($albums);
     }
