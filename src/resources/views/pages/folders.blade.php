@@ -58,7 +58,7 @@
                 <h5 class="offcanvas-title" id="offcanvasBottomLabel">Create album</h5>
             </div>
 
-            <div class="offcanvas-body small">
+            <div class="offcanvas-body small overflow-visible">
 
                 <form action="{{ route('api.albums.store') }}" method="POST" id="createAlbumForm" class="w-100">
                 @csrf
@@ -111,7 +111,7 @@
 
                             <div class="input-group">
                                 <span class="input-group-text">
-                                    <i class="bi bi-image"></i>
+                                    <i class="bi bi-search"></i>
                                 </span>
                                 <div class="form-control">
                                     <span class="picture-count">0</span> picture(s)
@@ -158,7 +158,7 @@
                 <h5 class="offcanvas-title" id="offcanvasBottomLabel">Add to album</h5>
             </div>
 
-            <div class="offcanvas-body small">
+            <div class="offcanvas-body small overflow-visible">
 
                 <form action="" method="POST" id="updateAlbumForm" class="w-100">
                 @csrf
@@ -169,18 +169,48 @@
 
                         <div class="col-8">
 
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="bi bi-fonts"></i>
-                                </span>
-                                <div class="dropup position-relative form-control p-0" id="search-dropdown-container">
+                            <div class="position-relative m-0" data-tpl-option="folderOption" data-tpl-empty="noFolderOption" id="folderSearchSelect">
 
-                                    <input type="text" class="form-control border-0" placeholder="Search..." id="dropdownInput" data-bs-toggle="dropdown" aria-expanded="false" autocomplete="off" required />
-                                    <ul class="dropdown-menu w-100" id="dropdownMenu"></ul>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi bi-menu-up"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="folder" placeholder="Select a folder" readonly>
+                                    <input type="hidden" class="form-control" id="type" name="album_id">
+                                </div>
 
-                                    <input type="hidden" name="album_id" id="dropdownHidden">
+                                <div class="search-select-wrapper position-absolute bottom-100 start-0 w-100">
+
+                                    <div class="d-flex flex-column bg-white border rounded-2">
+
+                                        <ul class="search-select-list list-group flex-fill overflow-auto border-bottom rounded-0 w-100" id="dropdownMenu"></ul>
+
+                                        <input type="text" class="form-control flex-grow-1 w-auto m-2" placeholder="Search..." id="dropdownInput" aria-expanded="false" autocomplete="off" required />
+
+                                    </div>
 
                                 </div>
+
+                                <template id="folderOption">
+                                <li class="list-group-item list-group-item-light list-group-item-action">
+                                    <a href="#" class="dropdown-item py-1">
+                                    <div class="form-select-option text-truncate">
+                                        <b data-field='name'></b><br/>
+                                        <span class="fw-light" data-field='type'></span>
+                                    </div>
+                                    </a>
+                                </li>
+                                </template>
+
+                                <template id="noFolderOption">
+                                <li class="list-group-item list-group-item-light disabled">
+                                    <a href="#" class="dropdown-item py-1">
+                                    <div class="form-select-option text-truncate">
+                                        <i>No folders matching your query</i>
+                                    </div>
+                                    </a>
+                                </li>
+                                </template>
 
                             </div>
 

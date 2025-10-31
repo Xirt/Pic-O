@@ -150,7 +150,14 @@
                         <label for="albumTitleCreate" class="col-4 col-form-label">Album Title</label>
 
                         <div class="col-8">
-                            <input type="text" class="form-control" id="albumTitleCreate" name="name" placeholder="Album title" value="" required>
+
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-fonts"></i>
+                                </span>
+                                <input type="text" class="form-control" id="albumTitleCreate" name="name" placeholder="Album title" value="" required>
+                            </div>
+
                         </div>
 
                     </div>
@@ -175,21 +182,57 @@
                             </div>
 
                         </div>
-                        
+
                     </div>
 
                     <div class="mb-1 row align-items-center">
 
-                        <label class="col-4 col-form-label">Folder</label>
+                        <label for="folder" class="col-4 col-form-label">Folder</label>
 
                         <div class="col-8">
 
-                            <div class="dropup position-relative" id="search-dropdown-container">
+                            <div class="position-relative m-0" data-tpl-option="folderOption" data-tpl-empty="noFolderOption" id="folderSearchSelect">
 
-                                <input type="text" class="form-control" placeholder="Search..." id="dropdownInput" data-bs-toggle="dropdown" aria-expanded="false" autocomplete="off" required />
-                                <ul class="dropdown-menu w-100" id="dropdownMenu"></ul>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="folder" placeholder="Select a folder" readonly>
+                                    <input type="hidden" class="form-control" id="type" name="folder_id">
+                                </div>
 
-                                <input type="hidden" name="folder_id" id="dropdownHidden">
+                                <div class="search-select-wrapper position-absolute bottom-100 start-0 w-100">
+
+                                    <div class="d-flex flex-column bg-white border rounded-2">
+
+                                        <ul class="search-select-list list-group flex-fill overflow-auto border-bottom rounded-0 w-100" id="dropdownMenu"></ul>
+
+                                        <input type="text" class="form-control flex-grow-1 w-auto m-2" placeholder="Search..." id="dropdownInput" aria-expanded="false" autocomplete="off" required />
+
+                                    </div>
+
+                                </div>
+
+                                <template id="folderOption">
+                                <li class="list-group-item list-group-item-light list-group-item-action">
+                                    <a href="#" class="dropdown-item py-1">
+                                    <div class="form-select-option text-truncate">
+                                        <b data-field='name'></b><br/>
+                                        <span class="fw-light" data-field='path'></span>
+                                    </div>
+                                    </a>
+                                </li>
+                                </template>
+
+                                <template id="noFolderOption">
+                                <li class="list-group-item list-group-item-light disabled">
+                                    <a href="#" class="dropdown-item py-1">
+                                    <div class="form-select-option text-truncate">
+                                        <i>No folders matching your query</i>
+                                    </div>
+                                    </a>
+                                </li>
+                                </template>
 
                             </div>
 

@@ -1,3 +1,24 @@
+:root {
+    --bs-primary: #7873f5;
+    --bs-primary-rgb: 120, 115, 245;
+}
+
+/* Optional: make sure bg-primary and btn-primary use it properly */
+.bg-primary {
+    background-color: var(--bs-primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: #7873f5 !important;
+    border-color: #7873f5 !important;
+}
+
+
 body {
     margin-bottom: 40px;
 }
@@ -330,15 +351,41 @@ footer {
     z-index: 250;
 }
 
-
-.dropdown-item i.bi-check-lg {
-    visibility: hidden;
+/**
+ * Select Dropdown
+ */
+.search-select-wrapper {
+    transform: translateY(0) !important;
+    max-height: 0;
+    min-width: 250px;
+    max-width: min(50vh, 500px);
+    transition: max-height 0.25s linear;
+    overflow: hidden;
+    border-width: 0 !important; 
 }
 
-.dropdown-item.selected i.bi-check-lg {
-    visibility: visible;
+.search-select-wrapper.grow {
+    max-height: 50vh;
+    border-width: 1px !important;
 }
 
+.search-select-wrapper b {
+    font-size: 0.9em;
+}
+
+.search-select-wrapper span {
+    font-size: 0.8em;
+}
+
+.search-select-wrapper .list-group-item:last-child {
+    border-bottom: none !important;
+}
+
+.search-select-wrapper .list-group-item.active {
+    background: rgba(120, 115, 245, 0.25);
+    border-color: rgba(120, 115, 245, 0.25);
+    color: var(--bs-light-text-emphasis);
+}
 
 
 /**
@@ -576,4 +623,7 @@ body:not(.slideshow-mode) .picoview .bi-stop-fill {
 .show:not(.offcanvas):not(.offcanvas-backdrop) {
     opacity: 1 !important;
     transform: scale(1) !important;
+}
+.show-opacity {
+    opacity: 1 !important;
 }

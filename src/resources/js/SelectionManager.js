@@ -2,21 +2,21 @@ import { AppRequest } from './AppRequest.js';
 
 export class SelectionManager {
 
-    constructor({elements, apiUrl, renderItem}) {
+    constructor({container, apiUrl}) {
+                                                    console.log(container);
+        this.container  = document.getElementById(container);
+        this.menu       = this.container.querySelector('.search-select-wrapper');
+        this.selectList = this.container.querySelector('.search-select-list');
+        this.selectEl   = this.container.querySelector('input[readonly]');
+        this.hiddenEl   = this.container.querySelector('input[type="hidden"]');
+        this.inputEl    = this.menu.querySelector('input[type="text"]');
 
-        ['input', 'menu', 'container', 'hiddenInput'].forEach(key => {
-            this[key] = typeof elements[key] === 'string'
-                ? document.getElementById(elements[key])
-                : elements[key];
-        });
-
-        this.dropdown       = new bootstrap.Dropdown(this.input);
+        this.optionTpl      = this.container.dataset.tplOption;
+        this.noOptionTpl    = this.container.dataset.tplEmpty;
         this.searchEndpoint = apiUrl;
-        this.renderItem     = renderItem || this.defaultRenderItem;
 
         this.currentItems  = [];
-        this.selectedValue = null;
-        this.lastQuery     = '';
+        this.lastQuery     = null;
         this.debounceTimer = null;
         this.activeIndex   = -1;
 
@@ -26,85 +26,84 @@ export class SelectionManager {
 
     init() {
 
-        this.input.addEventListener('input', () => this.onInput());
-        this.input.addEventListener('keydown', (e) => this.handleKeyDown(e));
+        this.inputEl.addEventListener('input', () => {
+            this.updateList();
+            this.show();
+        });
+
+        this.inputEl.addEventListener('keydown', (e) => {
+            this.handleKeyDown(e);
+        });
+
+        this.selectEl.addEventListener('focus', () => {
+            this.inputEl.focus();
+            this.updateList();
+            this.show();
+        });
 
         document.addEventListener('click', (e) => {
             if (!this.container.contains(e.target)) {
-                this.dropdown.hide();
+                this.hide();
             }
         });
 
     }
 
-    defaultRenderItem(item) {
+    getOptionFragment(item) {
 
-        const container = document.createElement('div');
+        const tpl = document.getElementById(this.optionTpl);
+        const fragment = tpl.content.cloneNode(true);
 
-        const boldName = document.createElement('b');
-        boldName.textContent = item.name;
-        container.appendChild(boldName);
+        fragment.querySelectorAll('[data-field]').forEach(child => {
 
-        if (item.label) {
+            const key = child.dataset.field;
+            if (key in item) child.textContent = item[key];
 
-            container.appendChild(document.createElement('br'));
+        });
 
-            const labelSpan = document.createElement('span');
-            labelSpan.style.fontSize = '0.75em';
-            labelSpan.textContent = item.label;
-            container.appendChild(labelSpan);
-
-        }
-
-        return container;
+        return fragment;
 
     }
 
-    clearMenu() {
-        this.menu.innerHTML = '';
-        this.currentItems = [];
-        this.activeIndex = -1;
+    getNoOptionFragment() {
+
+        const tpl = document.getElementById(this.noOptionTpl);
+        return tpl.content.cloneNode(true);
+
     }
 
-    populateMenu(items) {
+    populateOptionList(items = []) {
 
-        this.clearMenu();
+        this.clear();
 
         if (!items || items.length === 0) {
-            const li = document.createElement('li');
-            li.innerHTML = `<span class="dropdown-item disabled">No results</span>`;
-            this.menu.appendChild(li);
+
+            const fragment = this.getNoOptionFragment();
+            this.selectList.appendChild(fragment);
+
             return;
+
         }
 
         items.forEach((item, index) => {
-            console.log(item);
 
-            const li = document.createElement('li');
-            const content = this.renderItem(item); // Can be HTML string or element
+            const fragment = this.getOptionFragment(item);
+            fragment.querySelector('a').addEventListener('click', (e) => {
 
-            // If content is a string, wrap it in <a>; if it's a Node, append directly
-            if (typeof content === 'string') {
-                li.innerHTML = `<a class="dropdown-item h6" href="#" data-value="${item.id}">${content}</a>`;
-            } else if (content instanceof Node) {
-                const a = document.createElement('a');
-                a.className = 'dropdown-item h6';
-                a.href = '#';
-                //a.dataset.value = item.id;
-                a.appendChild(content);
-                li.appendChild(a);
-            }
-
-            li.querySelector('a').addEventListener('click', (e) => {
-                e.preventDefault();
                 this.selectItem(index);
+                e.preventDefault();
+
             });
 
-            this.menu.appendChild(li);
+            this.selectList.appendChild(fragment);
+            if (item.id == this.hiddenEl.value) {
+                this.updateActiveItem(index);
+            }
+
         });
 
-        this.dropdown.show();
         this.currentItems = items;
+
     }
 
     selectItem(index) {
@@ -112,71 +111,88 @@ export class SelectionManager {
         const item = this.currentItems[index];
         if (!item) return;
 
-        this.input.value = item.label || item.name;
-        this.hiddenInput.value = item.id;
-        this.selectedValue = item.id;
-        this.dropdown.hide();
-        this.clearMenu();
+        this.updateActiveItem(index);
+        setTimeout(() => this.updateList(), 500);
+        this.hide();
+
+        this.selectEl.value = this.currentItems[index].name;
+        this.hiddenEl.value = this.currentItems[index].id;
+
+        this.inputEl.value = this.currentItems[index].name;
+
+
     }
 
-    async fetchItems(query) {
-
-        if (!query || query.length < 2) {
-            return this.clearMenu();
-        }
+    async fetchItems(query, show = true) {
 
         try {
 
             const result = await AppRequest.request(`${this.searchEndpoint}?q=${encodeURIComponent(query)}`, 'GET');
-            this.populateMenu(result.data);
+            this.populateOptionList(result.data);
 
-        } catch (err) { console.error(e); }
+        } catch (e) { console.error(e); }
 
     }
 
-    updateActiveItem(direction) {
-        const items = Array.from(this.menu.querySelectorAll('.dropdown-item:not(.disabled)'));
+    updateActiveItem(index) {
+
+        const items = Array.from(this.selectList.children).filter(el => !el.classList.contains('disabled'));
         if (items.length === 0) return;
 
         items.forEach(el => el.classList.remove('active'));
+        items[index].classList.add('active');
+        this.activeIndex = index;
 
-        if (direction === 'down') {
-            this.activeIndex = (this.activeIndex + 1) % items.length;
-        } else if (direction === 'up') {
-            this.activeIndex = (this.activeIndex - 1 + items.length) % items.length;
-        }
-
-        items[this.activeIndex].classList.add('active');
     }
 
     handleKeyDown(e) {
-        if (this.menu.children.length === 0) return;
+
+        const items = this.selectList.children.length;
+        if (items === 0) return;
 
         switch (e.key) {
+
             case 'ArrowDown':
+
                 e.preventDefault();
-                this.updateActiveItem('down');
-                this.dropdown.show();
+
+                this.updateActiveItem((this.activeIndex + 1) % items);
+                this.show();
+
                 break;
+
             case 'ArrowUp':
+
                 e.preventDefault();
-                this.updateActiveItem('up');
-                this.dropdown.show();
+
+                this.updateActiveItem((this.activeIndex - 1 + items) % items);
+                this.show();
+
                 break;
+
             case 'Enter':
+
                 e.preventDefault();
+
                 if (this.activeIndex >= 0) {
                     this.selectItem(this.activeIndex);
                 }
+
                 break;
+
             case 'Escape':
-                this.dropdown.hide();
+
+                this.hide();
+
                 break;
+
         }
+
     }
 
-    onInput() {
-        const query = this.input.value.trim();
+    updateList() {
+
+        const query = this.inputEl.value.trim();
 
         if (query === this.lastQuery) return;
         this.lastQuery = query;
@@ -185,5 +201,27 @@ export class SelectionManager {
         this.debounceTimer = setTimeout(() => {
             this.fetchItems(query);
         }, 300);
+
     }
+
+    clear() {
+
+        this.selectList.innerHTML = '';
+        this.currentItems = [];
+        this.activeIndex = -1;
+
+    }
+
+    show() {
+
+        this.menu.classList.add('grow');
+
+    }
+
+    hide() {
+        
+        this.menu.classList.remove('grow');
+
+    }
+
 }

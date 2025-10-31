@@ -23,8 +23,8 @@
     "file": "assets/Selection-BoYlDC7p.js",
     "name": "Selection"
   },
-  "_SelectionManager-Ce4h-qpd.js": {
-    "file": "assets/SelectionManager-Ce4h-qpd.js",
+  "_SelectionManager-BbtZTF85.js": {
+    "file": "assets/SelectionManager-BbtZTF85.js",
     "name": "SelectionManager",
     "imports": [
       "_AppRequest-B2BOAsCr.js"
@@ -35,7 +35,7 @@
     "name": "domHelpers"
   },
   "resources/css/app.css": {
-    "file": "assets/app-i1_F13e3.css",
+    "file": "assets/app-C9nzbYL2.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -65,7 +65,7 @@
     ]
   },
   "resources/js/albums.js": {
-    "file": "assets/albums-DUJ7Nxf9.js",
+    "file": "assets/albums-Q--MaSH-.js",
     "name": "albums",
     "src": "resources/js/albums.js",
     "isEntry": true,
@@ -74,7 +74,7 @@
       "_Grid-FxjsC6xL.js",
       "_Selection-BoYlDC7p.js",
       "_AppRequest-B2BOAsCr.js",
-      "_SelectionManager-Ce4h-qpd.js"
+      "_SelectionManager-BbtZTF85.js"
     ]
   },
   "resources/js/app.js": {
@@ -84,7 +84,7 @@
     "isEntry": true
   },
   "resources/js/folders.js": {
-    "file": "assets/folders-v3m-8_VO.js",
+    "file": "assets/folders-BNp9LxGy.js",
     "name": "folders",
     "src": "resources/js/folders.js",
     "isEntry": true,
@@ -93,7 +93,7 @@
       "_Selection-BoYlDC7p.js",
       "_AppRequest-B2BOAsCr.js",
       "_Grid-FxjsC6xL.js",
-      "_SelectionManager-Ce4h-qpd.js",
+      "_SelectionManager-BbtZTF85.js",
       "_domHelpers-BtKPVOZb.js"
     ]
   },

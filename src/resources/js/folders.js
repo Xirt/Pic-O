@@ -13,6 +13,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const manager = new Folder(new Selection(container));
     const viewer  = new PicoView(container);
 
+    const folderSelect = new SelectionManager({
+        container: 'folderSearchSelect',
+        apiUrl: route('api.albums.search')
+    });
+
+    folderSelect.updateList();
     manager.init();
 
     attachViewerEvents(viewer, manager);
@@ -26,20 +32,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
 
     attachFormEvents('updateAlbumForm', 'PUT',
-        (data) => route('api.album.photos.addMultiple', { album: data.album_id }),
+        (data) => route('api.albums.photos.addMultiple', { album: data.album_id }),
         (result, data) => route('albums.show', { album: data.album_id })
     );
-
-    new SelectionManager({
-        elements: {
-            input       : 'dropdownInput',
-            menu        : 'dropdownMenu',
-            container   : 'search-dropdown-container',
-            hiddenInput : 'dropdownHidden'
-        },
-        apiUrl: route('api.albums.search'),
-        renderItem: null
-    });
 
     function attachViewerEvents(viewer, manager) {
 
@@ -121,6 +116,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch (e) { console.error(e); }
 
         });
+
+        form.reset();
 
     }
 

@@ -76,16 +76,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     });
 
-    new SelectionManager({
-        elements: {
-            input       : 'dropdownInput',
-            menu        : 'dropdownMenu',
-            container   : 'search-dropdown-container',
-            hiddenInput : 'dropdownHidden'
-        },
-        apiUrl: route('api.folders.search'),
-        renderItem: null
+    const folderSelect = new SelectionManager({
+        container: 'folderSearchSelect',
+        apiUrl: route('api.folders.search')
     });
+
+    createForm.reset();
+    folderSelect.updateList();
 
 });
 
