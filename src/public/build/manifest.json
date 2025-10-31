@@ -35,7 +35,7 @@
     "name": "domHelpers"
   },
   "resources/css/app.css": {
-    "file": "assets/app-C9nzbYL2.css",
+    "file": "assets/app-DhXCj5xZ.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -108,7 +108,7 @@
     ]
   },
   "resources/js/timeline.js": {
-    "file": "assets/timeline-CAQogdZw.js",
+    "file": "assets/timeline-tXllmcGR.js",
     "name": "timeline",
     "src": "resources/js/timeline.js",
     "isEntry": true,

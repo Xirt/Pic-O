@@ -345,11 +345,21 @@ table .col-actions {
 
 footer {
     width: 100%;
-    height: 50px; /* adjust as needed */
+    height: 50px;
     background: linear-gradient(to top, white, transparent);
     pointer-events: none;
     z-index: 250;
 }
+
+
+/**
+ * Timeline
+ */
+#currentSectionLabel {
+   opacity: 0;
+   transition: opacity 0.4s linear;
+}
+
 
 /**
  * Select Dropdown
@@ -361,7 +371,7 @@ footer {
     max-width: min(50vh, 500px);
     transition: max-height 0.25s linear;
     overflow: hidden;
-    border-width: 0 !important; 
+    border-width: 0 !important;
 }
 
 .search-select-wrapper.grow {

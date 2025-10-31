@@ -50,10 +50,14 @@ class Timeline {
 
         const nav = document.getElementById('currentSectionLabel');
         document.body.addEventListener('activate.bs.scrollspy', (e) => {
+
             const activeLink = document.querySelector('#dummy-nav a.active');
+            
             if (activeLink) {
                 nav.textContent = activeLink.textContent.trim();
+                nav.classList.add('show');
             }
+
         });
 
         this.loader = new PhotoLoader();
