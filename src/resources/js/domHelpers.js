@@ -75,7 +75,8 @@ export function getJSONFromForm(form) {
 }
 
 export function populateForm(form, data) {
-                 
+
+    form.reset();
     for (const key in data) {
 
         if (data.hasOwnProperty(key)) {

@@ -37,8 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const createForm = document.getElementById('createAlbumForm');
-    const createOffcanvas = document.getElementById('offcanvasCreateAlbum');
-
     createForm.addEventListener('submit', async function (e) {
 
         e.preventDefault();
@@ -54,17 +52,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (e) { console.error(e); }
 
-        createOffcanvas.hide();
+        closeCanvas('offcanvasCreateAlbum');
 
     });
 
+    const createOffcanvas = document.getElementById('offcanvasCreateAlbum');
     createOffcanvas.addEventListener('show.bs.offcanvas', function () {
         createForm.reset();
     });
 
     const updateForm = document.getElementById('updateAlbumForm');
-    const updateOffcanvas = document.getElementById('offcanvasUpdateAlbum');
-
     updateForm.addEventListener('submit', async function (e) {
 
         e.preventDefault();
@@ -78,12 +75,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (e) { console.error(e); }
 
-        updateOffcanvas.hide();
+        closeCanvas('offcanvasUpdateAlbum');
 
-    });
-
-    updateOffcanvas.addEventListener('show.bs.offcanvas', function () {
-        updateForm.reset();
     });
 
     const folderSelect = new SelectionManager({
@@ -181,7 +174,7 @@ class Albums {
 
         } catch (e) { console.error(e); }
 
-        openCanvas('offcanvasModifyAlbum');
+        openCanvas('offcanvasUpdateAlbum');
 
     }
 

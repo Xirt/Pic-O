@@ -275,13 +275,13 @@
 
     </div>
 
-    <div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvasModifyAlbum" aria-labelledby="offcanvasModifyLabel">
+    <div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvasUpdateAlbum" aria-labelledby="offcanvasUpdateLabel">
 
         <div class="offcanvas-inner bg-white rounded-top mx-auto w-100 px-3">
 
             <div class="offcanvas-header">
 
-                <h5 class="offcanvas-title" id="offcanvasModifyLabel">
+                <h5 class="offcanvas-title" id="offcanvasUpdateLabel">
                     Modify album
                 </h5>
 
