@@ -57,7 +57,7 @@ class AlbumController extends Controller
 
         $albums = Album::with(['coverPhoto'])
             ->withCount('photos')
-            ->when($query, fn($q) => $q->where('name', 'like', "%{$query}%"))
+            ->when($query, fn($q) => $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%']))
             ->when($type, fn($q) => $q->where('type', $type))
             ->orderBy($order, $direction)
             ->paginate(25);

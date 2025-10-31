@@ -40,7 +40,7 @@ class FolderController extends Controller
         $query = $validated['q'] ?? '';
 
         $folders = Folder::query()
-            ->where('path', 'like', '%' . $query . '%')
+            ->whereRaw('LOWER(path) LIKE ?', ['%' . strtolower($query) . '%'])
             ->orderBy('name')
             ->paginate(25);
 
