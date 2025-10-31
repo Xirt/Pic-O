@@ -242,11 +242,10 @@ class AlbumController extends Controller
 
     private function getDateRange(Album $album): array
     {
-        $dates = $album->photos()
-            ->selectRaw('MIN(taken_at) as start_date, MAX(taken_at) as end_date')
-            ->first(['taken_at']); // avoid selecting pivot columns
+        $start = $album->photos()->min('taken_at');
+        $end   = $album->photos()->max('taken_at');
 
-        return $dates ? $dates->toArray() : ['start_date' => null, 'end_date' => null];
+        return ['start_date' => $start, 'end_date' => $end];
     }
 
     private function getRandomCover($list): ?int
