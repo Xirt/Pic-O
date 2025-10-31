@@ -249,7 +249,7 @@ export const GridItemFactory = {
 
         const overlay = document.createElement('div');
         overlay.className = 'card-img-overlay top rounded-0 bg-dark text-light fw-semibold text-truncate p-2';
-        overlay.textContent = album.name;
+        overlay.textContent = album.display_name;
         card.appendChild(overlay);
 
         const toolbar = document.createElement('div');

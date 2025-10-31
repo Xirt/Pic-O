@@ -27,7 +27,7 @@
 
             <h1 class="flex-grow-1 text-truncate m-0 px-2 pb-1">
 
-                {{ $album->name }}
+                {{ $album->display_name }}
 
             </h1>
 
