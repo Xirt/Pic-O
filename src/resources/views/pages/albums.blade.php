@@ -14,7 +14,7 @@
 
             <div class="toolbar text-end pe-1 d-flex align-items-center">
 
-                <button type="button" class="btn btn-sm btn-primary flex-shrink-0 me-2 no-select" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-create-album" aria-controls="offcanvas-create-album">
+                <button type="button" class="btn btn-sm btn-primary flex-shrink-0 me-2 no-select" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCreateAlbum" aria-controls="offcanvasCreateAlbum">
                     <i class="bi bi-stars m-0 me-sm-1"></i>
                     <span class="d-none d-sm-inline">Create album</span>
                 </button>
@@ -128,7 +128,7 @@
 
     </div>
 
-    <div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvas-create-album" aria-labelledby="offcanvasCreateLabel">
+    <div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvasCreateAlbum" aria-labelledby="offcanvasCreateLabel">
 
         <div class="offcanvas-inner bg-white rounded-top mx-auto w-100 px-3">
 
@@ -275,7 +275,7 @@
 
     </div>
 
-    <div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvas-modify-album" aria-labelledby="offcanvasModifyLabel">
+    <div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvasModifyAlbum" aria-labelledby="offcanvasModifyLabel">
 
         <div class="offcanvas-inner bg-white rounded-top mx-auto w-100 px-3">
 
