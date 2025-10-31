@@ -14,9 +14,18 @@ class AlbumResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $nameString = strtr(config('settings.album_name_tpl', '{name}'), [
+            '{id}'    => $this->id,
+            '{name}'  => $this->name,
+            '{year}'  => $this->start_date?->year,
+            '{month}' => $this->start_date?->format('m'),
+            '{day}'   => $this->start_date?->format('d'),
+            '{type}'  => $this->type?->value ?? '',
+        ]);
+
         return [
             'id'     	     => $this->id,
-            'name'   	     => $this->name,
+            'name'   	     => $nameString,
             'type'           => $this->type?->value,
             'start_date'     => $this->start_date?->toDateString(),
             'end_date'       => $this->end_date?->toDateString(),

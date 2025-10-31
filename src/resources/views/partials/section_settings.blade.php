@@ -8,9 +8,9 @@
 
         <div class="mb-1 row align-items-center">
 
-            <label for="site_name" class="col-sm-3 col-form-label">Gallery Name</label>
+            <label for="site_name" class="col-md-4 col-form-label">Gallery Name</label>
 
-            <div class="col-sm-9">
+            <div class="col-md-8">
 
                 <div class="input-group">
                     <span class="input-group-text">
@@ -25,9 +25,9 @@
 
         <div class="mb-1 row align-items-center">
 
-            <label for="media_root" class="col-sm-3 col-form-label">Photo directory</label>
+            <label for="media_root" class="col-md-4 col-form-label">Photo directory</label>
 
-            <div class="col-sm-9">
+            <div class="col-md-8">
 
                 <div class="input-group">
                     <span class="input-group-text">
@@ -37,13 +37,14 @@
                 </div>
 
             </div>
+
         </div>
 
         <div class="mb-1 row align-items-center">
 
-            <label for="image_rendering" class="col-sm-3 col-form-label">Image rendering</label>
+            <label for="image_rendering" class="col-md-4 col-form-label">Image rendering</label>
 
-            <div class="col-sm-9">
+            <div class="col-md-8">
 
                 <div class="input-group">
 
@@ -63,9 +64,9 @@
 
         <div class="mb-1 row align-items-center">
 
-            <label for="cache_renders" class="col-sm-3 col-form-label">Image caching</label>
+            <label for="cache_renders" class="col-md-4 col-form-label">Image caching</label>
 
-            <div class="col-sm-9">
+            <div class="col-md-8">
 
                 <div class="input-group">
 
@@ -85,9 +86,9 @@
 
         <div class="mb-1 row align-items-center">
 
-            <label for="session_persistent" class="col-sm-3 col-form-label">Login Type</label>
+            <label for="session_persistent" class="col-md-4 col-form-label">Login Type</label>
 
-            <div class="col-sm-9">
+            <div class="col-md-8">
 
                 <div class="input-group">
 
@@ -99,6 +100,23 @@
                         <option value="0" {{ !config('settings.session_persistent') ? 'selected' : '' }}>Short</option>
                     </select>
 
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mb-1 row align-items-center">
+
+            <label for="album_name_tpl" class="col-md-4 col-form-label">Album Name Template</label>
+
+            <div class="col-md-8">
+
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-fonts"></i>
+                    </span>
+                    <input type="text" class="form-control" id="album_name_tpl" name="album_name_tpl" value="{{ config('settings.album_name_tpl') }}" required>
                 </div>
 
             </div>

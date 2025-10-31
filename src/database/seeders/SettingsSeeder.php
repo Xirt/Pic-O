@@ -39,5 +39,10 @@ class SettingsSeeder extends Seeder
 			['key'   => 'session_persistent'],
 			['value' => '0']
 		);
+
+		Setting::firstOrCreate(
+			['key'   => 'album_name_tpl'],
+			['value' => '{name} ({year})']
+		);
     }
 }

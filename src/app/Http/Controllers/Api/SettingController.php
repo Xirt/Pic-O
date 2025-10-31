@@ -35,6 +35,10 @@ class SettingController extends Controller
             'rules' => 'required|in:0,1',
         ],
 
+        'album_name_tpl' => [
+            'rules' => 'required|string|max:255',
+        ],
+
     ];
 
     /**
