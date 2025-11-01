@@ -3,7 +3,7 @@ import { PicoView } from './PicoView.js';
 import { Selection } from './Selection.js';
 import { AppRequest } from './AppRequest.js';
 import { Grid, GridItemFactory } from './Grid.js';
-import { populateForm, removeEventListeners, openCanvas, toast, createIcon } from './domHelpers.js';
+import { getJSONFromForm, populateForm, removeEventListeners, openCanvas, toast, createIcon } from './domHelpers.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -18,8 +18,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     attachViewerEvents(viewer, manager);
     attachContainerEvents(container, viewer);
 
-    const offcanvas = document.getElementById('offcanvas-share-album');
-    offcanvas.addEventListener('show.bs.offcanvas', async function(e) {
+    const updateForm = document.getElementById('updateAlbumForm');
+    updateForm.addEventListener('submit', async function (e) {
+
+        e.preventDefault();
+
+        try {
+
+            await AppRequest.request(route('api.albums.update', { album: id }), 'PATCH', getJSONFromForm(updateForm), 'albums');
+            location.reload();
+
+        } catch (e) { console.error(e); }
+
+    });
+
+    const updateAlbumOffcanvas = document.getElementById('offcanvasUpdateAlbum');
+    updateAlbumOffcanvas.addEventListener('show.bs.offcanvas', async function(e) {
+
+        try {
+
+            const url = route('api.albums.show', { album: id });
+            const result = await AppRequest.request(url, 'GET');
+
+            populateForm(document.getElementById('updateAlbumForm'), result.data);
+
+        } catch (e) { console.error(e); }
+
+        openCanvas('offcanvasUpdateAlbum');
+
+    });
+
+    const shareAlbumOffcanvas = document.getElementById('offcanvasShareAlbum');
+    shareAlbumOffcanvas.addEventListener('show.bs.offcanvas', async function(e) {
 
         try {
 

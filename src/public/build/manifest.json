@@ -35,7 +35,7 @@
     "name": "domHelpers"
   },
   "resources/css/app.css": {
-    "file": "assets/app-DhXCj5xZ.css",
+    "file": "assets/app-BbY3vxl5.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -52,7 +52,7 @@
     ]
   },
   "resources/js/album.js": {
-    "file": "assets/album-DXeO6sR_.js",
+    "file": "assets/album-B5d9LffI.js",
     "name": "album",
     "src": "resources/js/album.js",
     "isEntry": true,

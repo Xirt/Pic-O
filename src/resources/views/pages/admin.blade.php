@@ -55,10 +55,9 @@
 </div>
 
 
-@include('partials.create-user-form')
+@include('partials.offcanvas-create-user')
 
-
-@include('partials.modify-user-form')
+@include('partials.offcanvas-update-user')
 
 @endsection
 
