@@ -188,7 +188,7 @@ class Albums {
         const countEl = document.getElementById('delCount');
         countEl.textContent = cardArray.length;
 
-        const offcanvas = openCanvas('offcanvas-remove-album');
+        const offcanvas = openCanvas('offcanvasRemoveAlbum');
 
         let removeButton = document.getElementById('btn-remove');
         removeEventListeners(removeButton).addEventListener('click', () => {
