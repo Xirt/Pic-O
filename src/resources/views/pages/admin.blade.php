@@ -59,6 +59,8 @@
 
 @include('partials.offcanvas-update-user')
 
+@include('partials.offcanvas-confirm-delete-user')
+
 @endsection
 
 @push('scripts')
