@@ -17,7 +17,7 @@
 
                     <div class="col-sm-8">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-fonts"></i>
                             </span>
@@ -34,7 +34,7 @@
 
                     <div class="col-sm-8">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-fonts"></i>
                             </span>
@@ -51,7 +51,7 @@
 
                     <div class="col-sm-8">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-key"></i>
                             </span>
@@ -68,7 +68,7 @@
 
                     <div class="col-sm-8">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-key"></i>
                             </span>
@@ -85,7 +85,7 @@
 
                     <div class="col-sm-4">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-list"></i>
                             </span>
@@ -105,11 +105,11 @@
 
                 <div class="d-flex justify-content-center mt-4 mb-3">
 
-                    <button type="submit" class="btn btn-primary w-50 mx-2 mx-sm-4">
+                    <button type="submit" class="btn btn-sm btn-primary w-50 mx-2 mx-sm-4">
                         <i class="bi bi-person-plus me-1"></i> Create
                     </button>
 
-                    <button type="button" class="btn btn-secondary w-50 mx-2 mx-sm-4" data-bs-dismiss="offcanvas">
+                    <button type="button" class="btn btn-sm btn-secondary w-50 mx-2 mx-sm-4" data-bs-dismiss="offcanvas">
                         <i class="bi bi-x-lg me-1"></i> Cancel
                     </button>
 

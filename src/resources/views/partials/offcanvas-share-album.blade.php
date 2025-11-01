@@ -9,7 +9,7 @@
             </h5>
 
             <div class="text-end">
-                <button type="button" class="btn btn-primary" id="generateTokenBtn" data-album-id="{{ $album->id }}">
+                <button type="button" class="btn btn-sm btn-primary" id="generateTokenBtn" data-album-id="{{ $album->id }}">
                     <i class="bi bi-link-45deg"></i> Generate Link
                 </button>
             </div>
@@ -38,7 +38,7 @@
 
                         <div class="d-flex">
 
-                            <input class="form-control">
+                            <input class="form-control form-control-sm">
 
                             <button type="button" class="btn btn-sm btn-primary ms-2 btn-copy"><i class="bi bi-copy"></i></button>
 
@@ -57,7 +57,7 @@
 
                 <div class="d-flex justify-content-center mb-3">
 
-                    <button type="button" class="btn btn-secondary w-50 mx-4" data-bs-dismiss="offcanvas">
+                    <button type="button" class="btn btn-sm btn-secondary w-50 mx-4" data-bs-dismiss="offcanvas">
                         <i class="bi bi-x-lg me-1"></i> Close
                     </button>
 

@@ -21,7 +21,7 @@
 
                         <div class="col-sm-8">
 
-                            <div class="input-group">
+                            <div class="input-group input-group-sm">
                                 <span class="input-group-text">
                                     <i class="bi bi-fonts"></i>
                                 </span>
@@ -38,7 +38,7 @@
 
                         <div class="col-sm-8">
 
-                            <div class="input-group">
+                            <div class="input-group input-group-sm">
                                 <span class="input-group-text">
                                     <i class="bi bi-list"></i>
                                 </span>
@@ -63,7 +63,7 @@
 
                             <div class="position-relative m-0" data-tpl-option="folderOption" data-tpl-empty="noFolderOption" id="folderSearchSelect">
 
-                                <div class="input-group">
+                                <div class="input-group input-group-sm">
                                     <span class="input-group-text">
                                         <i class="bi bi-search"></i>
                                     </span>
@@ -77,7 +77,7 @@
 
                                         <ul class="search-select-list list-group flex-fill overflow-auto border-bottom rounded-0 w-100" id="dropdownMenu"></ul>
 
-                                        <input type="text" class="form-control flex-grow-1 w-auto m-2" placeholder="Search..." id="dropdownInput" aria-expanded="false" autocomplete="off" required />
+                                        <input type="text" class="form-control form-control-sm flex-grow-1 w-auto m-2" placeholder="Search..." id="dropdownInput" aria-expanded="false" autocomplete="off" required />
 
                                     </div>
 
@@ -110,7 +110,7 @@
 
                     </div>
 
-                    <div class="mb-3 mt-2 mt-sm-0 row align-items-center">
+                    <div class="mb-1 mt-2 mt-sm-0 row align-items-center">
 
                         <label class="col-sm-4 col-form-label d-none d-sm-block">Scope</label>
 
@@ -127,11 +127,11 @@
 
                     <div class="d-flex justify-content-center mt-4 mb-3">
 
-                        <button type="submit" class="btn btn-primary w-50 mx-2 mx-sm-44">
+                        <button type="submit" class="btn btn-sm btn-primary w-50 mx-2 mx-sm-44">
                             <i class="bi bi-stars me-1"></i> Create
                         </button>
 
-                        <button type="button" class="btn btn-secondary w-50 mx-2 mx-sm-4" data-bs-dismiss="offcanvas">
+                        <button type="button" class="btn btn-sm btn-secondary w-50 mx-2 mx-sm-4" data-bs-dismiss="offcanvas">
                             <i class="bi bi-x-lg me-1"></i> Cancel
                         </button>
 

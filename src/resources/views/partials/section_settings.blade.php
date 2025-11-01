@@ -12,7 +12,7 @@
 
             <div class="col-md-8">
 
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                     <span class="input-group-text">
                         <i class="bi bi-fonts"></i>
                     </span>
@@ -29,7 +29,7 @@
 
             <div class="col-md-8">
 
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                     <span class="input-group-text">
                         <i class="bi bi-fonts"></i>
                     </span>
@@ -46,7 +46,7 @@
 
             <div class="col-md-8">
 
-                <div class="input-group">
+                <div class="input-group input-group-sm">
 
                     <span class="input-group-text">
                         <i class="bi bi-list"></i>
@@ -68,7 +68,7 @@
 
             <div class="col-md-8">
 
-                <div class="input-group">
+                <div class="input-group input-group-sm">
 
                     <span class="input-group-text">
                         <i class="bi bi-list"></i>
@@ -90,7 +90,7 @@
 
             <div class="col-md-8">
 
-                <div class="input-group">
+                <div class="input-group input-group-sm">
 
                     <span class="input-group-text">
                         <i class="bi bi-list"></i>
@@ -112,7 +112,7 @@
 
             <div class="col-md-8">
 
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                     <span class="input-group-text">
                         <i class="bi bi-fonts"></i>
                     </span>
@@ -129,10 +129,10 @@
 
         <div class="d-flex justify-content-center mt-4 mb-1 w-lg-m500 mx-auto">
 
-            <button type="submit" class="btn btn-primary w-50 w-lg-25 mx-4">
+            <button type="submit" class="btn btn-sm btn-primary w-50 w-lg-25 mx-4">
                 <i class="bi bi-box-arrow-in-right me-2"></i> Save
             </button>
-            <button type="reset" class="btn btn-secondary w-50 w-lg-25 mx-4">
+            <button type="reset" class="btn btn-sm btn-secondary w-50 w-lg-25 mx-4">
                 <i class="bi bi-skip-backward-fill me-2"></i> Reset
             </button>
 

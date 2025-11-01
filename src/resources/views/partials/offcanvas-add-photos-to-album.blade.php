@@ -19,7 +19,7 @@
 
                         <div class="position-relative m-0" data-tpl-option="folderOption" data-tpl-empty="noFolderOption" id="folderSearchSelect">
 
-                            <div class="input-group">
+                            <div class="input-group input-group-sm">
                                 <span class="input-group-text">
                                     <i class="bi bi bi-menu-up"></i>
                                 </span>
@@ -66,13 +66,13 @@
 
                 </div>
 
-                <div class="mb-3 row align-items-center">
+                <div class="mb-1 row align-items-center">
 
                     <label class="col-sm-4 col-form-label">Selection</label>
 
                     <div class="col-sm-8">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-image"></i>
                             </span>
@@ -85,7 +85,7 @@
 
                 </div>
 
-                <div class="mb-3 alert form-message alert-success">
+                <div class="my-3 alert form-message alert-success show">
                     The album has been successfully updated.
                 </div>
 
@@ -95,11 +95,11 @@
 
                     <div class="d-none container-hidden"></div>
 
-                    <button type="submit" class="btn btn-primary w-50 mx-2 mx-sm-4">
+                    <button type="submit" class="btn btn-sm btn-primary w-50 mx-2 mx-sm-4">
                         <i class="bi bi-plus-lg me-1"></i> Add
                     </button>
 
-                    <button type="button" class="btn btn-secondary w-50 mx-2 mx-sm-4" data-bs-dismiss="offcanvas">
+                    <button type="button" class="btn btn-sm btn-secondary w-50 mx-2 mx-sm-4" data-bs-dismiss="offcanvas">
                         <i class="bi bi-x-lg me-1"></i> Cancel
                     </button>
 

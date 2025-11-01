@@ -21,7 +21,7 @@
 
                     <div class="col-sm-8">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-fonts"></i>
                             </span>
@@ -38,7 +38,7 @@
 
                     <div class="col-sm-8">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-list"></i>
                             </span>
@@ -61,7 +61,7 @@
 
                     <div class="col-sm-8">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-calendar"></i>
                             </span>
@@ -78,7 +78,7 @@
 
                     <div class="col-sm-8">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-calendar"></i>
                             </span>
@@ -95,7 +95,7 @@
 
                     <div class="col-sm-8">
 
-                        <div class="input-group">
+                        <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <i class="bi bi-list"></i>
                             </span>
@@ -118,11 +118,11 @@
 
                     <input type="hidden" class="form-control" id="albumId" name="id" placeholder="Album title" value="">
 
-                    <button type="submit" class="btn btn-primary w-50 mx-2 mx-sm-4">
+                    <button type="submit" class="btn btn-sm btn-primary w-50 mx-2 mx-sm-4">
                         <i class="bi bi-save me-1"></i> Save
                     </button>
 
-                    <button type="button" class="btn btn-secondary w-50 mx-2 mx-sm-4" data-bs-dismiss="offcanvas">
+                    <button type="button" class="btn btn-sm btn-secondary w-50 mx-2 mx-sm-4" data-bs-dismiss="offcanvas">
                         <i class="bi bi-x-lg me-1"></i> Cancel
                     </button>
 
