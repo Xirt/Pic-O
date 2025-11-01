@@ -32,7 +32,7 @@
                             <span class="d-none d-sm-inline">Modify</span>
                         </button>
 
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="confirmUserDelete({{ $user->id }})">
+                        <button type="button" class="btn btn-sm btn-secondary" disabled>
                             <i class="bi bi-trash m-0 me-sm-1"></i>
                             <span class="d-none d-sm-inline">Delete</span>
                         </button>

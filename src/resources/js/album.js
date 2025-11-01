@@ -66,6 +66,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     });
 
+    const multiDeleteBtn = document.getElementById('multiDeleteBtn');
+    multiDeleteBtn.addEventListener('click', async function (e) {
+
+        e.preventDefault();
+
+        try {
+
+            alert("Pending implementation");
+
+        } catch(e) { console.error(e); }
+
+    });i
+
     const shareBtn = document.getElementById('generateTokenBtn');
     shareBtn.addEventListener('click', async function (e) {
 
@@ -78,7 +91,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const container = document.getElementById('tokenList');
             container.appendChild(appendToken(result.data));
-            console.log(result);
 
         } catch(e) { console.error(e); }
 

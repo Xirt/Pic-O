@@ -26,7 +26,7 @@
             </a>
 
             <h1 class="flex-grow-1 text-truncate m-0 px-2 pb-1">
-            
+
                 {{ $album->display_name }}
 
             </h1>
@@ -48,7 +48,7 @@
                     <span class="d-none d-sm-inline">Selection Mode</span>
                 </button>
 
-                <button type="button" class="btn btn-sm btn-primary me-1 select-action" id="btn-remove-selection-multi" disabled>
+                <button type="button" class="btn btn-sm btn-primary me-1 select-action" id="multiDeleteBtn" disabled>
                     <i class="bi bi-trash3-fill m-0 me-sm-1"></i>
                     <span class="d-none d-sm-inline">Remove</span>
                 </button>
