@@ -28,6 +28,32 @@ class ProcessPhotoJob implements ShouldQueue
 
     private const LOG_CHANNEL = 'scanner';
 
+    private const FILENAME_PATTERNS = [
+        // Canon / Android / typical pattern: IMG_20251102_101500.jpg
+        '/(?P<y>20\d{2})(?P<m>\d{2})(?P<d>\d{2})[_-]?(?P<h>\d{2})(?P<i>\d{2})(?P<s>\d{2})?/',
+
+        // ISO-style with delimiters: 2025-11-02 10:15:00 or 2025-11-02_10-15-00
+        '/(?P<y>20\d{2})[-_](?P<m>\d{2})[-_](?P<d>\d{2})[ T-_.]?(?P<h>\d{2})[:_-]?(?P<i>\d{2})[:_-]?(?P<s>\d{2})?/',
+
+        // "YYYYMMDD-HHMM" (no seconds)
+        '/(?P<y>20\d{2})(?P<m>\d{2})(?P<d>\d{2})[-_ ](?P<h>\d{2})(?P<i>\d{2})\b/',
+
+        // "YYYY.MM.DD HH.MM.SS" (common in exported files)
+        '/(?P<y>20\d{2})[.](?P<m>\d{2})[.](?P<d>\d{2})[ _T-]?(?P<h>\d{2})[.:-]?(?P<i>\d{2})[.:-]?(?P<s>\d{2})?/',
+
+        // "DDMMYYYY_HHMMSS" (European format)
+        '/(?P<d>\d{2})(?P<m>\d{2})(?P<y>20\d{2})[_-]?(?P<h>\d{2})(?P<i>\d{2})(?P<s>\d{2})?/',
+
+        // Apple/HEIC style: "2025-11-02 10.15.00"
+        '/(?P<y>20\d{2})[-_.]?(?P<m>\d{2})[-_.]?(?P<d>\d{2})[ T_.-]?(?P<h>\d{2})[:_.-]?(?P<i>\d{2})[:_.-]?(?P<s>\d{2})?/',
+
+        // WhatsApp-style: "IMG-20251102-WA0001.jpg" ? derive date only
+        '/IMG[-_](?P<y>20\d{2})(?P<m>\d{2})(?P<d>\d{2})[-_]/',
+
+        // Google Photos export: "PXL_20251102_101500.jpg"
+        '/PXL[-_](?P<y>20\d{2})(?P<m>\d{2})(?P<d>\d{2})[_-]?(?P<h>\d{2})(?P<i>\d{2})(?P<s>\d{2})?/',
+    ];
+
     /**
      * Constructor
      */
@@ -53,11 +79,12 @@ class ProcessPhotoJob implements ShouldQueue
             return;
         }
 
+        $lastUpdate = $this->getLastRecordUpdate();
+
         // Gather photo metadata
         $dims = @getimagesize($this->path);
         $metadata = array_merge([
-            'size'     => @filesize($this->path),
-            'taken_at' => Carbon::createFromTimestamp(@filectime($this->path))
+            'size' => @filesize($this->path)
         ], $this->getEXIFData());
 
         // Store the photo
@@ -70,11 +97,25 @@ class ProcessPhotoJob implements ShouldQueue
         ], $metadata));
 
         // Attempt to create thumbnails
-        $photoService->thumbnail($photo);
-        $photo->blurhash = $photoService->blurhash($photo);
-        $photo->save();
+        $fileTime = @filemtime($this->path);
+        if ($lastUpdate === null || Carbon::createFromTimestamp($fileTime)->gt($lastUpdate))
+        {
+            $photoService->thumbnail($photo);
+            $photo->blurhash = $photoService->blurhash($photo);
+            $photo->save();
+        }
 
         Log::channel(self::LOG_CHANNEL)->info("Processed: $this->relativePath");
+    }
+
+    private function getLastRecordUpdate(): ?Carbon
+    {
+        $photo = Photo::where([
+            'folder_id' => $this->folderId,
+            'filename'  => $this->filename,
+        ])->first();
+
+        return $photo?->updated_at;
     }
 
     /**
@@ -146,9 +187,9 @@ class ProcessPhotoJob implements ShouldQueue
 	/**
 	 * Checks various EXIF values to determine date/time taken
 	 */
-	private function getTakenAt(array $exif): Carbon
+	private function getTakenAt(array $exif): ?Carbon
 	{
-        $candidates = ['DateTimeOriginal', 'DateTimeDigitized', 'CreateDate', 'ModifyDate'];
+        $candidates = ['DateTimeOriginal', 'CreateDate', 'DateTimeCreated', 'DateTimeDigitized'];
         foreach ($candidates as $candidate)
         {
             if (empty($exif[$candidate]) || preg_match('/^0{4}:0{2}:0{2}/', $exif[$candidate]))
@@ -158,31 +199,37 @@ class ProcessPhotoJob implements ShouldQueue
 
 			try
             {
+
+                $tz = $exif['OffsetTimeOriginal'] ?? 'UTC';
                 $dateString = preg_replace('/^(\d{4}):(\d{2}):(\d{2})/', '$1-$2-$3', $exif[$candidate]);
-				return Carbon::parse($dateString, 'UTC');
+
+				return Carbon::parse($dateString, $tz);
+
 			} catch (\Exception $e) {}
-
         }
 
-        return $this->getBestKnownDate();
-	}
-
-
-	/**
-	 * Fallback function to determine date/time taken
-	 */
-	private function getBestKnownDate(): Carbon
-    {
-        $ctime = @filectime($this->path);
-        $mtime = @filemtime($this->path);
-
-        if ($timestamp = $ctime && $ctime > 0 ? $ctime : ($mtime && $mtime > 0 ? $mtime : null))
+        foreach (self::FILENAME_PATTERNS as $pattern)
         {
-            return Carbon::createFromTimestamp($timestamp);
+            try
+            {
+                if (preg_match($pattern, $this->filename, $m))
+                {
+
+                    $h = $m['h'] ?? '00';
+                    $i = $m['i'] ?? '00';
+                    $s = $m['s'] ?? '00';
+                    $formatted = sprintf(
+                        '%04d-%02d-%02d %02d:%02d:%02d',
+                        $m['y'], $m['m'], $m['d'], $h, $i, $s
+                    );
+
+                    return Carbon::parse($formatted, 'UTC');
+                }
+            } catch (\Exception $e) {}
         }
 
-        return Carbon::create(1, 1, 1, 0, 0, 0, 'UTC');
-    }
+        return null;
+	}
 
 
     /**
