@@ -26,6 +26,11 @@ class SettingsSeeder extends Seeder
 		);
 
 		Setting::firstOrCreate(
+			['key'   => 'force_rescan'],
+			['value' => '0']
+		);
+
+		Setting::firstOrCreate(
 			['key'   => 'downscale_renders'],
 			['value' => '0']
 		);

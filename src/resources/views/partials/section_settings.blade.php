@@ -39,6 +39,28 @@
             </div>
 
         </div>
+        
+        <div class="mb-1 row align-items-center">
+
+            <label for="force_rescan" class="col-md-4 col-form-label">Force rescan</label>
+
+            <div class="col-md-8">
+
+                <div class="input-group input-group-sm">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-list"></i>
+                    </span>
+                    <select class="form-select" id="force_rescan" name="force_rescan" required>
+                        <option value="0" {{ !config('settings.force_rescan')  ? 'selected' : '' }}>On file update</option>
+                        <option value="1" {{ config('settings.force_rescan') ? 'selected' : '' }}>Always</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
 
         <div class="mb-1 row align-items-center">
 

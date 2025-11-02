@@ -22,6 +22,8 @@ class TraverseFolderJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected bool $forced;
+
     protected string $path;
 
     protected ?int $parentId;
@@ -37,10 +39,11 @@ class TraverseFolderJob implements ShouldQueue
     /**
      * Constructor
      */
-    public function __construct(string $path, int $parentId = NULL)
+    public function __construct(string $path, int $parentId = NULL, $forced = false)
     {
         $this->parentId     = $parentId;
         $this->path         = $path;
+        $this->forced       = $forced;
 
         $this->folderName   = basename($path);
         $this->relativePath = str_replace(resource_path(), '', $path);
@@ -90,7 +93,7 @@ class TraverseFolderJob implements ShouldQueue
             $relativePath = $this->getRelativePath($subfolder);
 
             Log::channel(self::LOG_CHANNEL)->info("Requesting folder scan: $relativePath");
-            TraverseFolderJob::dispatch($subfolder, $folderId)->onQueue('folders');
+            TraverseFolderJob::dispatch($subfolder, $folderId, $this->forced)->onQueue('folders');
         }
 
         // Remove obsolete (sub)directory entries
@@ -139,12 +142,16 @@ class TraverseFolderJob implements ShouldQueue
             {
                 unset($existingPhotos[$fileName]);
 
-                $fileTime = @filemtime($fileAbsPath);
-                $fileUpdate = Carbon::createFromTimestamp($fileTime);
-                if ($fileTime !== false && $fileUpdate->lte($photo->updated_at))
+                if (!$this->forced)
                 {
-                    Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
-                    continue;
+                    $fileTime = @filemtime($fileAbsPath);
+                    $fileUpdate = Carbon::createFromTimestamp($fileTime);
+
+                    if ($fileTime !== false && $fileUpdate->lte($photo->updated_at))
+                    {
+                        Log::channel(self::LOG_CHANNEL)->info("Skipping unchanged photo: $fileRelPath");
+                        continue;
+                    }
                 }
             }
 

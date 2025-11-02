@@ -59,7 +59,8 @@ class JobController extends Controller
                 $path = !empty($params['path']) ? $params['path'] : config('settings.media_root');
                 if (!empty($path))
                 {
-                    $params['path'] = realpath(resource_path($path));
+                    $params['path']   = realpath(resource_path($path));
+                    $params['forced'] = boolval(config('settings.force_rescan'));
                     TraverseFolderJob::dispatch(...$params)->onQueue('folders');
                 }
 
