@@ -21,7 +21,7 @@ class PhotoController extends Controller
     {
         $this->authorize('viewAny', Photo::class);
 
-        $photos = Photo::orderBy('taken_at', 'desc')
+        $photos = Photo::orderByRaw('taken_at IS NULL, taken_at DESC')
                        ->paginate(50);
 
         return PhotoResource::collection($photos);
