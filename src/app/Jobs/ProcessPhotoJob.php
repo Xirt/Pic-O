@@ -82,18 +82,26 @@ class ProcessPhotoJob implements ShouldQueue
         $lastUpdate = $this->getLastRecordUpdate();
 
         // Gather photo metadata
-        $dims = @getimagesize($this->path);
         $metadata = array_merge([
             'size' => @filesize($this->path)
         ], $this->getEXIFData());
+
+        // (Corrected) dimensions
+        $dims = @getimagesize($this->path);
+        $width  = $dims ? $dims[0] : null;
+        $height = $dims ? $dims[1] : null;
+
+        if (in_array($metadata['orientation'], [5, 6, 7, 8])) {
+            [$width, $height] = [$height, $width];
+        }
 
         // Store the photo
         $photo = Photo::updateOrCreate([
             'folder_id' => $this->folderId,
             'filename'  => $this->filename,
         ], array_merge([
-            'height'    => $dims ? $dims[1] : null,
-            'width'     => $dims ? $dims[0] : null,
+            'width'     => $width,
+            'height'    => $height,
         ], $metadata));
 
         // Attempt to create thumbnails
