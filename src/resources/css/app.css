@@ -352,6 +352,17 @@ footer {
     z-index: 250;
 }
 
+/**
+ * Filters (albums)
+ */
+.dropdown-item:not(.selected) i {
+    opacity: 0;
+}
+
+.dropdown-item.selected i {
+    opacity: 1;
+}
+
 
 /**
  * Timeline
