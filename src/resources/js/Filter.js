@@ -57,6 +57,10 @@ export const Filter = {
 
         this.orderItems.forEach(item => {
 
+            if (item.classList.contains('selected')) {
+                this.order = item.dataset.order;
+            }
+
             item.addEventListener('click', (e) => {
 
                 e.preventDefault();
@@ -80,6 +84,10 @@ export const Filter = {
     bindDirection() {
 
         this.directionItems.forEach(item => {
+
+            if (item.classList.contains('selected')) {
+                this.direction = item.dataset.direction;
+            }
 
             item.addEventListener('click', (e) => {
 

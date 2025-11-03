@@ -70,25 +70,25 @@
 
                     <li class="dropdown-header text-muted">Sort by</li>
                     <li>
-                        <a class="dropdown-item selected" href="#" data-order="name">
+                        <a class="dropdown-item {{ config('settings.album_sorting_type') == 'name'  ? 'selected' : '' }}" href="#" data-order="name">
                             <i class="bi bi-check-lg m-0 me-sm-1"></i>
                             <span class="d-none d-sm-inline">Name</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#" data-order="type">
+                        <a class="dropdown-item {{ config('settings.album_sorting_type') == 'type'  ? 'selected' : '' }}" href="#" data-order="type">
                             <i class="bi bi-check-lg m-0 me-sm-1"></i>
                             <span class="d-none d-sm-inline">Type</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#" data-order="start_date">
+                        <a class="dropdown-item {{ config('settings.album_sorting_type') == 'start_date'  ? 'selected' : '' }}" href="#" data-order="start_date">
                             <i class="bi bi-check-lg m-0 me-sm-1"></i>
                             <span class="d-none d-sm-inline">Date</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#" data-order="photos_count">
+                        <a class="dropdown-item {{ config('settings.album_sorting_type') == 'photos_count'  ? 'selected' : '' }}" href="#" data-order="photos_count">
                             <i class="bi bi-check-lg m-0 me-sm-1"></i>
                             <span class="d-none d-sm-inline">Photo count</span>
                         </a>
@@ -98,13 +98,13 @@
 
                     <li class="dropdown-header text-muted">Direction</li>
                     <li>
-                        <a class="dropdown-item selected" href="#" data-direction="ASC">
+                        <a class="dropdown-item {{ config('settings.album_sorting_direction') == 'asc'  ? 'selected' : '' }}" href="#" data-direction="ASC">
                             <i class="bi bi-check-lg m-0 me-sm-1"></i>
                             <span class="d-none d-sm-inline">Ascending</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#" data-direction="DESC">
+                        <a class="dropdown-item {{ config('settings.album_sorting_direction') == 'desc'  ? 'selected' : '' }}" href="#" data-direction="DESC">
                             <i class="bi bi-check-lg m-0 me-sm-1"></i>
                             <span class="d-none d-sm-inline">Descending</span>
                         </a>
