@@ -62,10 +62,6 @@
                     @endforeach
                 </select>
 
-            </div>
-
-            <div class="dropdown input-group-append">
-
                 <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="sortDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-gear"></i>
                 </button>
