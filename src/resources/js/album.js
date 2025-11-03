@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch(e) { console.error(e); }
 
-    });i
+    });
 
     const shareBtn = document.getElementById('generateTokenBtn');
     shareBtn.addEventListener('click', async function (e) {
