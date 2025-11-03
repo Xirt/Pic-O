@@ -39,7 +39,7 @@
             </div>
 
         </div>
-        
+
         <div class="mb-1 row align-items-center">
 
             <label for="force_rescan" class="col-md-4 col-form-label">Force rescan</label>
@@ -139,6 +139,52 @@
                         <i class="bi bi-fonts"></i>
                     </span>
                     <input type="text" class="form-control" id="album_name_tpl" name="album_name_tpl" value="{{ config('settings.album_name_tpl') }}" required>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mb-1 row align-items-center">
+
+            <label for="album_sorting_type" class="col-md-4 col-form-label">Sort Field</label>
+
+            <div class="col-md-8">
+
+                <div class="input-group input-group-sm">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-list"></i>
+                    </span>
+                    <select class="form-select" id="album_sorting_type" name="album_sorting_type" required>
+                        <option value="name" {{ !config('settings.album_sorting_type') == 'name'  ? 'selected' : '' }}>Album name</option>
+                        <option value="type" {{ config('settings.album_sorting_type') == 'type' ? 'selected' : '' }}>Album type</option>
+                        <option value="start_date" {{ config('settings.album_sorting_type') == 'start_date' ? 'selected' : '' }}>Album start date</option>
+                        <option value="photos_count" {{ config('settings.album_sorting_type') == 'photos_count' ? 'selected' : '' }}>Album photo count</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mb-1 row align-items-center">
+
+            <label for="album_sorting_direction" class="col-md-4 col-form-label">Sort Direction</label>
+
+            <div class="col-md-8">
+
+                <div class="input-group input-group-sm">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-list"></i>
+                    </span>
+                    <select class="form-select" id="album_sorting_direction" name="album_sorting_direction" required>
+                        <option value="asc" {{ !config('settings.album_sorting_direction')  ? 'selected' : '' }}>Ascending</option>
+                        <option value="desc" {{ config('settings.album_sorting_direction') ? 'selected' : '' }}>Descending</option>
+                    </select>
+
                 </div>
 
             </div>

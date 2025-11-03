@@ -43,6 +43,14 @@ class SettingController extends Controller
             'rules' => 'required|string|max:255',
         ],
 
+        'album_sorting_type' => [
+            'rules' => 'required|in:name,type,start_date,photos_count',
+        ],
+
+        'album_sorting_direction' => [
+            'rules' => 'required|in:asc,desc',
+        ],
+
     ];
 
     /**

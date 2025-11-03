@@ -46,6 +46,16 @@ class SettingsSeeder extends Seeder
 		);
 
 		Setting::firstOrCreate(
+			['key'   => 'album_sorting_type'],
+			['value' => 'name']
+		);
+
+		Setting::firstOrCreate(
+			['key'   => 'album_sorting_direction'],
+			['value' => 'asc']
+		);
+
+		Setting::firstOrCreate(
 			['key'   => 'album_name_tpl'],
 			['value' => '{name} ({year})']
 		);
