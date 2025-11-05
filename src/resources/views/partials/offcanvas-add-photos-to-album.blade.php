@@ -43,8 +43,12 @@
                             <li class="list-group-item list-group-item-light list-group-item-action">
                                 <a href="#" class="dropdown-item py-1">
                                 <div class="form-select-option text-truncate">
-                                    <b data-field='name'></b><br/>
-                                    <span class="fw-light" data-field='type'></span>
+                                    <b data-field='display_name'></b><br/>
+                                    <span class="fw-light">
+                                        <span data-field='type'></span>
+                                         /
+                                        <span data-field='start_date'></span>
+                                    </span>
                                 </div>
                                 </a>
                             </li>
