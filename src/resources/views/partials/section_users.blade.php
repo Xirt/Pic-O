@@ -21,7 +21,7 @@
         </thead>
         <tbody>
             @forelse ($users as $user)
-                <tr>
+                <tr data-user-id="{{ $user->id }}">
                     <td class="d-none d-sm-table-cell">{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td class="text-center">{{ ucfirst($user->role->value) }}</td>
@@ -32,7 +32,7 @@
                             <span class="d-none d-sm-inline">Modify</span>
                         </button>
 
-                        <button type="button" class="btn btn-sm btn-secondary" disabled>
+                        <button type="button" class="btn btn-sm btn-secondary remove-user" data-user-id="{{ $user->id }}">
                             <i class="bi bi-trash m-0 me-sm-1"></i>
                             <span class="d-none d-sm-inline">Delete</span>
                         </button>

@@ -18,7 +18,7 @@
 
         <div class="d-flex justify-content-center mt-4 mb-3">
 
-            <button type="button" class="btn btn-sm btn-primary w-50 mx-4" id="btn-remove">
+            <button type="button" class="btn btn-sm btn-primary w-50 mx-4" id="userRemovalBtn">
                 <i class="bi bi-trash3 me-1"></i> Delete
             </button>
 

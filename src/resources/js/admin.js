@@ -1,5 +1,6 @@
 import { AppRequest } from './AppRequest.js';
 import { JobProgressIndicator } from './JobProgressIndicator.js';
+import { removeEventListeners, openCanvas, closeCanvas, toast } from './domHelpers.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -74,9 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('button[data-bs-target="#offcanvas-modify-user"]').forEach(button => {
         button.addEventListener('click', async function () {
+
             const userId = this.getAttribute('data-user-id');
 
             try {
+
                 const result = await AppRequest.request(`/api/users/${userId}`, 'GET');
                 const user = result.data;
 
@@ -93,6 +96,36 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 alert('Failed to load user data: ' + err.message);
             }
+
+        });
+    });
+
+    document.querySelectorAll('button.remove-user').forEach(button => {
+        button.addEventListener('click', function () {
+
+            const userId = this.getAttribute('data-user-id');
+
+            const offcanvas = openCanvas('offcanvasRemoveUser');
+
+            let removeButton = document.getElementById('userRemovalBtn');
+            removeEventListeners(removeButton).addEventListener('click', async () => {
+
+                try {
+
+                    const url = route('api.users.destroy', { user: userId });
+                    const response = await AppRequest.request(url, 'DELETE');
+
+
+
+                    document.querySelector(`tr[data-user-id="${userId}"]`)?.remove();
+                    toast('User deleted');
+
+                } catch (e) { if (e.message) toast(e.message); }
+
+                offcanvas.hide();
+
+            });
+
         });
     });
 
