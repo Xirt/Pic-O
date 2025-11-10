@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
         unzip \
         nginx \
         supervisor \
-        tiny \
+        tini \
         libjpeg62-turbo-dev \
         libfreetype6-dev \
         libpng-dev \
