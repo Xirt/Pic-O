@@ -37,6 +37,7 @@ services:
       - mariadb_data:/var/lib/mysql
     networks:
       - pico
+    stop_grace_period: 30s
 
 networks:
   pico:

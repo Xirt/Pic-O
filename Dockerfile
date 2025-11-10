@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# Version: 20251004-1850
+# Version: 20251110-1111
 
 # -----------------------------------------------------------------------------
 # 1. Install dependencies
@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
         unzip \
         nginx \
         supervisor \
+        tiny \
         libjpeg62-turbo-dev \
         libfreetype6-dev \
         libpng-dev \
@@ -90,4 +91,4 @@ EXPOSE 80
 # -----------------------------------------------------------------------------
 # 11. Set Entrypoint
 # -----------------------------------------------------------------------------
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/docker-entrypoint.sh"]
