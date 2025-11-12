@@ -115,8 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const url = route('api.users.destroy', { user: userId });
                     const response = await AppRequest.request(url, 'DELETE');
 
-
-
                     document.querySelector(`tr[data-user-id="${userId}"]`)?.remove();
                     toast('User deleted');
 
