@@ -1,9 +1,10 @@
 import { AppRequest } from './AppRequest.js';
+import { enableVisibilityEvents } from './domHelpers.js';
 
 export class SelectionManager {
 
     constructor({container, apiUrl}) {
-                                                    console.log(container);
+
         this.container  = document.getElementById(container);
         this.menu       = this.container.querySelector('.search-select-wrapper');
         this.selectList = this.container.querySelector('.search-select-list');
@@ -39,6 +40,11 @@ export class SelectionManager {
             this.inputEl.focus();
             this.updateList();
             this.show();
+        });
+
+        enableVisibilityEvents(this.selectEl);
+        this.selectEl.addEventListener('visible', () => {
+            this.updateList();
         });
 
         document.addEventListener('click', (e) => {

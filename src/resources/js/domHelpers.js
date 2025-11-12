@@ -113,6 +113,75 @@ export function activateToggles() {
 
 }
 
+export function enableVisibilityEvents(element) {
+
+    function isDisplayVisible(el) {
+        return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+    }
+
+    let lastVisible = false;
+    const intersectionObserver = new IntersectionObserver(entries => {
+
+        entries.forEach(entry => {
+            const isVisible = entry.isIntersecting && isDisplayVisible(element);
+            updateVisibility(isVisible);
+        });
+
+    }, { threshold: 0.01 });
+
+    intersectionObserver.observe(element);
+
+    const mutationObserver = new MutationObserver(() => {
+        const isVisible = isDisplayVisible(element);
+        updateVisibility(isVisible && isElementInViewport(element));
+    });
+
+    mutationObserver.observe(document.body, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ['style', 'class', 'hidden']
+    });
+
+    function isElementInViewport(el) {
+
+        const rect = el.getBoundingClientRect();
+
+        return (
+            rect.width > 0 &&
+            rect.height > 0 &&
+            rect.bottom >= 0 &&
+            rect.right >= 0 &&
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.left <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+
+    }
+
+    function updateVisibility(isVisible) {
+
+        if (isVisible !== lastVisible) {
+
+            lastVisible = isVisible;
+            const eventName = isVisible ? 'visible' : 'hidden';
+            element.dispatchEvent(new CustomEvent(eventName, { detail: { visible: isVisible } }));
+
+        }
+
+    }
+
+    updateVisibility(isDisplayVisible(element) && isElementInViewport(element));
+
+    return {
+
+        disconnect() {
+            intersectionObserver.disconnect();
+            mutationObserver.disconnect();
+        }
+
+    };
+}
+
 export function toast(message, delay = 2500) {
 
     const tpl = document.getElementById('toastTpl');
