@@ -185,6 +185,33 @@ class AlbumController extends Controller
     }
 
     /**
+     * Add Photos if a specific folder to given Album
+     * POST /api/albums/{id}/photos/from-folder
+     */
+    public function addFromFolder(Request $request, Album $album): JsonResponse
+    {
+        $this->authorize('update', $album);
+
+        $validated = $request->validate([
+            'folder_id' => 'required|integer|min:1',
+        ]);
+
+        $folder = Folder::findOrFail($validated['folder_id']);
+
+        $folderIds = collect([$folder->id]);
+        if (!empty($validated['subdirectories']))
+        {
+            $subfolderIds = Folder::where('path', 'like', $folder->path . DIRECTORY_SEPARATOR . '%')->pluck('id');
+            $folderIds = $folderIds->merge($subfolderIds);
+        }
+
+        $photoIds = Photo::whereIn('folder_id', $folderIds)->pluck('id');
+        $album->photos()->syncWithoutDetaching($photoIds);
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    /**
      * Remove a given Photo from a given Album
      * DELETE /api/albums/{id}/photos/{id}
      */
