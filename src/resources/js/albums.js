@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     });
 
-    const createForm = document.getElementById('createAlbumForm');
+    const createForm = document.getElementById('createAlbumFromFolderForm');
     createForm.addEventListener('submit', async function (e) {
 
         e.preventDefault();
@@ -52,11 +52,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (e) { console.error(e); }
 
-        closeCanvas('offcanvasCreateAlbum');
+        closeCanvas('offcanvas-create-album-from-folder');
 
     });
 
-    const createOffcanvas = document.getElementById('offcanvasCreateAlbum');
+    const createOffcanvas = document.getElementById('offcanvas-create-album-from-folder');
     createOffcanvas.addEventListener('show.bs.offcanvas', function () {
         createForm.reset();
     });
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const folderSelect = new SelectionManager({
-        container: 'folderSearchSelect',
+        container: 'createAlbumFromFolder',
         apiUrl: route('api.folders.search')
     });
 

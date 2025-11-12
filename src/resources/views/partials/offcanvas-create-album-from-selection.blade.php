@@ -1,14 +1,18 @@
-<div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvas-create-album" aria-labelledby="offcanvasBottomLabel">
+<div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvas-create-album-from-selection" aria-labelledby="offcanvasCreateAlbumFromSelectionLabel">
 
     <div class="offcanvas-inner bg-white rounded-top mx-auto w-100 px-3">
 
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasBottomLabel">Create album</h5>
+
+            <h5 class="offcanvas-title" id="offcanvasCreateAlbumFromSelectionLabel">
+                Create album from selection
+            </h5>
+
         </div>
 
         <div class="offcanvas-body small overflow-visible">
 
-            <form action="{{ route('api.albums.store') }}" method="POST" id="createAlbumForm" class="w-100">
+            <form action="{{ route('api.albums.store') }}" method="POST" id="createAlbumFromSelectionForm" class="w-100">
             @csrf
 
                 <div class="mb-1 row align-items-center">

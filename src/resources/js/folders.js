@@ -5,6 +5,8 @@ import { Grid, GridItemFactory } from './Grid.js';
 import { SelectionManager } from './selectionManager.js';
 import { populateForm, getJSONFromForm, openCanvas } from './domHelpers.js';
 
+let createAlbumFolder;
+
 document.addEventListener('DOMContentLoaded', async () => {
 
     const REDIRECT_DELAY = 1000;
@@ -13,27 +15,51 @@ document.addEventListener('DOMContentLoaded', async () => {
     const manager = new Folder(new Selection(container));
     const viewer  = new PicoView(container);
 
-    const folderSelect = new SelectionManager({
-        container: 'folderSearchSelect',
-        apiUrl: route('api.albums.search')
-    });
-
-    folderSelect.updateList();
     manager.init();
 
     attachViewerEvents(viewer, manager);
     attachContainerEvents(container, viewer);
-    attachOffcanvasEvents('offcanvas-create-album');
-    attachOffcanvasEvents('offcanvas-update-album');
 
-    attachFormEvents('createAlbumForm', 'POST',
-        (data) => route('api.albums.store'),
+    // Activate Form - Add folder to album
+    new SelectionManager({
+        container: 'addFolderAlbum',
+        apiUrl: route('api.albums.search')
+    });
+
+    attachFormEvents('addFolderToAlbumForm', 'PUT',
+        (data) => route('api.albums.photos.addFromFolder', { album: data.album_id }),
+        (result, data) => route('albums.show', { album: data.album_id })
+    );
+
+    // Activate Form - Add selection to album
+    attachOffcanvasEvents('offcanvas-add-selection-to-album');
+    new SelectionManager({
+        container: 'addSelectionAlbum',
+        apiUrl: route('api.albums.search')
+    });
+
+    attachFormEvents('addSelectionToAlbumForm', 'PUT',
+        (data) => route('api.albums.photos.addMultiple', { album: data.album_id }),
+        (result, data) => route('albums.show', { album: data.album_id })
+    );
+
+    // Activate Form - Create album from folder
+    createAlbumFolder = new SelectionManager({
+        container: 'createAlbumFromFolder',
+        apiUrl: route('api.folders.search')
+    });
+
+    attachFormEvents('createAlbumFromFolderForm', 'POST',
+        (data) => route('api.albums.storeFromFolder'),
         (result) => route('albums.show', { album: result.data.id })
     );
 
-    attachFormEvents('updateAlbumForm', 'PUT',
-        (data) => route('api.albums.photos.addMultiple', { album: data.album_id }),
-        (result, data) => route('albums.show', { album: data.album_id })
+    // Activate Form - Create album from selection
+    attachOffcanvasEvents('offcanvas-create-album-from-selection');
+
+    attachFormEvents('createAlbumFromSelectionForm', 'POST',
+        (data) => route('api.albums.store'),
+        (result) => route('albums.show', { album: result.data.id })
     );
 
     function attachViewerEvents(viewer, manager) {
@@ -258,6 +284,8 @@ class FolderLoader {
 
     constructor() {
 
+        this.folderEl    = document.getElementById("folderId");
+
         this.folderId    = 0;
         this.lastPage    = null;
         this.currentPage = null;
@@ -269,6 +297,8 @@ class FolderLoader {
         this.folderId    = folderId;
         this.lastPage    = null;
         this.currentPage = 0;
+
+        this.folderEl.value = folderId;
 
     }
 
@@ -300,6 +330,7 @@ class FolderLoader {
         try {
 
             const result = await AppRequest.request(`/api/folders/${this.folderId}`, 'GET', null, this.folderId);
+            createAlbumFolder.setItem(result.data.id, result.data.name);
 
             return result.data;
 
@@ -335,6 +366,8 @@ class FolderLoader {
 class PhotoLoader {
 
     constructor(folderId) {
+
+        this.countEl     = document.getElementById("photoCount");
 
         this.folderId    = folderId;
         this.lastPage    = null;
@@ -386,12 +419,18 @@ class PhotoLoader {
             this.currentPage = result.meta.current_page;
             this.lastPage    = result.meta.last_page;
 
+            this.updatePhotoCount(result.meta.total);
+
             return result.data;
 
         } catch (e) { console.error(e); }
 
         return [];
 
+    }
+
+    updatePhotoCount(count = 0) {
+        this.countEl.innerHTML = count;
     }
 
 }

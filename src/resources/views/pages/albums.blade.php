@@ -14,7 +14,7 @@
 
             <div class="toolbar text-end pe-1 d-flex align-items-center">
 
-                <button type="button" class="btn btn-sm btn-primary flex-shrink-0 me-2 no-select" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCreateAlbum" aria-controls="offcanvasCreateAlbum">
+                <button type="button" class="btn btn-sm btn-primary flex-shrink-0 me-2 no-select" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-create-album-from-folder" aria-controls="offcanvas-create-album-from-folder">
                     <i class="bi bi-stars m-0 me-sm-1"></i>
                     <span class="d-none d-sm-inline">Create album</span>
                 </button>

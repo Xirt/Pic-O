@@ -1,30 +1,36 @@
-<div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvas-update-album" aria-labelledby="offcanvasBottomLabel">
+<div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvas-add-folder-to-album" aria-labelledby="offcanvasAddFolderToAlbumLabel">
 
     <div class="offcanvas-inner bg-white rounded-top mx-auto w-100 px-3">
 
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasBottomLabel">Add to album</h5>
+
+            <h5 class="offcanvas-title" id="offcanvasAddFolderToAlbumLabel">
+                Add folder to album
+            </h5>
+
         </div>
 
         <div class="offcanvas-body small overflow-visible">
 
-            <form action="" method="POST" id="updateAlbumForm" class="w-100">
+            <form action="" method="POST" id="addFolderToAlbumForm" class="w-100">
             @csrf
+
+                <input type="hidden" id="folderId" name="folder_id">
 
                 <div class="mb-1 row align-items-center">
 
-                    <label for="album" class="col-sm-4 col-form-label">Album Title</label>
+                    <label for="add_folder_album" class="col-sm-4 col-form-label">Album Title</label>
 
                     <div class="col-sm-8">
 
-                        <div class="position-relative m-0" data-tpl-option="folderOption" data-tpl-empty="noFolderOption" id="folderSearchSelect">
+                        <div class="position-relative m-0" data-tpl-option="albumOption" data-tpl-empty="noAlbumOption" id="addFolderAlbum">
 
                             <div class="input-group input-group-sm">
                                 <span class="input-group-text">
                                     <i class="bi bi bi-menu-up"></i>
                                 </span>
-                                <input type="text" class="form-control" id="album" placeholder="Select an album" readonly>
-                                <input type="hidden" class="form-control" id="type" name="album_id">
+                                <input type="text" class="form-control" id="add_folder_album" placeholder="Select an album" readonly>
+                                <input type="hidden" id="type" name="album_id">
                             </div>
 
                             <div class="search-select-wrapper position-absolute bottom-100 start-0 w-100">
@@ -39,31 +45,6 @@
 
                             </div>
 
-                            <template id="folderOption">
-                            <li class="list-group-item list-group-item-light list-group-item-action">
-                                <a href="#" class="dropdown-item py-1">
-                                <div class="form-select-option text-truncate">
-                                    <b data-field='display_name'></b><br/>
-                                    <span class="fw-light">
-                                        <span data-field='type'></span>
-                                         /
-                                        <span data-field='start_date'></span>
-                                    </span>
-                                </div>
-                                </a>
-                            </li>
-                            </template>
-
-                            <template id="noFolderOption">
-                            <li class="list-group-item list-group-item-light disabled">
-                                <a href="#" class="dropdown-item py-1">
-                                <div class="form-select-option text-truncate">
-                                    <i>No folders matching your query</i>
-                                </div>
-                                </a>
-                            </li>
-                            </template>
-
                         </div>
 
                     </div>
@@ -72,7 +53,7 @@
 
                 <div class="mb-1 row align-items-center">
 
-                    <label class="col-sm-4 col-form-label">Selection</label>
+                    <label class="col-sm-4 col-form-label">Folder contents</label>
 
                     <div class="col-sm-8">
 
@@ -81,10 +62,23 @@
                                 <i class="bi bi-image"></i>
                             </span>
                             <div class="form-control">
-                                <span class="picture-count">0</span> picture(s) selected.
+                                <span id="photoCount">0</span> picture(s), excl. subdirectories
                             </div>
                         </div>
 
+                    </div>
+
+                </div>
+
+                <div class="mb-1 mt-2 mt-sm-0 row align-items-center">
+
+                    <label for="add_folder_subdirectories" class="col-sm-4 col-form-label d-none d-sm-block">Scope</label>
+
+                    <div class="col-sm-8 d-flex align-items-center">
+                        <div class="form-check form-switch d-flex align-items-center mb-0">
+                            <input class="form-check-input" type="checkbox" name="subdirectories" id="add_folder_subdirectories" data-label-on="Include subdirectories" data-label-off="Exclude subdirectories" checked>
+                            <label class="form-check-label ms-2 mb-0 fst-italic" for="add_folder_subdirectories">Exclude subdirectories</label>
+                        </div>
                     </div>
 
                 </div>
