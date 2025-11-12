@@ -112,6 +112,16 @@ export class SelectionManager {
 
     }
 
+    setItem(id, name) {
+
+        this.inputEl.value  = name;
+        this.selectEl.value = name;
+        this.hiddenEl.value = id;
+
+        this.updateList();
+
+    }
+
     selectItem(index) {
 
         const item = this.currentItems[index];
@@ -121,10 +131,10 @@ export class SelectionManager {
         setTimeout(() => this.updateList(), 500);
         this.hide();
 
+        this.inputEl.value  = this.currentItems[index].name;
         this.selectEl.value = this.currentItems[index].name;
         this.hiddenEl.value = this.currentItems[index].id;
 
-        this.inputEl.value = this.currentItems[index].name;
 
 
     }
