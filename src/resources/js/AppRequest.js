@@ -2,7 +2,7 @@ import { IndicatorManager } from './IndicatorManager.js';
 
 export const AppRequest = (function () {
 
-    const activeRequests = new Set();
+    const activeRequests = new Map();
 
     function getCookie(name) {
 
@@ -30,80 +30,86 @@ export const AppRequest = (function () {
             const requestKey = key || `${method.toUpperCase()}:${url}`;
 
             if (activeRequests.has(requestKey)) {
-                console.warn('Request already in progress:', requestKey);
-                return;
+                return activeRequests.get(requestKey);
             }
 
-            activeRequests.add(requestKey);
-            if (showIndicator) IndicatorManager.start();
+            const promise = (async () => {
 
-            const options = {
-                method: method.toUpperCase(),
-                credentials: 'include',
-                headers: {                                                                         
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            };
+                if (showIndicator) IndicatorManager.start();
 
-            if (!['GET', 'HEAD', 'OPTIONS'].includes(options.method)) {
+                const options = {
+                    method: method.toUpperCase(),
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                };
 
-                const csrfToken = getCookie('XSRF-TOKEN');
-                if (csrfToken && csrfToken.length > 10) {
-                    options.headers['X-XSRF-TOKEN'] = decodeURIComponent(csrfToken);
-                }
+                if (!['GET', 'HEAD', 'OPTIONS'].includes(options.method)) {
 
-            }
-
-            if (data) {
-
-                const isForm = data instanceof FormData;
-                options.body = isForm ? data : JSON.stringify(data);
-                if (!isForm) options.headers['Content-Type'] = 'application/json';
-
-            }
-
-            try {
-
-                let data;
-
-                const response = await fetch(url, options);
-                const contentType = response.headers.get('content-type') || '';
-
-                if (contentType.includes('application/json')) {
-
-                    try {
-                        data = await response.json();
-                    } catch (e) { console.log(e); }
-
-                } else {
-
-                    data = await response.text();
+                    const csrfToken = getCookie('XSRF-TOKEN');
+                    if (csrfToken && csrfToken.length > 10) {
+                        options.headers['X-XSRF-TOKEN'] = decodeURIComponent(csrfToken);
+                    }
 
                 }
 
-                if (!response.ok) {
+                if (data) {
 
-                    if (showIndicator) IndicatorManager.error(response.status);
-
-                    const message = (typeof data === 'object' && data?.message) || data;
-                    throw new Error(message || 'Request failed');
+                    const isForm = data instanceof FormData;
+                    options.body = isForm ? data : JSON.stringify(data);
+                    if (!isForm) options.headers['Content-Type'] = 'application/json';
 
                 }
 
-                return data;
+                try {
 
-            } catch (e) {
+                    let parsed;
 
-                console.log(e);
-                throw e;
+                    const response = await fetch(url, options);
+                    const contentType = response.headers.get('content-type') || '';
 
-            } finally {
+                    if (contentType.includes('application/json')) {
 
-                activeRequests.delete(requestKey);
-                if (showIndicator) IndicatorManager.stop();
+                        try {
+                            parsed = await response.json();
+                        } catch (e) { console.log(e); }
 
-            }
+                    } else {
+
+                        parsed = await response.text();
+
+                    }
+
+                    if (!response.ok) {
+
+                        if (showIndicator) IndicatorManager.error(response.status);
+
+                        const message = (typeof parsed === 'object' && parsed?.message) || data;
+                        throw new Error(message || 'Request failed');
+
+                    }
+
+                    return parsed;
+
+                } catch (e) {
+
+                    console.log(e);
+                    throw e;
+
+                } finally {
+
+                    activeRequests.delete(requestKey);
+                    if (showIndicator) IndicatorManager.stop();
+
+                }
+
+            })();
+
+            activeRequests.set(requestKey, promise);
+            return promise;
+
         }
 
     };
