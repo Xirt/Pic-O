@@ -43,6 +43,11 @@
                     <span class="d-none d-sm-inline">Modify</span>
                 </button>
 
+                <button type="button" class="btn btn-sm btn-primary me-1 no-select" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-add-folder-to-album" aria-controls="offcanvas-add-folder-to-album">
+                    <i class="bi bi-plus-lg m-0 me-sm-1"></i>
+                    <span class="d-none d-sm-inline">Add folder</span>
+                </button>
+
                 <button type="button" class="btn btn-sm btn-secondary select-start">
                     <i class="bi bi-grid-3x3-gap-fill m-0 me-sm-1"></i>
                     <span class="d-none d-sm-inline">Selection Mode</span>
@@ -109,9 +114,11 @@
 
     </div>
 
+    @include('partials.offcanvas-share-album')
+
     @include('partials.offcanvas-update-album')
 
-    @include('partials.offcanvas-share-album')
+    @include('partials.offcanvas-add-folder-to-album')
 
 @endsection
 

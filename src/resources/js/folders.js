@@ -5,7 +5,7 @@ import { Grid, GridItemFactory } from './Grid.js';
 import { SelectionManager } from './selectionManager.js';
 import { populateForm, getJSONFromForm, openCanvas } from './domHelpers.js';
 
-let createAlbumFolder;
+let createAlbumFolder, addAlbumFolder;
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     attachContainerEvents(container, viewer);
 
     // Activate Form - Add folder to album
+    addFolderFolder = new SelectionManager({
+        container: 'addFolderFolder',
+        apiUrl: route('api.folders.search')
+    });
+
     new SelectionManager({
         container: 'addFolderAlbum',
         apiUrl: route('api.albums.search')
@@ -128,6 +133,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!form.checkValidity()) {
                 return form.reportValidity();
             }
+
+            form.querySelectorAll('button').forEach(
+                btn => btn.disabled = true
+            );         
 
             try {
 
@@ -284,8 +293,6 @@ class FolderLoader {
 
     constructor() {
 
-        this.folderEl    = document.getElementById("folderId");
-
         this.folderId    = 0;
         this.lastPage    = null;
         this.currentPage = null;
@@ -297,8 +304,6 @@ class FolderLoader {
         this.folderId    = folderId;
         this.lastPage    = null;
         this.currentPage = 0;
-
-        this.folderEl.value = folderId;
 
     }
 
@@ -331,6 +336,7 @@ class FolderLoader {
 
             const result = await AppRequest.request(`/api/folders/${this.folderId}`, 'GET', null, this.folderId);
             createAlbumFolder.setItem(result.data.id, result.data.name);
+            addFolderFolder.setItem(result.data.id, result.data.name);
 
             return result.data;
 
@@ -366,8 +372,6 @@ class FolderLoader {
 class PhotoLoader {
 
     constructor(folderId) {
-
-        this.countEl     = document.getElementById("photoCount");
 
         this.folderId    = folderId;
         this.lastPage    = null;
@@ -417,9 +421,7 @@ class PhotoLoader {
             const result = await AppRequest.request(`/api/folders/${this.folderId}/photos?page=${pageNum}`, 'GET', null, this.folderId);
 
             this.currentPage = result.meta.current_page;
-            this.lastPage    = result.meta.last_page;
-
-            this.updatePhotoCount(result.meta.total);
+            this.lastPage    = result.meta.last_page;    
 
             return result.data;
 
@@ -427,10 +429,6 @@ class PhotoLoader {
 
         return [];
 
-    }
-
-    updatePhotoCount(count = 0) {
-        this.countEl.innerHTML = count;
     }
 
 }

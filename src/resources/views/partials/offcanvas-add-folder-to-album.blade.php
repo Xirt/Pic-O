@@ -15,13 +15,25 @@
             <form action="" method="POST" id="addFolderToAlbumForm" class="w-100">
             @csrf
 
-                <input type="hidden" id="folderId" name="folder_id">
-
                 <div class="mb-1 row align-items-center">
 
-                    <label for="add_folder_album" class="col-sm-4 col-form-label">Album Title</label>
+                    <label for="add_folder_album" class="col-sm-4 col-form-label">Album</label>
 
                     <div class="col-sm-8">
+
+                        @if(isset($album))
+
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">
+                                <i class="bi bi-fonts"></i>
+                            </span>
+                            <div class="form-control">
+                               {{ $album->display_name }}
+                                <input type="hidden" name="album_id" value="{{ $album->id }}">
+                            </div>
+                        </div>
+
+                        @else
 
                         <div class="position-relative m-0" data-tpl-option="albumOption" data-tpl-empty="noAlbumOption" id="addFolderAlbum">
 
@@ -47,23 +59,61 @@
 
                         </div>
 
+                        @endif
+
                     </div>
 
                 </div>
 
                 <div class="mb-1 row align-items-center">
 
-                    <label class="col-sm-4 col-form-label">Folder contents</label>
+                    <label for="album-folder" class="col-sm-4 col-form-label">Folder</label>
 
                     <div class="col-sm-8">
 
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text">
-                                <i class="bi bi-image"></i>
-                            </span>
-                            <div class="form-control">
-                                <span id="photoCount">0</span> picture(s), excl. subdirectories
+                        <div class="position-relative m-0" data-tpl-option="folderOption" data-tpl-empty="noFolderOption" id="addFolderFolder">
+
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" class="form-control" id="album-folder" placeholder="Select a folder" readonly>
+                                <input type="hidden" class="form-control" id="type" name="folder_id">
                             </div>
+
+                            <div class="search-select-wrapper position-absolute bottom-100 start-0 w-100">
+
+                                <div class="d-flex flex-column bg-white border rounded-2">
+
+                                    <ul class="search-select-list list-group flex-fill overflow-auto border-bottom rounded-0 w-100" id="dropdownMenu"></ul>
+
+                                    <input type="text" class="form-control form-control-sm flex-grow-1 w-auto m-2" placeholder="Search..." id="dropdownInput" aria-expanded="false" autocomplete="off" required />
+
+                                </div>
+
+                            </div>
+
+                            <template id="folderOption">
+                            <li class="list-group-item list-group-item-light list-group-item-action">
+                                <a href="#" class="dropdown-item py-1">
+                                <div class="form-select-option text-truncate">
+                                    <b data-field='name'></b><br/>
+                                    <span class="fw-light" data-field='path'></span>
+                                </div>
+                                </a>
+                            </li>
+                            </template>
+
+                            <template id="noFolderOption">
+                            <li class="list-group-item list-group-item-light disabled">
+                                <a href="#" class="dropdown-item py-1">
+                                <div class="form-select-option text-truncate">
+                                    <i>No folders matching your query</i>
+                                </div>
+                                </a>
+                            </li>
+                            </template>
+
                         </div>
 
                     </div>
@@ -91,9 +141,8 @@
 
                 <div class="d-flex justify-content-center mt-4 mb-3">
 
-                    <div class="d-none container-hidden"></div>
-
-                    <button type="submit" class="btn btn-sm btn-primary w-50 mx-2 mx-sm-4">
+                    <button type="submit" class="btn btn-sm btn-primary form-processor w-50 mx-2 mx-sm-4">
+                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                         <i class="bi bi-plus-lg me-1"></i> Add
                     </button>
 

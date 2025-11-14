@@ -639,6 +639,18 @@ body:not(.slideshow-mode) .picoview .bi-stop-fill {
 	display: none !important;
 }
 
+
+/**
+ * Form elements
+ */
+.form-processor:not(:disabled) span {
+    display: none;
+}
+
+.form-processor:disabled i {
+    display: none;
+}
+
 /**
  * Shared animations
  */

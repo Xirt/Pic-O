@@ -112,13 +112,18 @@
 
                 </div>
 
+                <div class="my-3 alert form-message alert-success show">
+                    The album has been successfully updated.
+                </div>
+
                 <hr />
 
                 <div class="d-flex justify-content-center mt-4 mb-3">
 
                     <input type="hidden" class="form-control" id="albumId" name="id" placeholder="Album title" value="">
 
-                    <button type="submit" class="btn btn-sm btn-primary w-50 mx-2 mx-sm-4">
+                    <button type="submit" class="btn btn-sm btn-primary form-processor w-50 mx-2 mx-sm-4">
+                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                         <i class="bi bi-save me-1"></i> Save
                     </button>
 

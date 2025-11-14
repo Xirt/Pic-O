@@ -123,11 +123,16 @@
 
                 </div>
 
+                <div class="my-3 alert form-message alert-success">
+                    The album has been successfully created.
+                </div>
+
                 <hr />
 
                 <div class="d-flex justify-content-center mt-4 mb-3">
 
-                    <button type="submit" class="btn btn-sm btn-primary w-50 mx-2 mx-sm-44">
+                    <button type="submit" class="btn btn-sm btn-primary form-processor w-50 mx-2 mx-sm-4">
+                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                         <i class="bi bi-stars me-1"></i> Create
                     </button>
 

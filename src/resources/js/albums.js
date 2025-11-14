@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     });
 
-
     const deleteButton = document.getElementById('deleteButton');
     deleteButton.addEventListener('click', async (e) => {
 
@@ -41,9 +40,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         e.preventDefault();
         if (!createForm.checkValidity()) {
-            createForm.reportValidity();
-            return;
+            return createForm.reportValidity();
         }
+
+        createForm.querySelectorAll('button').forEach(
+            btn => btn.disabled = true
+        );
 
         try {
 
@@ -53,6 +55,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (e) { console.error(e); }
 
         closeCanvas('offcanvas-create-album-from-folder');
+
+        createForm.querySelectorAll('button').forEach(
+            btn => btn.disabled = false
+        );
 
     });
 
@@ -66,6 +72,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         e.preventDefault();
 
+        updateForm.querySelectorAll('button').forEach(
+            btn => btn.disabled = true
+        );
+
         try {
 
             const albumId = document.getElementById('albumId').value;
@@ -76,6 +86,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (e) { console.error(e); }
 
         closeCanvas('offcanvasUpdateAlbum');
+
+        updateForm.querySelectorAll('button').forEach(
+            btn => btn.disabled = false
+        );
 
     });
 

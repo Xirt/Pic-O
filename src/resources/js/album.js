@@ -3,9 +3,12 @@ import { PicoView } from './PicoView.js';
 import { Selection } from './Selection.js';
 import { AppRequest } from './AppRequest.js';
 import { Grid, GridItemFactory } from './Grid.js';
+import { SelectionManager } from './selectionManager.js';
 import { getJSONFromForm, populateForm, removeEventListeners, openCanvas, toast, createIcon } from './domHelpers.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+
+    const REDIRECT_DELAY = 1000;
 
     const container = document.getElementById('grid');
     const id = document.getElementById('album').dataset.albumId;
@@ -18,19 +21,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     attachViewerEvents(viewer, manager);
     attachContainerEvents(container, viewer);
 
-    const updateForm = document.getElementById('updateAlbumForm');
-    updateForm.addEventListener('submit', async function (e) {
-
-        e.preventDefault();
-
-        try {
-
-            await AppRequest.request(route('api.albums.update', { album: id }), 'PATCH', getJSONFromForm(updateForm), 'albums');
-            location.reload();
-
-        } catch (e) { console.error(e); }
-
+    addFolderFolder = new SelectionManager({
+        container: 'addFolderFolder',
+        apiUrl: route('api.folders.search')
     });
+
+    attachFormEvents('addFolderToAlbumForm', 'PUT',
+        (data) => route('api.albums.photos.addFromFolder', { album: data.album_id }),
+        (result, data) => route('albums.show', { album: data.album_id })
+    );
+
+    attachFormEvents('updateAlbumForm', 'PATCH',
+        (data) => route('api.albums.update', { album: id }),
+        (result, data) => window.location.href
+    );
+
+    function attachFormEvents(id, method = 'POST', urlCallback, redirectCallback) {
+
+        const form = document.getElementById(id);
+        form.addEventListener('submit', async function (e) {
+
+            e.preventDefault();
+
+            if (!form.checkValidity()) {
+                return form.reportValidity();
+            }
+
+            form.querySelectorAll('button').forEach(
+                btn => btn.disabled = true
+            );
+
+            try {
+
+                const data = getJSONFromForm(form);
+                const result = await AppRequest.request(urlCallback(data), method, data);
+                form.querySelector('.form-message')?.classList.add('visible');
+
+                setTimeout(() => {
+                    window.location.href = redirectCallback(result, data);
+                }, REDIRECT_DELAY);
+
+            } catch (e) { console.error(e); }
+
+        });
+
+        form.reset();
+
+    }
 
     const updateAlbumOffcanvas = document.getElementById('offcanvasUpdateAlbum');
     updateAlbumOffcanvas.addEventListener('show.bs.offcanvas', async function(e) {
