@@ -139,7 +139,7 @@ export class SelectionManager {
 
     }
 
-    async fetchItems(query, show = true) {
+    async fetchItems(query) {
 
         try {
 
