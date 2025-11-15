@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# Version: 20251110-1111
+# Version: 20251115-1451
 
 # -----------------------------------------------------------------------------
 # 1. Install dependencies
@@ -80,16 +80,22 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # -----------------------------------------------------------------------------
-# 9. Install dependencies
+# 9. Copy cronjob for Laravel scheduler
+# -----------------------------------------------------------------------------
+COPY laravel-scheduler /etc/cron.d/laravel-scheduler
+RUN chmod +r /etc/cron.d/laravel-scheduler
+
+# -----------------------------------------------------------------------------
+# 10. Install dependencies
 # -----------------------------------------------------------------------------
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # -----------------------------------------------------------------------------
-# 10. Expose port
+# 11. Expose port
 # -----------------------------------------------------------------------------
 EXPOSE 80
 
 # -----------------------------------------------------------------------------
-# 11. Set Entrypoint
+# 12. Set Entrypoint
 # -----------------------------------------------------------------------------
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/docker-entrypoint.sh"]
