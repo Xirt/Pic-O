@@ -1,1 +1,1 @@
-* * * * * www-data php /var/www/artisan schedule:run >> /var/www/storage/logs/laravel-scheduler.log 2>&1
+* * * * * www-data /usr/local/bin/php /var/www/artisan schedule:run >> /var/www/storage/logs/laravel-scheduler.log 2>&1
