@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# Version: 20251019-1912
+# Version: 20251115-1514
+
+SCHEDULER_LOG="/var/www/storage/logs/laravel-scheduler.log"
+LARAVEL_LOG="/var/www/storage/logs/laravel.log"
 
 set -e
 
@@ -99,6 +102,18 @@ if [ "$(id -u)" -eq 0 ]; then
   chown -R www-data:www-data storage bootstrap/cache || true
 
   chmod -R 775 storage bootstrap/cache || true
+
+  if [ ! -f "$SCHEDULER_LOG" ]; then
+      touch "$SCHEDULER_LOG"
+      chown www-data:www-data "$SCHEDULER_LOG"
+      chmod 664 "$SCHEDULER_LOG"
+  fi
+  
+  if [ ! -f "$LARAVEL_LOG" ]; then
+      touch "$LARAVEL_LOG"
+      chown www-data:www-data "$LARAVEL_LOG"
+      chmod 664 "$LARAVEL_LOG"
+  fi
 
 else
 
