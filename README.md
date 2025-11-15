@@ -10,10 +10,10 @@ you create albums, fill them with your favorite photos, and publish them beautif
 
 ## Why Pic-O?
 
-Modern gallery tools often aim to do too much — commenting, device syncing, editing, and even AI retouching.  
+Modern gallery tools often aim to do too much: commenting, device syncing, editing, and even AI retouching.  
 **Pic-O** focuses on doing one thing exceptionally well: *Make your photo archives effortlessly viewable and shareable.*
 
-It’s built for simplicity, privacy, and performance — and designed to look great on any screen.
+It’s built for simplicity, privacy, and performance, and designed to look great on any screen.
 
 - 🪶 **Lightweight** -- built on Laravel: fast to deploy, simple to maintain  
 - 🖼️ **Organized your way** -- easily create and managed dynamic albums  
