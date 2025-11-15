@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Setting;	
+use App\Models\Setting;
 
 class SettingsSeeder extends Seeder
 {
@@ -15,49 +15,69 @@ class SettingsSeeder extends Seeder
      */
     public function run(): void
     {
-		Setting::firstOrCreate(
-			['key'   => 'site_name'],
-			['value' => 'Pic-O']
-		);
+        Setting::firstOrCreate(
+            ['key'   => 'site_name'],
+            ['value' => 'Pic-O']
+        );
 
-		Setting::firstOrCreate(
-			['key'   => 'media_root'],
-			['value' => '/photos']
-		);
+        Setting::firstOrCreate(
+            ['key'   => 'media_root'],
+            ['value' => '/photos']
+        );
 
-		Setting::firstOrCreate(
-			['key'   => 'force_rescan'],
-			['value' => '0']
-		);
+        Setting::firstOrCreate(
+            ['key'   => 'force_rescan'],
+            ['value' => '0']
+        );
 
-		Setting::firstOrCreate(
-			['key'   => 'downscale_renders'],
-			['value' => '0']
-		);
+        Setting::firstOrCreate(
+            ['key' => 'scanner_interval'],
+            ['value' => 'none']
+        );
 
-		Setting::firstOrCreate(
-			['key'   => 'cache_renders'],
-			['value' => '0']
-		);
+        Setting::firstOrCreate(
+            ['key' => 'scanner_time'],
+            ['value' => '00:00']
+        );
 
-		Setting::firstOrCreate(
-			['key'   => 'session_persistent'],
-			['value' => '0']
-		);
+        Setting::firstOrCreate(
+            ['key' => 'scanner_day_week'],
+            ['value' => 0]
+        );
 
-		Setting::firstOrCreate(
-			['key'   => 'album_sorting_type'],
-			['value' => 'name']
-		);
+        Setting::firstOrCreate(
+            ['key' => 'scanner_day_month'],
+            ['value' => 1]
+        );
 
-		Setting::firstOrCreate(
-			['key'   => 'album_sorting_direction'],
-			['value' => 'asc']
-		);
+        Setting::firstOrCreate(
+            ['key'   => 'downscale_renders'],
+            ['value' => '0']
+        );
 
-		Setting::firstOrCreate(
-			['key'   => 'album_name_tpl'],
-			['value' => '{name} ({year})']
-		);
+        Setting::firstOrCreate(
+            ['key'   => 'cache_renders'],
+            ['value' => '0']
+        );
+
+        Setting::firstOrCreate(
+            ['key'   => 'session_persistent'],
+            ['value' => '0']
+        );
+
+        Setting::firstOrCreate(
+            ['key'   => 'album_sorting_type'],
+            ['value' => 'name']
+        );
+
+        Setting::firstOrCreate(
+            ['key'   => 'album_sorting_direction'],
+            ['value' => 'asc']
+        );
+
+        Setting::firstOrCreate(
+            ['key'   => 'album_name_tpl'],
+            ['value' => '{name} ({year})']
+        );
     }
 }

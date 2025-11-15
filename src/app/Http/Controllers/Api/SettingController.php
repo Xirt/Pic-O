@@ -27,6 +27,22 @@ class SettingController extends Controller
             'rules' => 'required|in:0,1',
         ],
 
+        'scanner_interval' => [
+            'rules' => 'required|in:none,hourly,daily,weekly,monthly',
+        ],
+
+        'scanner_time' => [
+            'rules' => ['required', 'regex:/^(?:[01]\d|2[0-3]):[0-5]\d$/'],
+        ],
+
+        'scanner_day_week' => [
+            'rules' => 'required|integer|between:0,6',
+        ],
+
+        'scanner_day_month' => [
+            'rules' => 'required|integer|between:1,31',
+        ],
+
         'downscale_renders' => [
             'rules' => 'required|in:0,1',
         ],

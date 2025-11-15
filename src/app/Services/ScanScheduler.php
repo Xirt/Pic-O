@@ -51,7 +51,7 @@ class ScanScheduler
     {
         $now = now();
 
-        $isCorrectDay = $now->dayOfWeek == $weekday;
+        $isCorrectDay = $now->dayOfWeek == ($weekday % 7);
         if ($isCorrectDay && $now->format('H:i') === $time)
         {
             app(ScanService::class)->run();

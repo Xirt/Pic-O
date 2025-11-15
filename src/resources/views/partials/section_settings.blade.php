@@ -64,6 +64,111 @@
 
         <div class="mb-1 row align-items-center">
 
+            <label for="scanner_interval" class="col-md-4 col-form-label">Scanner Interval</label>
+
+            <div class="col-md-8">
+
+                <div class="input-group input-group-sm">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-clock"></i>
+                    </span>
+                    <select class="form-select" id="scanner_interval" name="scanner_interval" required>
+                        <option value="none" {{ config('settings.scanner_interval') == 'none' ? 'selected' : '' }}>None</option>
+                        <option value="hourly" {{ config('settings.scanner_interval') == 'hourly' ? 'selected' : '' }}>Hourly</option>
+                        <option value="daily" {{ config('settings.scanner_interval') == 'daily' ? 'selected' : '' }}>Daily</option>
+                        <option value="weekly" {{ config('settings.scanner_interval') == 'weekly' ? 'selected' : '' }}>Weekly</option>
+                        <option value="monthly" {{ config('settings.scanner_interval') == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mb-1 row align-items-center">
+
+            <label for="scanner_time" class="col-md-4 col-form-label">Scanner Time (HH:00)</label>
+
+            <div class="col-md-8">
+
+                <div class="input-group input-group-sm">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-alarm"></i>
+                    </span>
+                    <select class="form-select" id="scanner_time" name="scanner_time" required>
+                        @for ($h = 0; $h < 24; $h++)
+                            @php $hour = sprintf('%02d:00', $h); @endphp
+                            <option value="{{ $hour }}" {{ config('settings.scanner_time') == $hour ? 'selected' : '' }}>
+                                {{ $hour }}
+                            </option>
+                        @endfor
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mb-1 row align-items-center">
+
+            <label for="scanner_day_week" class="col-md-4 col-form-label">Scanner Day of Week</label>
+
+            <div class="col-md-8">
+
+                <div class="input-group input-group-sm">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar-week"></i>
+                    </span>
+
+                    <select class="form-select" id="scanner_day_week" name="scanner_day_week" required>
+                        @php
+                            $days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+                        @endphp
+                        @foreach($days as $index => $day)
+                            <option value="{{ $index }}" {{ intval(config('settings.scanner_day_week')) === $index ? 'selected' : '' }}>
+                                {{ $day }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mb-1 row align-items-center">
+
+            <label for="scanner_day_month" class="col-md-4 col-form-label">Scanner Day of Month</label>
+
+            <div class="col-md-8">
+
+                <div class="input-group input-group-sm">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar-date"></i>
+                    </span>
+                    <select class="form-select" id="scanner_day_month" name="scanner_day_month" required>
+                        @for ($d = 1; $d <= 31; $d++)
+                            <option value="{{ $d }}" {{ intval(config('settings.scanner_day_month')) === $d ? 'selected' : '' }}>
+                                {{ $d }}
+                            </option>
+                        @endfor
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mb-1 row align-items-center">
+
             <label for="image_rendering" class="col-md-4 col-form-label">Image rendering</label>
 
             <div class="col-md-8">
