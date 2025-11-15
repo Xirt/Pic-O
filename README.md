@@ -1,7 +1,7 @@
-# Pic-O — A Lightweight Photo Sharing Platform
+# Pic-O - A Lightweight Photo Sharing Platform
 
 **Pic-O** is a simple, elegant, and self-hosted photo publishing platform built with **Laravel 12** and **Bootstrap 5.x**.  
-It’s designed for photographers, families, and self-hosters who want an easy way to organize and share their photo collections — without the complexity or overhead of full-fledged photo management suites.
+It’s designed for photographers, families, and self-hosters who want an easy way to organize and share their photo collections without the complexity or overhead of full-fledged photo management suites.
 
 Unlike heavy solutions that try to automate everything, **Pic-O** keeps things simple:  
 you create albums, fill them with your favorite photos, and publish them beautifully.
@@ -10,10 +10,10 @@ you create albums, fill them with your favorite photos, and publish them beautif
 
 ## Why Pic-O?
 
-Modern gallery tools often aim to do too much — commenting, device syncing, editing, and even AI retouching.  
+Modern gallery tools often aim to do too much: commenting, device syncing, editing, and even AI retouching.  
 **Pic-O** focuses on doing one thing exceptionally well: *Make your photo archives effortlessly viewable and shareable.*
 
-It’s built for simplicity, privacy, and performance — and designed to look great on any screen.
+It’s built for simplicity, privacy, and performance, and designed to look great on any screen.
 
 - 🪶 **Lightweight** -- built on Laravel: fast to deploy, simple to maintain  
 - 🖼️ **Organized your way** -- easily create and managed dynamic albums  
