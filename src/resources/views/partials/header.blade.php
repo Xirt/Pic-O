@@ -9,7 +9,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav me-auto">
                 @auth
 
                 <li class="nav-item">
@@ -26,11 +26,17 @@
 					</li>
 					@endif
 
+                @endauth
+
+            </ul>
+            <ul class="navbar-nav">
+                @auth
+
 				<li class="nav-item">
 					<a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
 				</li>
-                @endauth
 
+                @endauth
             </ul>
         </div>
     </div>
