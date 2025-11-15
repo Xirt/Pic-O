@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Http\Resources\JobResource;
-use App\Jobs\TraverseFolderJob;
 use App\Jobs\ProcessPhotoJob;
 use App\Models\Job;
+use App\Services\ScanService;
 
 class JobController extends Controller
 {
@@ -46,24 +46,7 @@ class JobController extends Controller
         switch ($type)
         {
             case 'TraverseFolderJob':
-
-                // Truncate scanner log
-                $logFile = storage_path('logs/scanner.log');
-                if (file_exists($logFile))
-                {
-                    $handle = fopen($logFile, 'w');
-                    fclose($handle);
-                }
-
-                // Start scan
-                $path = !empty($params['path']) ? $params['path'] : config('settings.media_root');
-                if (!empty($path))
-                {
-                    $params['path']   = realpath(resource_path($path));
-                    $params['forced'] = boolval(config('settings.force_rescan'));
-                    TraverseFolderJob::dispatch(...$params)->onQueue('folders');
-                }
-
+                app(ScanService::class)->run($params['path'] ?? null);
                 break;
         }
 
