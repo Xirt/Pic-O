@@ -20,7 +20,7 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return $user && in_array($user->role, [UserRole::ADMIN]);
+        return $user && ($user->id === $model->id || in_array($user->role, [UserRole::ADMIN]));
     }
 
     /**
@@ -36,7 +36,7 @@ class UserPolicy
      */
     public function update(?User $user, User $model): bool
     {
-        return $user && in_array($user->role, [UserRole::ADMIN]);
+        return $user && ($user->id === $model->id || in_array($user->role, [UserRole::ADMIN])); 
     }
 
     /**

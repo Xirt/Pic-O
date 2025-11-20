@@ -44,7 +44,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('store', User::class);
+        $this->authorize('create', User::class);
 
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
@@ -62,8 +62,8 @@ class UserController extends Controller
 
         return (new UserResource($user))
             ->additional(['message' => 'User created successfully.'])
-            ->setStatusCode(201)
-            ->response();
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -77,29 +77,49 @@ class UserController extends Controller
         $validated = $request->validate([
             'name'     => 'sometimes|string|max:255',
             'email'    => ['sometimes', 'email', Rule::unique('users')->ignore($user->id)],
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'sometimes|nullable|string|min:8|confirmed',
             'role'     => ['sometimes', new Enum(UserRole::class)],
         ]);
 
-        // Prevent current admin from downgrading themselves
-        if (isset($validated['role']) && $user->id === $request->user()->id && $user->role === 'admin' && $validated['role'] !== 'admin')
+        $actingUser = $request->user();
+        $isCurrentUser = $actingUser->id === $user->id;
+        $actingUserIsAdmin = $actingUser->role === UserRole::ADMIN;
+
+        if (isset($validated['role']))
         {
-            return response()->json([
-                'message' => 'You cannot downgrade your own admin role.',
-            ], 403);
+
+            if (!$actingUserIsAdmin && $validated['role'] !== $user->role->value)
+            {
+                return response()->json([
+                    'message' => 'Only administrators may change user roles.',
+                ], 403);
+            }
+
+            if ($isCurrentUser && $actingUserIsAdmin && $validated['role'] !== UserRole::ADMIN->value)
+            {
+                return response()->json([
+                    'message' => 'You cannot downgrade your own admin role.',
+                ], 403);
+            }
+
         }
 
-        if (isset($validated['password']))
+        if (!empty($validated['password']))
         {
             $validated['password'] = Hash::make($validated['password']);
+        }
+        else
+        {
+            unset($validated['password']);
         }
 
         $user->update($validated);
 
         return (new UserResource($user))
-            ->additional(['message' => 'User updated successfully.'])
-            ->setStatusCode(200)
-            ->response();
+            ->additional(['message' => 'User updated successfully.' . ($user->role === 'Admin')])
+            ->response()
+            ->setStatusCode(200);
+
     }
 
     /**

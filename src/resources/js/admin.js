@@ -125,34 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
         });
-    });
-
-    document.getElementById('modifyForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const userId = document.getElementById('modifyUserId').value;
-        const form = this;
-        const url = `/api/users/${userId}`;
-        const data = {
-            name: form.name.value,
-            email: form.email.value,
-            role: form.role.value,
-        };
-
-        const msg = document.getElementById('modifyFormMessage');
-
-        try {
-
-            const result = await AppRequest.request(url, 'PUT', data);
-            location.reload();
-
-        } catch (error) {
-
-            const errorMessage = error?.response?.message || error?.message || 'An unknown error occurred.';
-            showMessage(document.getElementById('modifyFormMessage'), errorMessage, false);
-
-        }
-    });
+    });   
 
     function showMessage(container, message, isSuccess = true) {
 

@@ -1,3 +1,5 @@
+const FADEOUT_DELAY = 3000;
+
 export function removeEventListeners(el) {
 
     const clone = el.cloneNode(true);
@@ -209,6 +211,24 @@ export function toast(message, delay = 2500) {
     });
 
     return toast;
+}
+
+let messageTimeoutId;
+export function showMessage(container, message, isSuccess = true, fadeOutDelay = null) {
+
+    container.textContent = message;
+
+    // Set requested styling
+    container.classList.remove('alert-success', 'alert-warning');
+    container.classList.add(isSuccess ? 'alert-success' : 'alert-warning');
+    container.classList.add('visible');
+
+    // Fade-out eventually
+    clearTimeout(messageTimeoutId);
+    messageTimeoutId = setTimeout(() => {
+        container.classList.remove('visible');
+    }, fadeOutDelay ?? FADEOUT_DELAY);
+
 }
 
 export function openCanvas(id) {

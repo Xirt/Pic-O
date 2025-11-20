@@ -27,7 +27,7 @@
                     <td class="text-center">{{ ucfirst($user->role->value) }}</td>
                     <td class="text-end">
 
-                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-modify-user" data-user-id="{{ $user->id }}">
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="offcanvas-update-user" data-user-id="{{ $user->id }}">
                             <i class="bi bi-pencil m-0 me-sm-1"></i>
                             <span class="d-none d-sm-inline">Modify</span>
                         </button>

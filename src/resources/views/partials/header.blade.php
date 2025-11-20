@@ -46,18 +46,24 @@
 
             <ul class="navbar-nav">
 
-                @if(auth()->user()->role->value === 'admin')
+                @auth
 
+                @if(auth()->user()->role->value === 'admin')
                 <li class="nav-item me-2">
                     <a class="nav-link" href="{{ route('admin.index') }}">
                         <i class="bi bi-gear me-2 me-lg-0"></i>
                         <span class="d-lg-none">Administration</span>
                     </a>
                 </li>
-
                 @endif
 
-                @auth
+                <li class="nav-item me-2">
+                    <a class="nav-link" href="#" data-bs-toggle="offcanvas-update-user" data-user-id="{{ auth()->user()->id }}">
+                        <i class="bi bi-person-circle me-2 me-lg-0"></i>
+                        <span class="d-lg-none">Account</span>
+                    </a>
+                </li>
+
                 <li class="nav-item me-2">
                     <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="bi bi-box-arrow-right me-2 me-lg-0"></i>

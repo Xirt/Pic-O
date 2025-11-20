@@ -66,6 +66,13 @@ Route::middleware([
         Route::delete('{token}', [ShareTokenController::class, 'destroy'])->name('destroy');
     });
 
+    // Users
+    Route::prefix('users')->as('api.users.')->group(function ()
+    {
+        Route::get('{user}', [UserController::class, 'show'])->name('show');
+        Route::put('{user}', [UserController::class, 'update'])->name('update');
+    });
+
 });
 
 
@@ -103,9 +110,7 @@ Route::middleware([
     Route::prefix('users')->as('api.users.')->group(function ()
     {
         Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::get('{user}', [UserController::class, 'show'])->name('show');
         Route::post('/', [UserController::class, 'store'])->name('store');
-        Route::put('{user}', [UserController::class, 'update'])->name('update');
         Route::delete('{user}', [UserController::class, 'destroy'])->name('destroy');
     });
 
