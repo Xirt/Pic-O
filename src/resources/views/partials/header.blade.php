@@ -16,32 +16,32 @@
 
             <ul class="navbar-nav me-auto">
 
-                @auth
+                @can('viewAny', \App\Models\Photo::class)
                 <li class="nav-item me-3">
                     <a class="nav-link" href="{{ route('home') }}">
                         <i class="bi bi-calendar-week me-2"></i>
                         Timeline
                     </a>
                 </li>
+                @endcan
 
+                @can('viewAny', \App\Models\Album::class)
                 <li class="nav-item me-3">
                     <a class="nav-link" href="{{ route('albums.index') }}">
                         <i class="bi bi-images me-2"></i>
                         Albums
                     </a>
                 </li>
+                @endcan
 
-                @if(auth()->user()->role->value === 'admin')
-
+                @can('viewAny', \App\Models\Folder::class)
                 <li class="nav-item me-3">
                     <a class="nav-link" href="{{ route('folders.index') }}">
                         <i class="bi bi-folder2 me-2"></i>
                         Folders
                     </a>
                 </li>
-
-                @endif
-                @endauth
+                @endcan
             </ul>
 
             <ul class="navbar-nav">

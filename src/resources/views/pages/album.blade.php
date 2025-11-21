@@ -38,6 +38,7 @@
                     <span class="d-none d-sm-inline">Share</span>
                 </button>
 
+                @can('update', $album)
                 <button type="button" class="btn btn-sm btn-primary me-1 no-select" id="modifyButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUpdateAlbum" aria-controls="offcanvasUpdateAlbum">
                     <i class="bi bi-pencil m-0 me-sm-1"></i>
                     <span class="d-none d-sm-inline">Modify</span>
@@ -62,6 +63,7 @@
                     <i class="bi bi-x-diamond-fill m-0 me-sm-1"></i>
                     <span class="d-none d-sm-inline">Cancel</span>
                 </button>
+                @endcan
 
             </div>
 
@@ -84,6 +86,9 @@
 
     @include('partials.photo-info-form')
 
+    @include('partials.offcanvas-share-album')
+
+    @can('update', $album)
     <div class="position-fixed bottom-0 start-50 translate-middle-x mb-5" style="z-index: 110000000;">
 
         <div id="removalToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -114,11 +119,11 @@
 
     </div>
 
-    @include('partials.offcanvas-share-album')
-
     @include('partials.offcanvas-update-album')
 
     @include('partials.offcanvas-add-folder-to-album')
+
+    @endcan
 
 @endsection
 
