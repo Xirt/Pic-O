@@ -29,7 +29,7 @@ const REDIRECT_DELAY = 1000;
 
     // Activate "Update User"-functionality (store & hide)
     const updateUserForm = document.getElementById('updateUserForm');
-    updateUserForm.addEventListener('submit', async function (e) {
+    updateUserForm?.addEventListener('submit', async function (e) {
 
         e.preventDefault();
 

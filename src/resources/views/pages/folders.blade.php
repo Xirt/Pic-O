@@ -46,9 +46,47 @@
         </div>
 
         <div class="grid row w-100 g-0" id="grid" data-cols="sm:4 md:6 xl:9">
+
             <div class="empty-grid text-muted text-center py-4">
                 Nothing to show at the moment.
             </div>
+
+            <template id="card-folder">
+            <div class="grid-item card folder selectable clickable my-1">
+
+                <div class="card-body text-primary position-relative w-100 ratio ratio-4x3 p-3">
+
+                    <div class="d-flex align-items-center justify-content-center folder-icon-wrapper">
+
+                        <img class="folder-icon h-75 w-75" src="images/folder.png">
+                        <img class="folder-thumb position-absolute w-75 mt-2">
+
+                    </div>
+
+                </div>
+
+                <div class="card-footer text-center text-truncate overflow-hidden folder-name"></div>
+
+            </div>
+            </template>    
+
+            <template id="card-file">
+            <a class="grid-item card file selectable clickable thumbnail my-1"
+               data-type="image">
+
+                <div class="card-body text-primary position-relative w-100 ratio ratio-4x3 p-3 file-body">
+
+                    <div class="d-flex align-items-center justify-content-center">
+                        <i class="bi bi-check-circle-fill opacity-75 file-selected-icon"></i>
+                    </div>
+
+                </div>
+
+                <div class="card-footer text-center text-truncate overflow-hidden file-name"></div>
+
+            </a>
+            </template>
+
         </div>
 
     </div>

@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     manager.init();
 
     const modifyButton = document.getElementById('modifyButton');
-    modifyButton.addEventListener('click', async (e) => {
+    modifyButton?.addEventListener('click', async (e) => {
 
         const card = document.querySelector('.card.selected');
         manager.showModifyAlbum(card);
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const deleteButton = document.getElementById('deleteButton');
-    deleteButton.addEventListener('click', async (e) => {
+    deleteButton?.addEventListener('click', async (e) => {
 
         const cards = document.querySelectorAll('.card.selected');
         manager.showRemovalconfirmation(cards);
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const createForm = document.getElementById('createAlbumFromFolderForm');
-    createForm.addEventListener('submit', async function (e) {
+    createForm?.addEventListener('submit', async function (e) {
 
         e.preventDefault();
         if (!createForm.checkValidity()) {
@@ -63,12 +63,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const createOffcanvas = document.getElementById('offcanvas-create-album-from-folder');
-    createOffcanvas.addEventListener('show.bs.offcanvas', function () {
+    createOffcanvas?.addEventListener('show.bs.offcanvas', function () {
         createForm.reset();
     });
 
     const updateForm = document.getElementById('updateAlbumForm');
-    updateForm.addEventListener('submit', async function (e) {
+    updateForm?.addEventListener('submit', async function (e) {
 
         e.preventDefault();
 
@@ -97,9 +97,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         container: 'createAlbumFromFolder',
         apiUrl: route('api.folders.search')
     });
-
-    createForm.reset();
-    folderSelect.updateList();
 
 });
 
@@ -148,7 +145,7 @@ class Albums {
                 const el = await GridItemFactory.album(entity);
 
                 const modButton = el.querySelector('.btn-modify');
-                modButton.addEventListener('click', (event) => {
+                modButton?.addEventListener('click', (event) => {
 
                     event.preventDefault();
                     event.stopPropagation();
@@ -158,7 +155,7 @@ class Albums {
                 });
 
                 const delButton = el.querySelector('.btn-delete');
-                delButton.addEventListener('click', (event) => {
+                delButton?.addEventListener('click', (event) => {
 
                     event.preventDefault();
                     event.stopPropagation();

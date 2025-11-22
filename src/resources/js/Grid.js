@@ -101,124 +101,113 @@ export const GridItemFactory = {
 
     folder(folder) {
 
-        const card = document.createElement('div');
-        card.className = 'grid-item card folder selectable clickable my-1';
+        const tpl = document.querySelector('#card-folder');
+        const card = tpl.content.firstElementChild.cloneNode(true);
 
-        const body = document.createElement('div');
-        body.className = 'card-body text-primary position-relative w-100 ratio ratio-4x3 p-3';
-        card.appendChild(body);
+        const thumb = card.querySelector('.folder-thumb');
+        thumb.src = `folders/${folder.id}/thumbnail`;
 
-        const iconWrapper = document.createElement('div');
-        iconWrapper.className = 'd-flex align-items-center justify-content-center';
-
-            const icon = document.createElement('img');
-            icon.className = 'h-75 w-75';
-            icon.src = 'images/folder.png';
-            iconWrapper.appendChild(icon);
-
-            const thumb = document.createElement('img');
-            thumb.className = 'position-absolute w-75 mt-2';
-            thumb.src = `folders/${folder.id}/thumbnail`;
-            iconWrapper.appendChild(thumb);
-
-        body.appendChild(iconWrapper);
-
-        const footer = document.createElement('div');
-        footer.className = 'card-footer text-center text-truncate overflow-hidden';
-        footer.textContent = folder.name;
-        footer.title = folder.name;
-        card.appendChild(footer);
+        const name = card.querySelector('.folder-name');
+        name.textContent = folder.name;
+        name.title = folder.name;
 
         return card;
 
     },
 
-    photoFolder(photo, manager) {
+    file(file) {
 
-        const card = document.createElement('a');
-        card.href = photo.path_full;
-        card.setAttribute('data-id', photo.id);
-        card.setAttribute('data-type', 'image');
-        card.className = 'grid-item card file selectable clickable thumbnail my-1';
+        const tpl = document.querySelector('#card-file');
+        const card = tpl.content.firstElementChild.cloneNode(true);
 
-        const body = document.createElement('div');
-        body.className = 'card-body text-primary position-relative w-100 ratio ratio-4x3 p-3';
-        body.style.backgroundImage = `url(${photo.path_thumb})`;
+        card.href = file.path_full;
+        card.dataset.id = file.id;
+
+        const body = card.querySelector('.file-body');
+        body.style.backgroundImage = `url(${file.path_thumb})`;
         body.style.backgroundSize = 'cover';
-        card.appendChild(body);
 
-        const iconWrapper = document.createElement('div');
-        iconWrapper.className = 'd-flex align-items-center justify-content-center';
-
-            const icon = createIcon('check-circle-fill', 'opacity-75');
-            iconWrapper.appendChild(icon);
-
-        body.appendChild(iconWrapper);
-
-        const footer = document.createElement('div');
-        footer.className = 'card-footer text-center text-truncate overflow-hidden'
-        footer.textContent = photo.filename;
-        footer.title = photo.filename;
-        card.appendChild(footer);
-
-        return card;
-
-    },
-
-    async photo(photo, inAlbum = true) {
-
-        const ratioSmall = Math.min(250 / photo.width, 1);
-        const newWidth  = Math.round(photo.width * ratioSmall);
-        const newHeight = Math.round(photo.height * ratioSmall);
-
-        const card = document.createElement('a');
-        card.id = `card-${photo.id}`;
-        card.href = photo.path_full;
-        card.setAttribute('data-id', photo.id);
-        card.setAttribute('data-type', 'image');
-        card.style.cssText = `width: 100%; aspect-ratio: ${newWidth} / ${newHeight};`;
-        card.className = 'grid-item clickable selectable position-relative thumbnail w-100 p-0 my-1';
-
-        const icon = createIcon('check-circle-fill', 'position-absolute top-50 start-50 translate-middle');
-        card.appendChild(icon);
-
-        const body = document.createElement('div');
-        body.className = 'img-container text-primary position-relative d-inline-block align-items-center text-center';
-
-        const placeholder = await this._createBlurHash(photo, newWidth, newHeight);
-        placeholder.className = 'd-block w-100 h-100 m-0 blurhash';
-        placeholder.removeAttribute('height');
-        placeholder.removeAttribute('width');
-        card.appendChild(placeholder);
-
-        const thumb = document.createElement('img');
-        thumb.className = 'd-block w-100 h-100 opacity-0 m-0';
-        thumb.src = photo.path_thumb;
-        card.appendChild(thumb);
-
-        const toolbar = document.createElement('div');
-        toolbar.className = 'd-block card-img-overlay bg-dark text-light fw-semibold quick-actions top p-1';
-        card.appendChild(toolbar);
-
-        toolbar.appendChild(this.createInfoButton(card));
-        toolbar.appendChild(this.createDownloadButton(card));
-
-        if (inAlbum) {
-            toolbar.appendChild(this.createCoverButton(card));
-            toolbar.appendChild(this.createDeleteButton(card));
-        }
-
-        thumb.onload = () => {
-            thumb.classList.remove('opacity-0');
-            placeholder.classList.add('opacity-0');
-            setTimeout(() => card.removeChild(placeholder), 1000);
-        };
+        const footer = card.querySelector('.file-name');
+        footer.textContent = file.filename;
+        footer.title = file.filename;
 
         return card;
 
     },
 
     async album(album) {
+
+        const tpl = document.querySelector('#card-album');
+        const card = tpl.content.firstElementChild.cloneNode(true);
+
+        card.href = route('albums.show', { id: album.id });
+        card.dataset.id = album.id;
+
+        if (album.cover) {
+
+            const blurCanvas = await this._createBlurHash(album.cover);
+            blurCanvas.className = 'd-block position-absolute object-fit-cover w-100 h-100';
+
+            const placeholder = card.querySelector('.album-blurhash');
+            placeholder.replaceWith(blurCanvas);
+
+            const thumb = card.querySelector('.album-thumb');
+            thumb.src = `photos/${album.cover.id}/thumbnail`;
+
+        } else {
+
+            card.querySelector('.album-blurhash').remove();
+            card.querySelector('.album-thumb').remove();
+
+        }
+
+        const photoCount = card.querySelector('.album-photo-count');
+        photoCount.textContent = album.photos;
+
+        const title = card.querySelector('.album-title');
+        title.textContent = album.display_name;
+
+        return card;
+
+    },
+
+    async photo(photo) {
+
+        const tpl = document.querySelector('#card-photo');
+        const card = tpl.content.firstElementChild.cloneNode(true);
+
+        const ratioSmall = Math.min(250 / photo.width, 1);
+        const newWidth  = Math.round(photo.width * ratioSmall);
+        const newHeight = Math.round(photo.height * ratioSmall);
+
+        card.id = `card-${photo.id}`;
+        card.href = photo.path_full;
+        card.dataset.id = photo.id;
+        card.style.aspectRatio = `${newWidth} / ${newHeight}`;
+
+        // ==== BLURHASH ====
+        const blurCanvas = await this._createBlurHash(photo, newWidth, newHeight);
+        blurCanvas.className = 'd-block w-100 h-100 m-0 blurhash';
+
+        const placeholder = card.querySelector('.photo-blurhash');
+        placeholder.replaceWith(blurCanvas);
+
+        // ==== THUMBNAIL ====
+        const thumb = card.querySelector('.photo-thumb');
+        thumb.src = photo.path_thumb;
+
+        thumb.onload = () => {
+            thumb.classList.remove('opacity-0');
+            blurCanvas.classList.add('opacity-0');
+            setTimeout(() => blurCanvas.remove(), 1000);
+        };
+
+        return card;
+
+    },
+
+
+    async album2(album) {
 
         const card = document.createElement('a');
         card.className = 'grid-item card clickable selectable position-relative rounded-0 ratio ratio-4x3 w-100 p-0 my-1 border-0';
@@ -265,71 +254,12 @@ export const GridItemFactory = {
 
     separator(title) {
 
-        const separator = document.createElement('h5');
-        separator.className = 'text-dark-emphasis p-2 pb-1 mt-4 fw-semibold border-bottom';
-        separator.innerText = title;
+        const tpl = document.querySelector('#grid-separator');
+        const separator = tpl.content.firstElementChild.cloneNode(true);
+
+        separator.textContent = title;
 
         return separator;
-
-    },
-
-    createInfoButton(card) {
-
-        const button = document.createElement('button');
-        button.className = 'btn btn-light btn-sm me-1 btn-info';
-
-        const icon = createIcon('info-circle-fill', 'text-secondary');
-        button.appendChild(icon);
-
-        return button;
-
-    },
-
-    createDownloadButton(card) {
-
-        const button = document.createElement('button');
-        button.className = 'btn btn-light btn-sm me-1 btn-download';
-
-        const icon = createIcon('download', 'text-secondary');
-        button.appendChild(icon);
-
-        return button;
-
-    },
-
-    createCoverButton(card) {
-
-        const button = document.createElement('button');
-        button.className = 'btn btn-light btn-sm me-1 btn-cover no-share';
-
-        const icon = createIcon('star-fill', 'text-secondary');
-        button.appendChild(icon);
-
-        return button;
-
-    },
-
-    createModifyButton(card) {
-
-        const button = document.createElement('button');
-        button.className = 'btn btn-light btn-sm me-1 btn-modify no-share';
-
-        const icon = createIcon('pencil-fill', 'text-secondary');
-        button.appendChild(icon);
-
-        return button;
-
-    },
-
-    createDeleteButton (card) {
-
-        const button = document.createElement('button');
-        button.className = 'btn btn-light btn-sm btn-delete no-share';
-
-        const button_icon = createIcon('trash3', 'text-secondary');
-        button.appendChild(button_icon);
-
-        return button;
 
     },
 

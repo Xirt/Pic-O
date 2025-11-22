@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     attachViewerEvents(viewer, manager);
     attachContainerEvents(container, viewer);
 
-    addFolderFolder = new SelectionManager({
+    new SelectionManager({
         container: 'addFolderFolder',
         apiUrl: route('api.folders.search')
     });
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function attachFormEvents(id, method = 'POST', urlCallback, redirectCallback) {
 
         const form = document.getElementById(id);
-        form.addEventListener('submit', async function (e) {
+        form?.addEventListener('submit', async function (e) {
 
             e.preventDefault();
 
@@ -65,12 +65,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         });
 
-        form.reset();
+        form?.reset();
 
     }
 
     const updateAlbumOffcanvas = document.getElementById('offcanvasUpdateAlbum');
-    updateAlbumOffcanvas.addEventListener('show.bs.offcanvas', async function(e) {
+    updateAlbumOffcanvas?.addEventListener('show.bs.offcanvas', async function(e) {
 
         try {
 
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const shareAlbumOffcanvas = document.getElementById('offcanvasShareAlbum');
-    shareAlbumOffcanvas.addEventListener('show.bs.offcanvas', async function(e) {
+    shareAlbumOffcanvas?.addEventListener('show.bs.offcanvas', async function(e) {
 
         try {
 
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const multiDeleteBtn = document.getElementById('multiDeleteBtn');
-    multiDeleteBtn.addEventListener('click', async function (e) {
+    multiDeleteBtn?.addEventListener('click', async function (e) {
 
         e.preventDefault();
 
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const shareBtn = document.getElementById('generateTokenBtn');
-    shareBtn.addEventListener('click', async function (e) {
+    shareBtn?.addEventListener('click', async function (e) {
 
         e.preventDefault();
 
@@ -244,7 +244,7 @@ class Album {
                 const el = await GridItemFactory.photo(entity);
 
                 const delButton = el.querySelector('.btn-delete');
-                delButton.addEventListener('click', (event) => {
+                delButton?.addEventListener('click', (event) => {
 
                     event.preventDefault();
                     event.stopPropagation();
@@ -254,7 +254,7 @@ class Album {
                 });
 
                 const infoButton = el.querySelector('.btn-info');
-                infoButton.addEventListener('click', (event) => {
+                infoButton?.addEventListener('click', (event) => {
 
                     event.preventDefault();
                     event.stopPropagation();
@@ -264,7 +264,7 @@ class Album {
                 });
 
                 const coverButton = el.querySelector('.btn-cover');
-                coverButton.addEventListener('click', (event) => {
+                coverButton?.addEventListener('click', (event) => {
 
                     event.preventDefault();
                     event.stopPropagation();
@@ -274,7 +274,7 @@ class Album {
                 });
 
                 const downloadButton = el.querySelector('.btn-download');
-                downloadButton.addEventListener('click', (event) => {
+                downloadButton?.addEventListener('click', (event) => {
 
                     event.preventDefault();
                     event.stopPropagation();

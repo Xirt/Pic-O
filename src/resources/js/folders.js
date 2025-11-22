@@ -215,7 +215,7 @@ class Folder {
         if (!this.folderLoader.hasNextPage()) {
 
             const photos = await this.photoLoader.next();
-            const elementPromises = photos.map((entity) => GridItemFactory.photoFolder(entity, this));
+            const elementPromises = photos.map((entity) => GridItemFactory.file(entity, this));
             const elements = await Promise.all(elementPromises);
             this.grid.add(elements);
 

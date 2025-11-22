@@ -70,9 +70,45 @@
         </div>
 
         <div class="grid row w-100 g-0" id="grid" data-cols="sm:3 lg:6">
+
             <div class="empty-grid text-muted text-center py-4">
                 Nothing to show at the moment.
             </div>
+
+            <template id="card-photo">
+            <a class="grid-item clickable selectable position-relative thumbnail w-100 p-0 my-1" data-type="image">
+
+                <i class="bi bi-check-circle-fill position-absolute top-50 start-50 translate-middle photo-selected-icon"></i>
+
+                <canvas class="photo-blurhash d-block w-100 h-100 m-0 blurhash"></canvas>
+
+                <img class="photo-thumb d-block w-100 h-100 opacity-0 m-0" loading="lazy">
+
+                <div class="card-img-overlay bg-dark text-light fw-semibold quick-actions top p-1 photo-toolbar">
+
+                    <button class="btn btn-light btn-sm me-1 btn-info">
+                        <i class="bi bi-info-circle-fill text-secondary"></i>
+                    </button>
+
+                    <button class="btn btn-light btn-sm me-1 btn-download">
+                        <i class="bi bi-download text-secondary"></i>
+                    </button>
+
+                    @can('update', $album)
+                    <button class="btn btn-light btn-sm me-1 btn-cover no-share photo-cover-btn">
+                        <i class="bi bi-star-fill text-secondary"></i>
+                    </button>
+
+                    <button class="btn btn-light btn-sm btn-delete no-share photo-delete-btn">
+                        <i class="bi bi-trash3 text-secondary"></i>
+                    </button>
+                    @endcan
+
+                </div>
+
+            </a>
+            </template>
+
         </div>
 
     </div>

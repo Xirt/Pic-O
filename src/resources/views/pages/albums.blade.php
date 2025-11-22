@@ -56,11 +56,11 @@
                 <input type="text" class="form-control" placeholder="Search term" aria-label="Search" aria-describedby="search-label-addon1" id="inp-search">
 
                 <select class="form-select text-center" id="sel-type" name="type" style="max-width: 150px;">
-                        <option value="" selected></option>
+                    <option value="" selected></option>
                     @foreach (\App\Enums\AlbumType::cases() as $type)
-                        <option value="{{ $type->value }}">
-                            {{ ucfirst($type->value) }}
-                        </option>
+                    <option value="{{ $type->value }}">
+                        {{ ucfirst($type->value) }}
+                    </option>
                     @endforeach
                 </select>
 
@@ -119,18 +119,52 @@
         </div>
 
         <div class="grid row w-100 g-0" id="grid" data-cols="sm:2 lg:4">
+
             <div class="empty-grid text-muted text-center py-4">
                 Nothing to show at the moment.
             </div>
+
+            <template id="card-album">
+            <a class="grid-item card clickable selectable position-relative rounded-0 ratio ratio-4x3 w-100 p-0 my-1 border-0">
+
+                <canvas class="album-blurhash d-block position-absolute object-fit-cover w-100 h-100"></canvas>
+
+                <img class="album-thumb d-block object-fit-cover" loading="lazy">
+
+                <i class="bi bi-check-circle-fill opacity-75 h-auto w-auto position-absolute top-50 start-50 translate-middle album-selected-icon"></i>
+
+                <div class="card-img-overlay bottom badge rounded-pill bg-secondary text-light fw-bold px-2 py-1 m-1 me-2 album-photo-count"></div>
+
+                <div class="card-img-overlay top rounded-0 bg-dark text-light fw-semibold text-truncate px-2 py-1 p-lg-2 album-title"></div>
+
+                <div class="d-block quick-actions p-1 pe-2 album-toolbar">
+
+                    @can('create', \App\Models\Album::class)
+                    <button class="btn btn-light btn-sm me-1 btn-modify no-share">
+                        <i class="bi bi-pencil-fill text-secondary"></i>
+                    </button>
+
+                    <button class="btn btn-light btn-sm btn-delete no-share">
+                        <i class="bi bi-trash3 text-secondary"></i>
+                    </button>
+                    @endcan
+
+                </div>
+
+            </a>
+            </template>
+
         </div>
 
     </div>
 
+    @can('create', \App\Models\Album::class)
+
     @include('partials.offcanvas-create-album-from-folder')
-
     @include('partials.offcanvas-update-album')
-
     @include('partials.offcanvas-confirm-delete-album')
+
+    @endcan
 
 @endsection
 
