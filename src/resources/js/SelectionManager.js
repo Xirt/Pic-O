@@ -6,6 +6,8 @@ export class SelectionManager {
     constructor({container, apiUrl}) {
 
         this.container  = document.getElementById(container);
+        if (!this.container) return;
+
         this.menu       = this.container.querySelector('.search-select-wrapper');
         this.selectList = this.container.querySelector('.search-select-list');
         this.selectEl   = this.container.querySelector('input[readonly]');
