@@ -30,10 +30,7 @@ class AlbumController extends Controller
 
         $album->recordImpression();
 
-        return view('pages.album', [
-            'sharedView' => !Auth::check() && (bool) request()->token,
-            'album'      => $album,
-        ]);
+        return view('pages.album', compact('album'));
     }
 
     /**

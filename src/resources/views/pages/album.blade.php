@@ -113,12 +113,23 @@
 
     </div>
 
-    @include('partials.module-picoview', [
-        'showInfoButton'     => true,
-        'showDownloadButton' => true,
-        'showCoverButton'    => ($sharedView ?? false) ? false : true,
-        'showRemoveButton'   => ($sharedView ?? false) ? false : true,
-    ])
+    @can('update', $album)
+
+        @include('partials.module-picoview', [
+            'showInfoButton'     => true,
+            'showDownloadButton' => true,
+            'showCoverButton'    => true,
+            'showRemoveButton'   => true,
+        ])
+
+    @else
+
+        @include('partials.module-picoview', [
+            'showInfoButton'     => true,
+            'showDownloadButton' => true
+        ])
+
+    @endcan
 
     @include('partials.photo-info-form')
 
