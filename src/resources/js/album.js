@@ -94,6 +94,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const result = await AppRequest.request(route('api.albums.tokens', { 'album' : albumId }), 'GET');
 
             const container = document.getElementById('tokenList');
+            container.querySelectorAll('.token-wrapper').forEach(el => el.remove());
+
             result.data.forEach((token) => {
                 container.appendChild(appendToken(token))
             });
