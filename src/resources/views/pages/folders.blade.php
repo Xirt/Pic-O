@@ -7,9 +7,9 @@
 
         <div class="d-flex align-items-center justify-content-between mb-2 ms-1">
 
-            <h1 id="title">Folders</h1>
+            <h1 class="flex-grow-1 text-truncate pe-2" id="title">Folders</h1>
 
-            <div class="toolbar text-end pe-1">
+            <div class="toolbar flex-shrink-0 text-end pe-1">
 
                 <button type="button" class="btn btn-sm btn-primary no-select" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-create-album-from-folder" aria-controls="offcanvas-create-album-from-folder">
                     <i class="bi bi-stars m-0 me-sm-1"></i>
@@ -71,8 +71,7 @@
             </template>    
 
             <template id="card-file">
-            <a class="grid-item card file selectable clickable thumbnail my-1"
-               data-type="image">
+            <a class="grid-item card file selectable clickable thumbnail my-1" data-type="image">
 
                 <div class="card-body text-primary position-relative w-100 ratio ratio-4x3 p-3 file-body">
 
