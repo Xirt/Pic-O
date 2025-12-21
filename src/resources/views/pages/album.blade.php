@@ -33,10 +33,12 @@
 
             <div class="toolbar flex-shrink-0 text-end pe-1 no-share">
 
+                @auth
                 <button type="button" class="btn btn-sm btn-primary me-1 no-select" id="shareButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvasShareAlbum" aria-controls="offcanvasShareAlbum">
                     <i class="bi bi-share-fill m-0 me-sm-1"></i>
                     <span class="d-none d-sm-inline">Share</span>
                 </button>
+                @endauth
 
                 @can('update', $album)
                 <button type="button" class="btn btn-sm btn-primary me-1 no-select" id="modifyButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUpdateAlbum" aria-controls="offcanvasUpdateAlbum">
