@@ -108,13 +108,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const multiDeleteBtn = document.getElementById('multiDeleteBtn');
     multiDeleteBtn?.addEventListener('click', async function (e) {
 
+        const cards = document.querySelectorAll('.grid-item.selected');
+        manager.showRemovalconfirmation(cards);
+
         e.preventDefault();
-
-        try {
-
-            alert("Pending implementation");
-
-        } catch(e) { console.error(e); }
 
     });
 
@@ -377,6 +374,41 @@ class Album {
 
             this.grid.add(card);
             toast.hide();
+
+        });
+
+    }
+
+    showRemovalconfirmation(cards) {
+
+        let cardArray = [cards];
+        if (cards instanceof NodeList) {
+            cardArray = Array.from(cards);
+        }
+
+        const countEl = document.getElementById('delCount');
+        countEl.textContent = cardArray.length;
+
+        const offcanvas = openCanvas('offcanvasRemovePhotos');
+
+        let removeButton = document.getElementById('btn-remove');
+        removeEventListeners(removeButton).addEventListener('click', () => {
+
+            try {
+
+                for (const card of cardArray) {
+
+                    const url = route('api.albums.photos.removeOne', { album: this.id, photo: card.getAttribute('data-id') });
+                    AppRequest.request(url, 'DELETE');
+
+                    toast('Photo(s) removed');
+                    this.grid.remove(card);
+
+                }
+
+            } catch (e) { console.log(e); }
+
+            offcanvas.hide();
 
         });
 

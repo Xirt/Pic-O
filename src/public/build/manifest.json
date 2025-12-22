@@ -14,8 +14,8 @@
       "_Grid-DsKHW_82.js"
     ]
   },
-  "_SelectionManager-BiUsltYr.js": {
-    "file": "assets/SelectionManager-BiUsltYr.js",
+  "_SelectionManager-Dord-efE.js": {
+    "file": "assets/SelectionManager-Dord-efE.js",
     "name": "SelectionManager",
     "imports": [
       "_domHelpers-Da9rvIEx.js"
@@ -43,26 +43,26 @@
     ]
   },
   "resources/js/album.js": {
-    "file": "assets/album-2G9N_Pdr.js",
+    "file": "assets/album-Ba3fBwRZ.js",
     "name": "album",
     "src": "resources/js/album.js",
     "isEntry": true,
     "imports": [
       "_PicoView-3alaDzrO.js",
-      "_SelectionManager-BiUsltYr.js",
+      "_SelectionManager-Dord-efE.js",
       "_domHelpers-Da9rvIEx.js",
       "_Grid-DsKHW_82.js"
     ]
   },
   "resources/js/albums.js": {
-    "file": "assets/albums-Bvbkywjm.js",
+    "file": "assets/albums-DxIptBqy.js",
     "name": "albums",
     "src": "resources/js/albums.js",
     "isEntry": true,
     "imports": [
       "_domHelpers-Da9rvIEx.js",
       "_Grid-DsKHW_82.js",
-      "_SelectionManager-BiUsltYr.js"
+      "_SelectionManager-Dord-efE.js"
     ]
   },
   "resources/js/app.js": {
@@ -75,13 +75,13 @@
     ]
   },
   "resources/js/folders.js": {
-    "file": "assets/folders-C6W2K9nc.js",
+    "file": "assets/folders-CoAetiCY.js",
     "name": "folders",
     "src": "resources/js/folders.js",
     "isEntry": true,
     "imports": [
       "_PicoView-3alaDzrO.js",
-      "_SelectionManager-BiUsltYr.js",
+      "_SelectionManager-Dord-efE.js",
       "_domHelpers-Da9rvIEx.js",
       "_Grid-DsKHW_82.js"
     ]

@@ -172,6 +172,8 @@
 
     @include('partials.offcanvas-add-folder-to-album')
 
+    @include('partials.offcanvas-remove-selection-from-album')
+
     @endcan
 
 @endsection
