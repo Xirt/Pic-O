@@ -78,6 +78,23 @@ export class Selection {
 
         this.container.addEventListener('mouseleave', () => clearTimeout(holdTimer));
 
+        new MutationObserver((mutations) => {
+
+            mutations.forEach((mutation) => {
+
+                if (mutation.type === "childList" && mutation.removedNodes.length > 0) {
+                    this.cancelSelection();
+                }
+
+            });
+
+        }).observe(this.container, {
+
+            childList: true
+
+        });
+
+
     }
 
     enterSelectionMode() {
