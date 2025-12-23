@@ -47,6 +47,7 @@ Route::middleware([
             Route::put('/', [AlbumController::class, 'addPhotos'])->name('addMultiple');
             Route::put('/from-folder', [AlbumController::class, 'addFromFolder'])->name('addFromFolder');
             Route::put('{photo}', [AlbumController::class, 'addPhoto'])->name('addOne');
+            Route::delete('/', [AlbumController::class, 'removePhotos'])->name('removeMultiple');
             Route::delete('{photo}', [AlbumController::class, 'removePhoto'])->name('removeOne');
         });
     });

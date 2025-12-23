@@ -219,9 +219,18 @@ class AlbumController extends Controller
     {
         $this->authorize('update', $album);
 
-        $album->photos()->detach($photo->id);
+        return $this->detachPhotos($album, [$photo->id]);
+    }
 
-        return response()->json(['status' => 'ok']);
+    /**
+     * Remove given Photos from a given Album
+     * DELETE /api/albums/{id}/photos
+     */
+    public function removePhotos(Request $request, Album $album)
+    {
+        $this->authorize('update', $album);
+
+        return $this->detachPhotos($album, $this->getPhotoIds($request));
     }
 
     /**
@@ -253,18 +262,23 @@ class AlbumController extends Controller
 
     private function getPhotoIds(Request $request): array
     {
-        $data = $request->all();
-
-        if (isset($data['pictures']) && !is_array($data['pictures'])) {
-            $data['pictures'] = [$data['pictures']];
-        }
+        $data = [
+            'pictures' => (array) $request->input('pictures'),
+        ];
 
         $validated = Validator::make($data, [
-            'pictures'   => ['required', 'array'],
+            'pictures'   => ['required', 'array', 'min:1'],
             'pictures.*' => ['integer']
         ])->validate();
 
-        return Photo::whereIn('id', $validated['pictures'])->pluck('id')->toArray();
+        return Photo::whereIn('id', $validated['pictures'])->pluck('id')->all();
+    }
+
+    private function detachPhotos(Album $album, array $photoIds)
+    {
+        $album->photos()->detach($photoIds);
+
+        return response()->json(['message' => 'Photo(s) removed']);
     }
 
     private function getDateRange(Album $album): array
