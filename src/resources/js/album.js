@@ -381,10 +381,9 @@ class Album {
 
     showRemovalconfirmation(cards) {
 
-        let cardArray = [cards];
-        if (cards instanceof NodeList) {
-            cardArray = Array.from(cards);
-        }
+        const cardArray = !Array.isArray(cards)
+            ? cards instanceof NodeList ? Array.from(cards) : [cards]
+            : cards;
 
         const countEl = document.getElementById('delCount');
         countEl.textContent = cardArray.length;
@@ -396,15 +395,17 @@ class Album {
 
             try {
 
+                const url = route('api.albums.photos.removeMultiple', { album: this.id });
+
+                AppRequest.request(url, 'DELETE', {
+                    pictures: cardArray.map(card => card.getAttribute('data-id'))
+                });
+
                 for (const card of cardArray) {
-
-                    const url = route('api.albums.photos.removeOne', { album: this.id, photo: card.getAttribute('data-id') });
-                    AppRequest.request(url, 'DELETE');
-
-                    toast('Photo(s) removed');
                     this.grid.remove(card);
-
                 }
+
+                toast('Photo(s) removed');
 
             } catch (e) { console.log(e); }
 
