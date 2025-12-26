@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Represents a folder in the media library.
+ *
+ * Stores folder path, name, and parent-child relationships.
+ */
 class Folder extends Model
 {
     /**
@@ -33,7 +38,9 @@ class Folder extends Model
     }
 
     /**
-     * Get the parent folder.
+     * Get the parent Folder.
+     *
+     * @return BelongsTo<Folder, Folder>
      */
     public function parent(): BelongsTo
     {
@@ -41,7 +48,9 @@ class Folder extends Model
     }
 
     /**
-     * Get the child folders.
+     * Get the child Folders.
+     *
+     * @return HasMany<Folder>
      */
     public function children(): HasMany
     {
@@ -49,7 +58,9 @@ class Folder extends Model
     }
 
     /**
-     * Get the photos in this folder.
+     * Get the Photos contained in this Folder.
+     *
+     * @return HasMany<Photo>
      */
 	public function photos(): HasMany
 	{

@@ -12,6 +12,12 @@ use App\Enums\DatePrecision;
 use App\Enums\UserRole;
 use App\Traits\RecordsStats;
 
+/**
+ * Represents a photo album in the application.
+ *
+ * Stores metadata such as name, display name, type, date range, and associated photos.
+ * Can have a cover photo and keeps track of photo counts.
+ */
 class Album extends Model
 {
     use RecordsStats;
@@ -36,7 +42,9 @@ class Album extends Model
      *
      * @var list<string>
      */
-    protected $appends = ['display_name'];
+    protected $appends = [
+        'display_name'
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -57,7 +65,7 @@ class Album extends Model
     }
 
     /**
-     * Get the display name for this album.
+     * Accessor for the Album display name.
      *
      * @return string
      */
@@ -74,7 +82,9 @@ class Album extends Model
     }
 
     /**
-     * Get the photos in this album.
+     * Get the Photos associated with this Album.
+     *
+     * @return BelongsToMany<Photo>
      */
 	public function photos(): BelongsToMany
 	{
@@ -82,7 +92,9 @@ class Album extends Model
 	}
 
     /**
-     * Get the cover of this album.
+     * Get the cover for this Album.
+     *
+     * @return BelongsTo<Photo, Album>
      */
     public function coverPhoto(): BelongsTo
     {

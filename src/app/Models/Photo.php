@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 use App\Traits\RecordsStats;
 
+/**
+ * Represents a photo in the media library.
+ *
+ * Stores metadata such as filename, dimensions, camera info, exposure settings,
+ * and statistics like impressions and downloads.
+ * Belongs to a folder and can belong to multiple albums.
+ */
 class Photo extends Model
 {
     use RecordsStats;
@@ -49,7 +56,9 @@ class Photo extends Model
     ];
 
     /**
-     * Get the folder for this photo.
+     * Get the Folder this Photo belongs to.
+     *
+     * @return BelongsTo<Folder, Photo>
      */
     public function folder(): BelongsTo
     {
@@ -57,7 +66,9 @@ class Photo extends Model
     }
 
     /**
-     * Get the albums for this photo.
+     *  Get the Albums this Photo is associated with.
+     *
+     * @return BelongsToMany<Album>
      */
 	public function albums(): BelongsToMany
 	{

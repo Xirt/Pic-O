@@ -5,6 +5,13 @@ namespace App\Services;
 use App\Jobs\TraverseFolderJob;
 use App\Models\Job;
 
+/**
+ * Service responsible for scanning media folders and processing photos.
+ *
+ * Provides methods to start folder traversal jobs, check if scans are
+ * currently running, and manage scanner logs. Dispatches TraverseFolderJob
+ * for recursive folder scanning and ProcessPhotoJob for individual photos.
+ */
 class ScanService
 {
     /**
@@ -14,8 +21,10 @@ class ScanService
 
     /**
      * Public entry point for triggering the scan.
+     *
+     * @param string|null $overridePath Optional path to scan instead of default media_root
      */
-    public function run(?string $overridePath = null)
+    public function run(?string $overridePath = null): void
     {
         if (!$this->isRunning())
         {
@@ -27,7 +36,7 @@ class ScanService
     /**
      * Truncate the scanner.log file.
      */
-    private function truncateScannerLog()
+    private function truncateScannerLog(): void
     {
         $logFile = storage_path(self::SCANNER_LOG);
 
@@ -39,8 +48,10 @@ class ScanService
 
     /**
      * Dispatch the folder traversal scan job.
+     *
+     * @param string|null $overridePath Optional path to scan
      */
-    private function dispatchScanJob(?string $overridePath)
+    private function dispatchScanJob(?string $overridePath): void
     {
         $pathConfig = $overridePath ?? config('settings.media_root');
 
@@ -56,7 +67,9 @@ class ScanService
     }
 
     /**
-     * Check if any of the given jobs are currently queued or running.
+     * Check if any of the relevant jobs are currently queued or running.
+     *
+     * @return bool True if a TraverseFolderJob or ProcessPhotoJob is queued or running
      */
     public static function isRunning(): bool
     {

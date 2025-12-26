@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\URL;
 use App\Models\Setting;
 use App\Policies\AdminPolicy;
 
+/**
+ * Application service provider responsible for registering and bootstrapping
+ * application services.
+ *
+ * Handles global configurations, enforces HTTPS when behind proxies,
+ * registers authorization policies, and loads application settings from
+ * the database.
+ */
 class AppServiceProvider extends ServiceProvider
 {
     /**

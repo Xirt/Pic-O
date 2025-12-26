@@ -4,9 +4,19 @@ namespace App\Services;
 
 use App\Services\ScanService;
 
+/**
+ * Service responsible for scheduling automatic folder scans based on
+ * configured intervals (hourly, daily, weekly, monthly).
+ *
+ * Determines when to trigger the ScanService according to application
+ * settings and current date/time.
+ */
 class ScanScheduler
 {
-    public function run()
+    /**
+     * Run the scheduler according to configured interval.
+     */
+    public function run(): void
     {
         $settings = [
             'interval'     => config('settings.scanner_interval', 'none'),
@@ -26,7 +36,7 @@ class ScanScheduler
     }
 
     /**
-     * HOURLY runs immediately once per scheduler tick
+     * Run hourly: executes immediately once per scheduler tick.
      */
     private function runHourly(): void
     {
@@ -34,7 +44,9 @@ class ScanScheduler
     }
 
     /**
-     * DAILY at specific HH:MM
+     * Run daily at a specific HH:MM time.
+     *
+     * @param string $time Time in "HH:MM" format
      */
     private function runDaily(string $time): void
     {
@@ -44,8 +56,11 @@ class ScanScheduler
         }
     }
 
-    /**
-     * WEEKLY on specific weekday at HH:MM
+   /**
+     * Run weekly on a specific weekday at HH:MM.
+     *
+     * @param int    $weekday Day of week (0 = Sunday)
+     * @param string $time    Time in "HH:MM" format
      */
     private function runWeekly(int $weekday, string $time): void
     {
@@ -59,7 +74,10 @@ class ScanScheduler
     }
 
     /**
-     * MONTHLY:
+     * Run monthly on a specific day of the month at HH:MM.
+     *
+     * @param int    $dayOfMonth Day of the month (1-31)
+     * @param string $time       Time in "HH:MM" format
      */
     private function runMonthly(int $dayOfMonth, string $time): void
     {
@@ -71,5 +89,4 @@ class ScanScheduler
             app(ScanService::class)->run();
         }
     }
-
 }

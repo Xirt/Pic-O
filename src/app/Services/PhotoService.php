@@ -17,8 +17,16 @@ use App\ValueObjects\Position;
 use App\ValueObjects\Dimension;
 use kornrunner\Blurhash\Blurhash;
 
+/**
+ * Service for handling photo operations, including rendering, thumbnails,
+ * downloads, collections, and blurhash generation.
+ *
+ * Handles caching, resizing, cropping, and positioning of images, and
+ * provides utilities for generating visual collections of photos.
+ */
 class PhotoService
 {
+    // Dimensions to use for photo rendering
     private const RENDER_DIMS = 1920;
 
     // Collection configuration
@@ -38,10 +46,11 @@ class PhotoService
     private const MIN_DISTANCE = 200;
     private const MAX_ATTEMPTS = 30;
 
+    /** Directory where cached thumbnails and renders are stored */
     protected string $cacheDir;
 
     /**
-     * Constructor - Initializes cache
+     * Constructor - Initializes cache directory.
      */
     public function __construct()
     {
@@ -52,7 +61,11 @@ class PhotoService
     }
 
     /**
-     * Returns a large render of the provided photo
+     * Returns a large render of the provided Photo.
+     *
+     * @param Photo $photo
+     *
+     * @return BinaryFileResponse|BinaryStreamResponse
      */
     public function render(Photo $photo): BinaryFileResponse|BinaryStreamResponse
     {
@@ -67,7 +80,11 @@ class PhotoService
     }
 
     /**
-     * Enforces downloading of the original file of the provided photo
+     * Enforces downloading of the original file of the provided Photo.
+     *
+     * @param Photo $photo
+     *
+     * @return BinaryFileResponse
      */
     public function download(Photo $photo): BinaryFileResponse
     {
@@ -77,7 +94,13 @@ class PhotoService
     }
 
     /**
-     * Returns a downscaled version of the provided photo
+     * Returns a downscaled version of the provided Photo.
+     *
+     * @param Photo $photo
+     * @param int   $maxDimensions
+     * @param float|null $ratio
+     *
+     * @return BinaryFileResponse
      */
     public function thumbnail(Photo $photo, int $maxDimensions = 500, ?float $ratio = null): BinaryFileResponse
     {
@@ -104,7 +127,11 @@ class PhotoService
     }
 
     /**
-     * Returns an image file with the provided photos on it
+     * Returns an image file with the provided Photos on it.
+     *
+     * @param Collection<Photo> $photos
+     *
+     * @return BinaryStreamResponse
      */
     public function collection(Collection $photos): BinaryStreamResponse
     {
@@ -157,7 +184,13 @@ class PhotoService
     }
 
     /**
-     * Returns blurhash for given photo
+     * Returns BlurHash for given Photo.
+     *
+     * @param Photo $photo
+     * @param int   $width
+     * @param int   $height
+     *
+     * @return string
      */
     function blurhash(Photo $photo, $width = 4, $height = 3)
     {
@@ -165,7 +198,11 @@ class PhotoService
     }
 
     /**
-     * Returns a downscaled render of the provided photo
+     * Returns a downscaled render of the provided Photo.
+     *
+     * @param string $fullPath
+     *
+     * @return BinaryFileResponse|BinaryStreamResponse
      */
     private function downScaledRender(String $fullPath): BinaryFileResponse|BinaryStreamResponse
     {
@@ -193,7 +230,11 @@ class PhotoService
     }
 
     /**
-     * Retrieve an image from cache using the given name
+     * Retrieve an image from cache using the given name.
+     *
+     * @param string $name
+     *
+     * @return BinaryFileResponse|null
      */
     private function retrieveFromCache(string $name): ?BinaryFileResponse
     {
@@ -206,7 +247,12 @@ class PhotoService
     }
 
     /**
-     * Stores the given image in the cache under the given name
+     * Stores the given image in the cache under the given name.
+     *
+     * @param Image  $image
+     * @param string $name
+     *
+     * @return BinaryFileResponse
      */
     private function storeInCache(Image $image, string $name): BinaryFileResponse
     {
@@ -217,7 +263,11 @@ class PhotoService
     }
 
     /**
-     * Returns the absolute path to the given photo
+     * Returns the absolute path to the given Photo.
+     *
+     * @param Photo $photo
+     *
+     * @return string
      */
     private function getFilePath(Photo $photo): string
     {
@@ -231,7 +281,10 @@ class PhotoService
     }
 
     /**
-     * Returns the absolute path to the given file in the cache
+     * Returns the absolute path to the given file in the cache.
+     *
+     * @param string $name
+     * @return string
      */
     private function getCachePath(string $name): string
     {
@@ -239,7 +292,12 @@ class PhotoService
     }
 
     /**
-     * Returns a downsaled version of the given image
+     * Returns a downsized version of the given image.
+     *
+     * @param Image $image
+     * @param int   $maxDimension
+     *
+     * @return Image
      */
     private function resizeImage(Image $image, int $maxDimension = 500): Image
     {
@@ -252,7 +310,12 @@ class PhotoService
     }
 
     /**
-     * Crops an image to a given width / height ratio (from the center)
+     * Crops an image to a given width / height ratio (from the center).
+     *
+     * @param Image $image
+     * @param float $ratio
+     *
+     * @return Image
      */
     protected function cropToRatio(Image $image, float $ratio): Image
     {
@@ -277,7 +340,11 @@ class PhotoService
     }
 
     /**
-     * Get (downscaled) pixel matrix for given photo
+     * Get (downscaled) pixel matrix for given photo.
+     *
+     * @param Photo $photo
+     *
+     * @return array<int, array<int, array<int, int>>>
      */
     private function pixels(Photo $photo): array
     {
@@ -304,7 +371,13 @@ class PhotoService
     }
 
     /**
-     * Generates random (spread) positions for items on a canvas
+     * Generates random (spread) positions for items on a canvas.
+     *
+     * @param Dimension $canvas
+     * @param Dimension $item
+     * @param int $count
+     *
+     * @return Position[]
      */
     private function generatePositions(Dimension $canvas, Dimension $item, int $count = 10): array
     {
@@ -340,7 +413,15 @@ class PhotoService
     }
 
     /**
-     * Returns a random position (top / left) for item placement
+     * Returns a random position (top / left) for item placement.
+     *
+     * @param int $cw Canvas width
+     * @param int $ch Canvas height
+     * @param int $pw Item width
+     * @param int $ph Item height
+     * @param int $margin Optional margin
+     *
+     * @return Position
      */
     private function getRandomPos(int $cw, int $ch, int $pw, int $ph, $margin = 25): Position
     {
@@ -352,7 +433,13 @@ class PhotoService
     }
 
     /**
-     * Checks whether the given position is placed at a given distance from a given list of positions
+     * Checks whether the given position is placed at a given distance from a list of positions.
+     *
+     * @param Position $newPos
+     * @param Position[] $positions
+     * @param int $minDist
+     *
+     * @return bool
      */
     private function isFarEnough(Position $newPos, array $positions, int $minDist): bool
     {
@@ -368,12 +455,13 @@ class PhotoService
     }
 
     /**
-     * Returns image manager based on available drivers
+     * Returns image manager based on available drivers.
+     *
+     * @return ImageManager
      */
     private function getImageManager(): ImageManager
     {
         $driver = class_exists('Imagick') ? new ImagickDriver() : new GdDriver();
         return new ImageManager($driver);
     }
-
 }

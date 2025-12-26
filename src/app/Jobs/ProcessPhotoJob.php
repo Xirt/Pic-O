@@ -14,21 +14,39 @@ use Carbon\Carbon;
 use App\Models\Photo;
 use App\Services\PhotoService;
 
+/**
+ * Handles the processing of a single photo file.
+ *
+ * This job reads the photo from disk, extracts metadata (EXIF, dimensions, etc.),
+ * generates thumbnails or blurhashes, and stores or updates the corresponding
+ * Photo model in the database.
+ */        
 class ProcessPhotoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /** @var string Absolute filesystem path to the photo */
     protected string $path;
 
+    /** @var string ID of the Folder the photo belongs to */
     protected int $folderId;
 
+    /** @var string Filename of the photo */
     protected string $filename;
 
+    /** @var string Relative path of the photo */
     protected string $relativePath;
 
+    /** @var string Scanner log channel (for information logging) */
     private const LOG_CHANNEL = 'scanner';
 
+    /**
+     * Filename date/time extraction patterns for various well-known formats.
+     *
+     * @var array<int, string>
+     */
     private const FILENAME_PATTERNS = [
+
         // Canon / Android / typical pattern: IMG_20251102_101500.jpg
         '/(?P<y>20\d{2})(?P<m>\d{2})(?P<d>\d{2})[_-]?(?P<h>\d{2})(?P<i>\d{2})(?P<s>\d{2})?/',
 
@@ -52,10 +70,12 @@ class ProcessPhotoJob implements ShouldQueue
 
         // Google Photos export: "PXL_20251102_101500.jpg"
         '/PXL[-_](?P<y>20\d{2})(?P<m>\d{2})(?P<d>\d{2})[_-]?(?P<h>\d{2})(?P<i>\d{2})(?P<s>\d{2})?/',
+
     ];
 
     /**
-     * Constructor
+     * @param int    $folderId Folder ID the photo belongs to
+     * @param string $path     Absolute filesystem path
      */
     public function __construct(int $folderId, string $path)
     {
@@ -67,7 +87,11 @@ class ProcessPhotoJob implements ShouldQueue
     }
 
     /**
-     * Process a photo for later use
+     * Process the photo.
+     *
+     * @param PhotoService $photoService
+     *
+     * @return void
      */
     public function handle(PhotoService $photoService): void
     {  
@@ -116,6 +140,11 @@ class ProcessPhotoJob implements ShouldQueue
         Log::channel(self::LOG_CHANNEL)->info("Processed: $this->relativePath");
     }
 
+    /**
+     * Get last database update for this photo record.
+     *
+     * @return Carbon|null
+     */
     private function getLastRecordUpdate(): ?Carbon
     {
         $photo = Photo::where([
@@ -127,7 +156,9 @@ class ProcessPhotoJob implements ShouldQueue
     }
 
     /**
-     * Returns all retrieved EXIF metadata of the current photo
+     * Retrieve EXIF metadata from the photo.
+     *
+     * @return array<string, mixed>
      */
     private function getEXIFData(): array
     {
@@ -192,9 +223,13 @@ class ProcessPhotoJob implements ShouldQueue
     }
 
 
-	/**
-	 * Checks various EXIF values to determine date/time taken
-	 */
+    /**
+     * Determine photo capture time from EXIF or filename.
+     *
+     * @param array<string, mixed> $exif
+     *
+     * @return Carbon|null
+     */
 	private function getTakenAt(array $exif): ?Carbon
 	{
         $candidates = ['DateTimeOriginal', 'CreateDate', 'DateTimeCreated', 'DateTimeDigitized'];
@@ -241,7 +276,11 @@ class ProcessPhotoJob implements ShouldQueue
 
 
     /**
-     * Interprets a given EXIF value based on its specific format
+     * Interpret EXIF numeric or fractional values.
+     *
+     * @param string|null $value
+     *
+     * @return float|null
      */
     private function interpretValue(?string $value): ?float
     {

@@ -18,26 +18,46 @@ use App\Jobs\ProcessPhotoJob;
 use App\Models\Folder;
 use App\Models\Photo;
 
+/**
+ * Recursively scans a folder for subfolders and photo files.
+ *
+ * This job creates or updates Folder models for directories,
+ * dispatches ProcessPhotoJob for each relevant photo file, and removes
+ * obsolete database entries for deleted files or directories.
+ */
 class TraverseFolderJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /** @var bool Force reprocessing of files even if unchanged */
     protected bool $forced;
 
+    /** @var string Absolute filesystem path of the folder */
     protected string $path;
 
+     /** @var int|null Parent folder database ID */
     protected ?int $parentId;
 
+     /** @var string Name of the folder */
     protected string $folderName;
 
+    /** @var string Relative (resource) path of the folder */
     protected string $relativePath;
 
+    /** @var string Scanner log channel (for information logging) */
     private const LOG_CHANNEL = 'scanner';
 
+    /**
+    * Allowed photo file extensions for processing.
+    *
+    * @var array<int, string>
+    */
     private const PHOTO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
     /**
-     * Constructor
+     * @param string   $path     Absolute folder path
+     * @param int|null $parentId Parent folder ID
+     * @param bool     $forced   Force reprocessing of files
      */
     public function __construct(string $path, int $parentId = NULL, $forced = false)
     {
@@ -50,7 +70,9 @@ class TraverseFolderJob implements ShouldQueue
     }
 
     /**
-     * Execute the job
+     * Execute the folder traversal job.
+     *
+     * @return void
      */
     public function handle(): void
     {
@@ -72,6 +94,14 @@ class TraverseFolderJob implements ShouldQueue
         Log::channel(self::LOG_CHANNEL)->info("Completed scan: $this->relativePath");
     }
 
+    /**
+     * Scan and dispatch jobs for subdirectories.
+     *
+     * @param int                $folderId
+     * @param array<int, string> $ignorePatterns
+     *
+     * @return void
+     */
     private function scanSubdirectories(int $folderId, array $ignorePatterns): void
     {
         $subfolders = collect(File::directories($this->path))
@@ -110,6 +140,14 @@ class TraverseFolderJob implements ShouldQueue
         }
     }
 
+    /**
+     * Scan files in the current directory and dispatch photo jobs.
+     *
+     * @param int                $folderId
+     * @param array<int, string> $ignorePatterns
+     *
+     * @return void
+     */
     private function scanFiles(int $folderId, array $ignorePatterns): void
     {
         $files = [];
@@ -166,7 +204,14 @@ class TraverseFolderJob implements ShouldQueue
             Photo::destroy($existingPhotos->pluck('id'));
         }
     }
-    
+
+    /**
+     * Get existing photos indexed by filename for the given Folder ID.
+     *
+     * @param int $folderId
+     *
+     * @return Collection<string, Photo>
+     */
     protected function getExistingPhotos(int $folderId): Collection
     {
         return Photo::where('folder_id', $folderId)
@@ -174,11 +219,26 @@ class TraverseFolderJob implements ShouldQueue
             ->keyBy('filename');
     }
 
+    /**
+     * Convert absolute path to resource-relative path.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
     protected function getRelativePath(string $path): string
     {
         return Str::after($path, resource_path() . DIRECTORY_SEPARATOR);
     }
 
+    /**
+     * Retrieve ignore patterns from root and local directories.
+     *
+     * @param string $dir
+     * @param string $rootDir
+     *
+     * @return array<int, string>
+     */
     protected function getIgnorePatterns(string $dir, string $rootDir): array
     {
         return array_unique(array_merge(
@@ -187,6 +247,13 @@ class TraverseFolderJob implements ShouldQueue
         ));
     }
 
+    /**
+     * Read ignore rules from `.ignore` file in given directory.
+     *
+     * @param string $dir
+     *
+     * @return array<int, string>
+     */
     protected function getIgnoreLines(string $dir) : array
     {
         $ignoreFile = $dir . DIRECTORY_SEPARATOR . '.ignore';
@@ -202,6 +269,14 @@ class TraverseFolderJob implements ShouldQueue
         return [];
     }
 
+    /**
+     * Determine whether given path matches (one of the) provided ignore patterns.
+     *
+     * @param string              $path
+     * @param array<int, string>  $patterns
+     *
+     * @return bool
+     */
     protected function isIgnored(string $path, array $patterns): bool
     {
         $filename   = basename($path);

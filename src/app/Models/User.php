@@ -7,6 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Enums\UserRole;
 
+/**
+ * Represents an application user.
+ *
+ * Stores user attributes including role and authentication data.
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;

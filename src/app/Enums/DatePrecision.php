@@ -2,6 +2,9 @@
 
 namespace App\Enums;
 
+/**
+ * Specifies the precision level of a date range.
+ */
 enum DatePrecision: string
 {
     case DAY     = 'day';

@@ -2,6 +2,9 @@
 
 namespace App\Enums;
 
+/**
+ * Represents types of photo albums.
+ */
 enum AlbumType: string
 {
     case HOLIDAY      = 'holiday';

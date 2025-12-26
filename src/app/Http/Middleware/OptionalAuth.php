@@ -5,12 +5,28 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 use App\Models\ShareToken;
 
+/**
+ * Policy for handling optional authentication rules.
+ *
+ * This policy determines which actions are permitted for users
+ * who may or may not be authenticated. Methods typically define
+ * access to resources based on the presence of a user and their role.
+ */
 class OptionalAuth
 {
-    public function handle(Request $request, Closure $next)
+    /**
+     * Handle an incoming request and checks for authentication via tokens.
+     *
+     * @param Request $request The incoming HTTP request.
+     * @param Closure(Request): Response $next The next middleware callback.
+     *
+     * @return Response
+     */
+    public function handle(Request $request, Closure $next): Response
     {
         Auth::shouldUse('web');
                                      
@@ -27,7 +43,7 @@ class OptionalAuth
                 return $next($request);
             }
 
-            $request->merge(['token' => NULL]);
+            $request->merge(['token' => null]);
             return $next($request);
         }
 
