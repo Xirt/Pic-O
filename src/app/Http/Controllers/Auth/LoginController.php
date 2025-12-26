@@ -3,12 +3,28 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Lockout;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
-use Illuminate\Auth\Events\Lockout;
+use Illuminate\View\View;
 
+/**
+ * Handles user authentication: login and logout.
+ *
+ * Provides:
+ *  - Display of the login form.
+ *  - Login attempt processing with rate limiting.
+ *  - Logout and session invalidation.
+ *
+ * Routes:
+ *  - GET  /login  -> index()
+ *  - POST /login  -> login()
+ *  - POST /logout -> logout()
+ */
 class LoginController extends Controller
 {
     private const MAX_ATTEMPTS = 5;
@@ -17,18 +33,22 @@ class LoginController extends Controller
 
     /**
      * Show login page
-     * POST /login
+     *
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('pages.login');
     }
 
     /**
      * Perform a login attempt
-     * POST /login
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $request->validate([
             'email'    => 'required|email',
@@ -67,9 +87,12 @@ class LoginController extends Controller
 
     /**
      * Perform a logout attempt
-     * POST /logout
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
      */
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
 
