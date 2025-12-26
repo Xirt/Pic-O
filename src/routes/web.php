@@ -54,7 +54,7 @@ Route::middleware([
 
     // Photos
     Route::prefix('photos')->as('photos.')->group(function () {
-        Route::get('/', [FolderController::class, 'index'])->name('index'); // Note: Maybe this should be AlbumController?
+        Route::get('/', [PhotoController::class, 'index'])->name('index');
         Route::get('{photo}', [PhotoController::class, 'showRender'])->name('show');
         Route::get('{photo}/download', [PhotoController::class, 'download'])->name('download');
         Route::get('{photo}/thumbnail', [PhotoController::class, 'showThumbnail'])->name('thumbnail');
