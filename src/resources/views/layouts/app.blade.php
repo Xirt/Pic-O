@@ -9,7 +9,13 @@
 
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
 
-    <title>@yield('title', config('app.name'))</title>
+    <title>
+        @hasSection('title')
+             {{ config('settings.site_name') }} | @yield('title')
+        @else
+            {{ config('settings.site_name') }}
+        @endif
+    </title>
 
     {{-- CSS --}}
 
