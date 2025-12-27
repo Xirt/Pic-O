@@ -3,17 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\Response;
 
 use App\Models\Photo;
 use App\Services\PhotoService;
 
+/**
+ * Handles web display of Photos.
+ *
+ * Provides:
+ *  - Timeline view
+ *  - Viewing, rendering, and downloading individual photos
+ *  - Generating photo thumbnails
+ *
+ * Routes:
+ *  - GET /                  -> index()
+ *  - GET /photos/{id}       -> showRender()
+ *  - GET /photos/{id}/thumbnail -> showThumbnail()
+ *  - GET /photos/{id}/download  -> download()
+ */
 class PhotoController extends Controller
 {                                        
     /**
-     * Show one or more Photos
-     * GET /
+     * Show the timeline page (list of photos).
+     *
+     * @param Request $request
+     * @return View|Response
      */
-    public function index(Request $request)
+    public function index(Request $request): View|Response
     {
         if (!$request->user())
         {
@@ -26,10 +44,13 @@ class PhotoController extends Controller
     }
 
     /**
-     * Show a given Photo
-     * GET /photos/{id}
+     * Render a specific Photo page.
+     *
+     * @param Photo $photo
+     * @param PhotoService $photoService
+     * @return Response
      */
-    public function showRender(Photo $photo, PhotoService $photoService)
+    public function showRender(Photo $photo, PhotoService $photoService): Response
     {
         $this->authorize('view', $photo);
 
@@ -39,10 +60,13 @@ class PhotoController extends Controller
     }
 
     /**
-     * Show a thumbnail version of a given Photo
-     * GET /photos/{id}/thumbnail
+     * Show a thumbnail for a given Photo.
+     *
+     * @param Photo $photo
+     * @param PhotoService $photoService
+     * @return Response
      */
-    public function showThumbnail(Photo $photo, PhotoService $photoService)
+    public function showThumbnail(Photo $photo, PhotoService $photoService): Response
     {
         $this->authorize('view', $photo);
         
@@ -50,10 +74,13 @@ class PhotoController extends Controller
     }
 
     /**
-     * Download a given Photo
-     * GET /photos/{id}/download
+     * Download a specific Photo.
+     *
+     * @param Photo $photo
+     * @param PhotoService $photoService
+     * @return Response
      */
-    public function download(Photo $photo, PhotoService $photoService)
+    public function download(Photo $photo, PhotoService $photoService): Response
     {
         $this->authorize('view', $photo);
 

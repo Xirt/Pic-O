@@ -17,11 +17,35 @@ use App\Models\Album;
 use App\Models\Photo;
 use App\Models\Folder;
 
+/**
+ * Handles Album management via API endpoints.
+ *
+ * Provides:
+ *  - Album listing and searching.
+ *  - Album creation and updates.
+ *  - Photo attachment and detachment.
+ *  - Folder-based album and photo operations.
+ *
+ * Routes:
+ *  - GET    /api/albums
+ *  - GET    /api/albums/search
+ *  - GET    /api/albums/{id}
+ *  - POST   /api/albums/create
+ *  - POST   /api/albums/from-folder
+ *  - PATCH  /api/albums/{id}
+ *  - PUT    /api/albums/{id}/photos
+ *  - PUT    /api/albums/{id}/photos/{id}
+ *  - POST   /api/albums/{id}/photos/from-folder
+ *  - DELETE /api/albums/{id}/photos
+ *  - DELETE /api/albums/{id}/photos/{id}
+ *  - DELETE /api/albums/{id}
+ */
 class AlbumController extends Controller
 {
     /**
      * Retrieve one or more Albums
-     * GET /api/albums
+     *
+     * @return AnonymousResourceCollection
      */
     public function index(): AnonymousResourceCollection
     {
@@ -37,7 +61,10 @@ class AlbumController extends Controller
 
     /**
      * Search for one or more Albums
-     * GET /api/albums/search
+     *
+     * @param Request $request
+     *
+     * @return AnonymousResourceCollection
      */
     public function search(Request $request): AnonymousResourceCollection
     {
@@ -67,7 +94,10 @@ class AlbumController extends Controller
 
     /**
      * Retrieve a specific Album
-     * GET /api/albums/{id}
+     *
+     * @param Album $album
+     *
+     * @return AlbumResource
      */
     public function show(Album $album): AlbumResource
     {
@@ -80,7 +110,10 @@ class AlbumController extends Controller
 
     /**
      * Create a new Album
-     * POST /api/albums/create
+     *
+     * @param Request $request
+     *
+     * @return AlbumResource
      */
     public function store(Request $request): AlbumResource
     {
@@ -97,7 +130,10 @@ class AlbumController extends Controller
 
     /**
      * Create a new Album using a specific Folder
-     * POST /api/albums/from-folder
+     *
+     * @param Request $request
+     *
+     * @return AlbumResource
      */
     public function storeFromFolder(Request $request): AlbumResource
     {
@@ -127,7 +163,11 @@ class AlbumController extends Controller
 
     /**
      * Update a given Album
-     * PATCH /api/albums/{id}
+     *
+     * @param Request $request
+     * @param Album   $album
+     *
+     * @return AlbumResource
      */
     public function update(Request $request, Album $album): AlbumResource
     {
@@ -158,7 +198,12 @@ class AlbumController extends Controller
 
     /**
      * Add a given Photo to a given Album
-     * PUT /api/albums/{id}/photos/{id}
+     *
+     * @param Request $request
+     * @param Album   $album
+     * @param Photo   $photo
+     *
+     * @return JsonResponse
      */
     public function addPhoto(Request $request, Album $album, Photo $photo): JsonResponse
     {
@@ -171,7 +216,11 @@ class AlbumController extends Controller
 
     /**
      * Add given Photos to a given Album
-     * PUT /api/albums/{id}/photos
+     *
+     * @param Request $request
+     * @param Album   $album
+     *
+     * @return JsonResponse
      */
     public function addPhotos(Request $request, Album $album): JsonResponse
     {
@@ -185,8 +234,12 @@ class AlbumController extends Controller
     }
 
     /**
-     * Add Photos if a specific folder to given Album
-     * POST /api/albums/{id}/photos/from-folder
+     * Add Photos from a specific Folder to a given Album
+     *
+     * @param Request $request
+     * @param Album   $album
+     *
+     * @return JsonResponse
      */
     public function addFromFolder(Request $request, Album $album): JsonResponse
     {
@@ -213,7 +266,11 @@ class AlbumController extends Controller
 
     /**
      * Remove a given Photo from a given Album
-     * DELETE /api/albums/{id}/photos/{id}
+     *
+     * @param Album $album
+     * @param Photo $photo
+     *
+     * @return JsonResponse
      */
     public function removePhoto(Album $album, Photo $photo)
     {
@@ -224,7 +281,11 @@ class AlbumController extends Controller
 
     /**
      * Remove given Photos from a given Album
-     * DELETE /api/albums/{id}/photos
+     *
+     * @param Request $request
+     * @param Album   $album
+     *
+     * @return JsonResponse
      */
     public function removePhotos(Request $request, Album $album)
     {
@@ -235,7 +296,10 @@ class AlbumController extends Controller
 
     /**
      * Delete a given Album
-     * DELETE /api/albums/{album}
+     *
+     * @param Album $album
+     *
+     * @return JsonResponse
      */
     public function destroy(Album $album): JsonResponse
     {
@@ -246,6 +310,15 @@ class AlbumController extends Controller
         return response()->json(['message' => 'Album deleted']);
     }
 
+    /**
+     * Persist a new Album and attach Photos
+     *
+     * @param string $name
+     * @param string $type
+     * @param array  $photoIds
+     *
+     * @return AlbumResource
+     */
     private function createAlbum(String $name, String $type, array $photoIds): AlbumResource
     {
         $album = Album::create([
@@ -260,6 +333,13 @@ class AlbumController extends Controller
         return new AlbumResource($album);
     }
 
+    /**
+     * Extract and validate Photo IDs from request
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
     private function getPhotoIds(Request $request): array
     {
         $data = [
@@ -274,6 +354,14 @@ class AlbumController extends Controller
         return Photo::whereIn('id', $validated['pictures'])->pluck('id')->all();
     }
 
+    /**
+     * Detach Photos from an Album
+     *
+     * @param Album $album
+     * @param array $photoIds
+     *
+     * @return JsonResponse
+     */
     private function detachPhotos(Album $album, array $photoIds)
     {
         $album->photos()->detach($photoIds);
@@ -281,6 +369,13 @@ class AlbumController extends Controller
         return response()->json(['message' => 'Photo(s) removed']);
     }
 
+    /**
+     * Determine the date range for an Album
+     *
+     * @param Album $album
+     *
+     * @return array
+     */
     private function getDateRange(Album $album): array
     {
         $start = $album->photos()->min('taken_at');
@@ -289,6 +384,13 @@ class AlbumController extends Controller
         return ['start_date' => $start, 'end_date' => $end];
     }
 
+    /**
+     * Select a random Photo ID for album cover
+     *
+     * @param array $list
+     *
+     * @return int|null
+     */
     private function getRandomCover($list): ?int
     {
         return $list ? $list[array_rand($list)] : null;

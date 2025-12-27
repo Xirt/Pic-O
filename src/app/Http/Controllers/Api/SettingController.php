@@ -8,10 +8,22 @@ use Illuminate\Http\Request;
 
 use App\Models\Setting;
 
+/**
+ * Handles application Settings management via API endpoints.
+ *
+ * Provides:
+ *  - Validation of allowed settings.
+ *  - Creation and updating of application settings.
+ *
+ * Routes:
+ *  - POST /api/settings
+ */
 class SettingController extends Controller
 {
     /**
      * Allowed settings and their validation rules.
+     *
+     * @var array<string, array{rules: mixed}>
      */
     private const ALLOWED_SETTINGS = [
 
@@ -70,8 +82,11 @@ class SettingController extends Controller
     ];
 
     /**
-     * Create / update one or more Settings
-     * POST /api/settings
+     * Create or update one or more Settings
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {

@@ -2,17 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\Response;
+
 use App\Models\Photo;
 use App\Models\Folder;
-use App\Services\PhotoService;       
+use App\Services\PhotoService;
 
+/**
+ * Handles web display of Folders.
+ *
+ * Provides:
+ *  - Listing of folders
+ *  - Generating folder thumbnails
+ *
+ * Routes:
+ *  - GET /folders               -> index()
+ *  - GET /folders/{id}/thumbnail -> thumbnail()
+ */
 class FolderController extends Controller
 {          
     /**
-     * Show one or more Folders
-     * GET /folders
+     * Show the folders listing page.
+     *
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         $this->authorize('viewAny', Folder::class);
 
@@ -20,10 +35,14 @@ class FolderController extends Controller
     }
 
     /**
-     * Show thumbnail for a given Folder
-     * GET /folders/{id}/thumbnail
+     * Show a thumbnail collection for a given Folder.
+     *
+     * @param int $folderId
+     * @param PhotoService $photoService
+     *
+     * @return Response
      */
-    public function thumbnail(int $folderId, PhotoService $photoService)
+    public function thumbnail(int $folderId, PhotoService $photoService): Response
     {
         $this->authorize('viewAny', Folder::class);
 

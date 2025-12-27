@@ -10,11 +10,27 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Models\Folder;
 use App\Http\Resources\FolderResource;
 
+/**
+ * Handles Folder retrieval and navigation via API endpoints.
+ *
+ * Provides:
+ *  - Root folder retrieval.
+ *  - Folder search by path.
+ *  - Single folder access.
+ *  - Subfolder listing.
+ *
+ * Routes:
+ *  - GET /api/folders
+ *  - GET /api/folders/search
+ *  - GET /api/folders/{id}
+ *  - GET /api/folders/{id}/subfolders
+ */
 class FolderController extends Controller
 {
     /**
-     * Retrieve one or more Folders
-     * GET /api/folders
+     * Retrieve the root Folder
+     *
+     * @return FolderResource
      */
     public function index(): FolderResource
     {
@@ -27,7 +43,10 @@ class FolderController extends Controller
 
     /**
      * Search for one or more Folders
-     * GET /api/folders/search
+     *
+     * @param Request $request
+     *
+     * @return AnonymousResourceCollection
      */
     public function search(Request $request): AnonymousResourceCollection
     {
@@ -49,7 +68,10 @@ class FolderController extends Controller
 
     /**
      * Retrieve a specific Folder
-     * GET /api/folders/{id}
+     *
+     * @param int $folderId
+     *
+     * @return FolderResource
      */
     public function show(int $folderId): FolderResource
     {
@@ -62,7 +84,10 @@ class FolderController extends Controller
 
     /**
      * Retrieve subfolders for a specific Folder
-     * GET /api/folders/{id}/subfolders
+     *
+     * @param int $folderId
+     *
+     * @return AnonymousResourceCollection
      */
     public function subfolders(int $folderId): AnonymousResourceCollection
     {
@@ -77,6 +102,13 @@ class FolderController extends Controller
         return FolderResource::collection($subfolders);
     }
 
+    /**
+     * Normalize Folder ID input, resolving root folder when ID is zero
+     *
+     * @param int $folderId
+     *
+     * @return int
+     */
     private function parseFolderId(int $folderId): int
     {
         if ($folderId === 0) {

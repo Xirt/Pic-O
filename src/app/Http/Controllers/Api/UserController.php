@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -12,13 +14,29 @@ use App\Enums\UserRole;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
+/**
+ * Handles User management via API endpoints.
+ *
+ * Provides:
+ *  - User listing and retrieval.
+ *  - User creation and updates.
+ *  - User deletion with safety checks.
+ *
+ * Routes:
+ *  - GET    /api/users
+ *  - GET    /api/users/{id}
+ *  - POST   /api/users
+ *  - PUT    /api/users/{id}
+ *  - DELETE /api/users/{id}
+ */
 class UserController extends Controller
 {
     /**
      * Retrieve one or more Users
-     * GET /api/users
+     *
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         $this->authorize('viewAny', User::class);
 
@@ -29,9 +47,12 @@ class UserController extends Controller
 
     /**
      * Retrieve a specific User
-     * GET /api/users/{id}
+     *
+     * @param User $user
+     *
+     * @return UserResource
      */
-    public function show(User $user)
+    public function show(User $user): UserResource
     {
         $this->authorize('view', $user);
 
@@ -40,9 +61,12 @@ class UserController extends Controller
 
     /**
      * Create a new User
-     * POST /api/users
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $this->authorize('create', User::class);
 
@@ -68,9 +92,13 @@ class UserController extends Controller
 
     /**
      * Update a given User
-     * PUT /api/users/{id}
+     *
+     * @param Request $request
+     * @param User    $user
+     *
+     * @return JsonResponse
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user): JsonResponse
     {
         $this->authorize('update', $user);
 
@@ -124,7 +152,11 @@ class UserController extends Controller
 
     /**
      * Delete a given User
-     * DELETE /api/users/{id}
+     *
+     * @param Request $request
+     * @param User    $user
+     *
+     * @return JsonResponse
      */
     public function destroy(Request $request, User $user)
     {

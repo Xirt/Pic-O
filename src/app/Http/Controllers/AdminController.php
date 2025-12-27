@@ -1,14 +1,30 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Jobs\TraverseFolderJob;
 
+use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\Response;
+use Illuminate\Http\BinaryFileResponse;
+
+use App\Jobs\TraverseFolderJob;
 use App\Models\User;
 use App\Models\Folder;
 use App\Models\Photo;
 use App\Models\Album;
 use App\Policies\AdminPolicy;
 
+/**
+ * Handles administrative pages and actions.
+ *
+ * Provides:
+ *  - Administration dashboard with statistics and access to (user) configuration
+ *  - Download of the latest scanner log.
+ *
+ * Routes:
+ *  - GET /admin              -> index()
+ *  - GET /admin/scanner-log  -> getScannerLog()
+ */
 class AdminController extends Controller
 {
     protected AdminPolicy $policy;
@@ -29,10 +45,11 @@ class AdminController extends Controller
     }
 
     /**
-     * Show administration page
-     * GET /admin
+     * Show the administration page with user and system statistics.
+     *
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         $users = User::all();
 
@@ -49,7 +66,12 @@ class AdminController extends Controller
         return view('pages.admin', compact('users', 'statistics'));
     }
 
-    public function getScannerLog()
+    /**
+     * Download the latest scanner log file.
+     *
+     * @return Response|BinaryFileResponse
+     */
+    public function getScannerLog(): Response|BinaryFileResponse
     {
         $logPath = storage_path('logs/scanner.log');
 
@@ -64,5 +86,4 @@ class AdminController extends Controller
             'Content-Type' => 'text/plain',
         ]);
     }
-
 }

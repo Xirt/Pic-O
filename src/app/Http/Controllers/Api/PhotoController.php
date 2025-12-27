@@ -11,11 +11,28 @@ use App\Models\Album;
 use App\Models\Photo;
 use App\Models\Folder;
 
+/**
+ * Handles Photo retrieval and interaction via API endpoints.
+ *
+ * Provides:
+ *  - Photo listing and pagination.
+ *  - Album- and folder-based photo retrieval.
+ *  - Single photo access.
+ *  - Impression recording.
+ *
+ * Routes:
+ *  - GET /api/photos
+ *  - GET /api/photos/{id}
+ *  - GET /api/photos/{id}/impression
+ *  - GET /api/albums/{id}/photos
+ *  - GET /api/folders/{id}/photos
+ */
 class PhotoController extends Controller
 {
     /**
      * Retrieve one or more Photos
-     * GET /api/photos
+     *
+     * @return AnonymousResourceCollection
      */
     public function index(): AnonymousResourceCollection
     {
@@ -29,7 +46,10 @@ class PhotoController extends Controller
 
     /**
      * Retrieve Photos for a specific Album
-     * GET /api/albums/{id}/photos
+     *
+     * @param Album $album
+     *
+     * @return AnonymousResourceCollection
      */
     public function byAlbum(Album $album): AnonymousResourceCollection
     {
@@ -44,14 +64,17 @@ class PhotoController extends Controller
 
     /**
      * Retrieve Photos for a specific Folder
-     * GET /api/folders/{id}/photos
+     *
+     * @param Folder $folder
+     *
+     * @return AnonymousResourceCollection
      */
     public function byFolder(Folder $folder): AnonymousResourceCollection
     {
         $this->authorize('view', $folder);
 
         $photos = $folder->photos()
-            ->orderByRaw('taken_at IS NULL, taken_at ASC')  
+            ->orderByRaw('taken_at IS NULL, taken_at ASC')
             ->paginate(50);
 
         return PhotoResource::collection($photos);
@@ -59,7 +82,10 @@ class PhotoController extends Controller
 
     /**
      * Retrieve a specific Photo
-     * GET /api/photos/{id}
+     *
+     * @param Photo $photo
+     *
+     * @return PhotoResource
      */
     public function show(Photo $photo): PhotoResource
     {
@@ -69,8 +95,11 @@ class PhotoController extends Controller
     }
 
     /**
-     * Record an impression for a photo
-     * GET /api/photos/{id}/impression
+     * Record an impression for a Photo
+     *
+     * @param Photo $photo
+     *
+     * @return Response
      */
     public function recordImpression(Photo $photo): Response
     {

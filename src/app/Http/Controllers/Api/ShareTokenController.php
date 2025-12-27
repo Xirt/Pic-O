@@ -5,18 +5,31 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 use App\Http\Resources\ShareTokenResource;
 use App\Models\ShareToken;
 use App\Models\Album;
 
+/**
+ * Handles Share Token management via API endpoints.
+ *
+ * Provides:
+ *  - Share token creation for albums.
+ *  - Share token revocation.
+ *  - Album token listing (unused).
+ *
+ * Routes:
+ *  - POST   /api/tokens
+ *  - DELETE /api/tokens/{id}
+ */
 class ShareTokenController extends Controller
 {
     /**
      * Retrieve one or more Tokens
      * UNUSED
      */
-    public function index(Album $album)
+    public function index(Album $album): AnonymousResourceCollection
     {
         $this->authorize('viewAny', ShareToken::class);
         $this->authorize('view', $album);
@@ -29,8 +42,11 @@ class ShareTokenController extends Controller
     }
 
     /**
-     * Create a new Token for a specific Album
-     * POST /api/tokens
+     * Create a new Share Token for a specific Album
+     *
+     * @param Request $request
+     *
+     * @return ShareTokenResource
      */
     public function store(Request $request): ShareTokenResource
     {
@@ -50,8 +66,11 @@ class ShareTokenController extends Controller
     }
 
     /**
-     * Delete a given Token
-     * DELETE /api/tokens/{id}
+     * Delete a given Share Token
+     *
+     * @param ShareToken $token
+     *
+     * @return JsonResponse
      */
     public function destroy(ShareToken $token): JsonResponse
     {

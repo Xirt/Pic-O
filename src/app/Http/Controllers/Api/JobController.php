@@ -2,21 +2,37 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 use App\Http\Resources\JobResource;
 use App\Jobs\ProcessPhotoJob;
 use App\Models\Job;
 use App\Services\ScanService;
 
+/**
+ * Handles background Job management via API endpoints.
+ *
+ * Provides:
+ *  - Job listing and pagination.
+ *  - Job dispatching with parameters.
+ *  - Pending job count aggregation by type.
+ *
+ * Routes:
+ *  - GET /api/jobs
+ *  - GET /api/jobs/dispatch
+ *  - GET /api/jobs/pending-count
+ */
 class JobController extends Controller
 {
     /**
      * Retrieve one or more Jobs
-     * GET /api/jobs
+     *
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         $this->authorize('viewAny', Job::class);
 
@@ -28,10 +44,13 @@ class JobController extends Controller
     }
 
     /**
-     * Starts a specific Job with given parameters
-     * GET /api/jobs/dispatch
+     * Start a specific Job with given parameters
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
-    public function dispatchJob(Request $request)
+    public function dispatchJob(Request $request): JsonResponse
     {
         $this->authorize('create', Job::class);
 
@@ -58,10 +77,11 @@ class JobController extends Controller
     }
 
     /**
-     * Get the number of pending Jobs by type
-     * GET /api/jobs/pending-count
+     * Retrieve the number of pending Jobs grouped by type
+     *
+     * @return JsonResponse
      */
-    public function countPending()
+    public function countPending(): JsonResponse
     {
         $this->authorize('viewAny', Job::class);
 
