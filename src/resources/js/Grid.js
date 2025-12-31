@@ -145,21 +145,22 @@ export const GridItemFactory = {
 
         if (album.cover) {
 
+            // ==== BLURHASH ====
             const blurCanvas = await this._createBlurHash(album.cover);
             blurCanvas.className = 'd-block position-absolute object-fit-cover w-100 h-100';
 
             const placeholder = card.querySelector('.album-blurhash');
             placeholder.replaceWith(blurCanvas);
 
-            const thumb = card.querySelector('.album-thumb');
-            thumb.src = `photos/${album.cover.id}/thumbnail`;
-
         } else {
 
+            // ==== NO BLURHASH ====
             card.querySelector('.album-blurhash').remove();
-            card.querySelector('.album-thumb').remove();
 
         }
+
+        const thumb = card.querySelector('.album-thumb');
+        thumb.src = `albums/${album.id}/cover`;
 
         const photoCount = card.querySelector('.album-photo-count');
         photoCount.textContent = album.photos;
@@ -201,52 +202,6 @@ export const GridItemFactory = {
             blurCanvas.classList.add('opacity-0');
             setTimeout(() => blurCanvas.remove(), 1000);
         };
-
-        return card;
-
-    },
-
-
-    async album2(album) {
-
-        const card = document.createElement('a');
-        card.className = 'grid-item card clickable selectable position-relative rounded-0 ratio ratio-4x3 w-100 p-0 my-1 border-0';
-        card.href = route('albums.show', {id: album.id});
-        card.setAttribute('data-id', album.id);
-
-        if (album.cover) {
-
-            const canvas = await this._createBlurHash(album.cover);
-            canvas.className = 'd-block position-absolute object-fit-cover w-100 h-100';
-            card.appendChild(canvas);
-
-            const thumb = document.createElement('img');
-            thumb.className = 'd-block object-fit-cover';
-            thumb.src = `photos/${album.cover.id}/thumbnail`;
-            thumb.loading = 'lazy';
-            card.appendChild(thumb);
-
-        }
-
-        const icon = createIcon('check-circle-fill', 'opacity-75 h-auto w-auto position-absolute top-50 start-50 translate-middle');
-        card.appendChild(icon);
-
-        const photoCount = document.createElement('div');
-        photoCount.className = 'card-img-overlay bottom badge rounded-pill bg-secondary text-light fw-bold px-2 py-1 m-1 me-2';
-        photoCount.textContent = album.photos;
-        card.appendChild(photoCount);
-
-        const overlay = document.createElement('div');
-        overlay.className = 'card-img-overlay top rounded-0 bg-dark text-light fw-semibold text-truncate p-2';
-        overlay.textContent = album.display_name;
-        card.appendChild(overlay);
-
-        const toolbar = document.createElement('div');
-        toolbar.className = 'd-block quick-actions p-1 pe-2';
-        card.appendChild(toolbar);
-
-        toolbar.appendChild(this.createModifyButton(card));
-        toolbar.appendChild(this.createDeleteButton(card));
 
         return card;
 
