@@ -366,6 +366,12 @@ class AlbumController extends Controller
     {
         $album->photos()->detach($photoIds);
 
+        if (in_array($album->photo_id, $photoIds))
+        {
+            $album->photo_id = null;
+            $album->save();
+        }
+
         return response()->json(['message' => 'Photo(s) removed']);
     }
 
