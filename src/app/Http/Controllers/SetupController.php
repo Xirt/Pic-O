@@ -61,22 +61,22 @@ class SetupController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        DB::transaction(function () use ($validated) {
-
-            //if (User::exists()) throw new HttpException(403, 'An initial user already exists.');
-
-            User::create([
-                'name'     => $validated['name'],
-                'email'    => $validated['email'],
-                'password' => Hash::make($validated['password']),
-                'role'     => UserRole::ADMIN->value,
-            ]);
+        DB::transaction(function () use ($validated)
+        {
+            if (!User::exists())
+            {
+                User::create([
+                    'name'     => $validated['name'],
+                    'email'    => $validated['email'],
+                    'password' => Hash::make($validated['password']),
+                    'role'     => UserRole::ADMIN->value,
+                ]);
+            }
 
             Setting::updateOrCreate(
                 ['key' => 'setup_completed'],
                 ['value' => 1],
             );
-
         });
 
         return redirect('/');
