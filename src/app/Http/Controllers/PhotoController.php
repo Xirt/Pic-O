@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use App\Models\Photo;
 use App\Services\PhotoService;
@@ -48,9 +49,9 @@ class PhotoController extends Controller
      *
      * @param Photo $photo
      * @param PhotoService $photoService
-     * @return Response
+     * @return SymfonyResponse
      */
-    public function showRender(Photo $photo, PhotoService $photoService): Response
+    public function showRender(Photo $photo, PhotoService $photoService): SymfonyResponse
     {
         $this->authorize('view', $photo);
 
@@ -64,9 +65,9 @@ class PhotoController extends Controller
      *
      * @param Photo $photo
      * @param PhotoService $photoService
-     * @return Response
+     * @return SymfonyResponse
      */
-    public function showThumbnail(Photo $photo, PhotoService $photoService): Response
+    public function showThumbnail(Photo $photo, PhotoService $photoService): SymfonyResponse
     {
         $this->authorize('view', $photo);
         
@@ -78,9 +79,9 @@ class PhotoController extends Controller
      *
      * @param Photo $photo
      * @param PhotoService $photoService
-     * @return Response
+     * @return SymfonyResponse
      */
-    public function download(Photo $photo, PhotoService $photoService): Response
+    public function download(Photo $photo, PhotoService $photoService): SymfonyResponse
     {
         $this->authorize('view', $photo);
 

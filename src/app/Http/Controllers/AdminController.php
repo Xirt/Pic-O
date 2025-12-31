@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Response;
-use Illuminate\Http\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use App\Jobs\TraverseFolderJob;
 use App\Models\User;
@@ -69,9 +69,9 @@ class AdminController extends Controller
     /**
      * Download the latest scanner log file.
      *
-     * @return Response|BinaryFileResponse
+     * @return SymfonyResponse
      */
-    public function getScannerLog(): Response|BinaryFileResponse
+    public function getScannerLog(): SymfonyResponse
     {
         $logPath = storage_path('logs/scanner.log');
 
