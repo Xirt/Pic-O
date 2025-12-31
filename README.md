@@ -76,7 +76,7 @@ Once the containers are running, verify everything is working by opening your br
 http://localhost:8080
 ```
 
-You should see the Pic-O login screen and be able to log in with the user "admin@mydomain.com" and password "password". Don't forget to change them from the administration panel!
+You should see the Pic-O setup screen allowing you to create an initial admin account. Once created, you will be redirected to the login screen.
 
 ### Option 2: Use the prebuilt Docker image
 If you prefer a faster, ready-made deployment, you can use the published image on Docker Hub.
@@ -115,4 +115,4 @@ Once the containers are running, verify everything is working by opening your br
 http://localhost:8080
 ```
 
-You should see the Pic-O login screen and be able to log in with the user "admin@mydomain.com" and password "password". Don't forget to change them from the administration panel!
+You should see the Pic-O setup screen allowing you to create an initial admin account. Once created, you will be redirected to the login screen.

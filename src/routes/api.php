@@ -3,6 +3,7 @@
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\OptionalAuth;
+use App\Http\Middleware\EnsureInitialization;
 use App\Http\Controllers\Api\{
     ShareTokenController,
     SettingController,
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::middleware([
 
+    EnsureInitialization::class,
     EnsureFrontendRequestsAreStateful::class,
     OptionalAuth::class,
 
@@ -84,6 +86,7 @@ Route::middleware([
  */
 Route::middleware([
 
+    EnsureInitialization::class,
     EnsureFrontendRequestsAreStateful::class,
     'auth:sanctum',
 

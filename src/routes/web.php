@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Middleware\EnsureInitialization;
 use App\Http\Middleware\OptionalAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\{
+    SetupController,
     PhotoController,
     FolderController,
     AlbumController,
@@ -22,13 +24,28 @@ Route::get('/', function () {
 
 /*
  *--------------------------------------------------------------------------
+ * Setup routes (application initialization)
+ *--------------------------------------------------------------------------
+ */
+Route::get('/setup', [SetupController::class, 'show'])->name('setup.show');
+Route::post('/setup', [SetupController::class, 'initialize'])->name('setup.init');
+
+/*
+ *--------------------------------------------------------------------------
  * Auth routes
  *--------------------------------------------------------------------------
  */
-Route::get('/login', [LoginController::class, 'index'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::middleware([
 
+    EnsureInitialization::class
+
+])->group(function () {
+
+    Route::get('/login', [LoginController::class, 'index'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+});
 
 /*
  *--------------------------------------------------------------------------
@@ -37,6 +54,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
  */
 Route::middleware([
 
+    EnsureInitialization::class,
     OptionalAuth::class,
 
 ])->group(function () {
@@ -61,7 +79,6 @@ Route::middleware([
     });
 });
 
-
 /*
  *--------------------------------------------------------------------------
  * Admin-only routes
@@ -69,6 +86,7 @@ Route::middleware([
  */
 Route::middleware([
 
+    EnsureInitialization::class,
     'auth'
 
 ])->group(function ()
@@ -89,7 +107,6 @@ Route::middleware([
         Route::get('/scanner-log', [AdminController::class, 'getScannerLog'])->name('log');
     });
 });
-
 
 /*
  *--------------------------------------------------------------------------
