@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\Response;
+use Illuminate\View\View;      
+use Illuminate\Http\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use App\Models\Photo;
@@ -30,9 +30,9 @@ class PhotoController extends Controller
      * Show the timeline page (list of photos).
      *
      * @param Request $request
-     * @return View|Response
+     * @return View|RedirectResponse
      */
-    public function index(Request $request): View|Response
+    public function index(Request $request): View|RedirectResponse
     {
         if (!$request->user())
         {
