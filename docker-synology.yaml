@@ -1,0 +1,49 @@
+services:
+    app:
+        image: xirtnl/pic-o:latest
+        container_name: pico_app
+        restart: unless-stopped
+        ports:
+            - "8080:80"
+        volumes:
+            - "/volume1/docker/pic-o/photos:/var/www/resources/photos:ro"                             # REPLACE WITH PHOTO LOCATION (or create /volume1/docker/pic-o/photos)
+            - "/volume1/docker/pic-o/app:/var/www/storage/app:rw"                                     # REPLACE WITH STORAGE LOCATION (or create /volume1/docker/pic-o/storage)
+        environment:
+            DB_CONNECTION: pgsql
+            DB_HOST: postgres
+            DB_PORT: 5432
+            DB_DATABASE: pico
+            DB_USERNAME: pico
+            DB_PASSWORD: pico_pass
+            APP_PORT: 8080
+            APP_HOST: your-id.synology.me                                                             # REPLACE WITH YOUR HOST ID
+            TRUSTED_PROXIES: '*'
+            SESSION_SECURE_COOKIE: true
+            PHP_MEMORY_LIMIT: 2048M
+            SANCTUM_STATEFUL_DOMAINS: x.x.x.x:8080,your-id.synology.me:8080,localhost,127.0.0.1       # REPLACE WITH YOUR HOST ID / IP
+            PHOTOS_GID: 1                                                                             # REPLACE WITH PHOTO_GID FOR READ ACCESS
+        depends_on:
+            - postgres
+        networks:
+            - pico
+
+    postgres:
+        image: postgres:16
+        container_name: pico_postgres
+        restart: unless-stopped
+        environment:
+            POSTGRES_DB: pico
+            POSTGRES_USER: pico
+            POSTGRES_PASSWORD: pico_pass
+        ports:
+            - "5433:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        networks:
+            - pico
+
+networks:
+    pico:
+
+volumes:
+    postgres_data:
