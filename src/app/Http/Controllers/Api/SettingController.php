@@ -16,7 +16,7 @@ use App\Models\Setting;
  *  - Creation and updating of application settings.
  *
  * Routes:
- *  - POST /api/settings
+ *  - POST /api/settings -> store()
  */
 class SettingController extends Controller
 {

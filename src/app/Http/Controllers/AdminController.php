@@ -22,8 +22,8 @@ use App\Policies\AdminPolicy;
  *  - Download of the latest scanner log.
  *
  * Routes:
- *  - GET /admin              -> index()
- *  - GET /admin/scanner-log  -> getScannerLog()
+ *  - GET /admin             -> index()
+ *  - GET /admin/scanner-log -> getScannerLog()
  */
 class AdminController extends Controller
 {

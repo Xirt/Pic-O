@@ -18,8 +18,8 @@ use App\Services\PhotoService;
  *  - Generating photo thumbnails
  *
  * Routes:
- *  - GET /                  -> index()
- *  - GET /photos/{id}       -> showRender()
+ *  - GET /                      -> index()
+ *  - GET /photos/{id}           -> showRender()
  *  - GET /photos/{id}/thumbnail -> showThumbnail()
  *  - GET /photos/{id}/download  -> download()
  */

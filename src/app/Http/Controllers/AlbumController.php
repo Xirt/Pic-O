@@ -17,8 +17,8 @@ use App\Services\PhotoService;
  *  - Generating album thumbnails and previews
  *
  * Routes:
- *  - GET /albums               -> index()
- *  - GET /albums/{id}          -> show()
+ *  - GET /albums                -> index()
+ *  - GET /albums/{id}           -> show()
  *  - GET /albums/{id}/thumbnail -> showThumbnail()
  *  - GET /albums/{id}/preview   -> showPreview()
  */

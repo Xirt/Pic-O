@@ -17,7 +17,7 @@ use App\Services\PhotoService;
  *  - Generating folder thumbnails
  *
  * Routes:
- *  - GET /folders               -> index()
+ *  - GET /folders                -> index()
  *  - GET /folders/{id}/thumbnail -> thumbnail()
  */
 class FolderController extends Controller
