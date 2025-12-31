@@ -67,7 +67,7 @@ Route::middleware([
         Route::get('/', [AlbumController::class, 'index'])->name('index');
         Route::get('{album}', [AlbumController::class, 'show'])->name('show');
         Route::get('{album}/preview', [AlbumController::class, 'showPreview'])->name('preview');
-        Route::get('{album}/thumbnail', [AlbumController::class, 'showThumbnail'])->name('thumbnail');
+        Route::get('{album}/cover', [AlbumController::class, 'showCover'])->name('cover');
     });
 
     // Photos
