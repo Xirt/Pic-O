@@ -1,10 +1,9 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
+name: "🐞 Bug Report"
+about: "Report a potential defect or unexpected behavior"
+title: '[Issue]'
+labels: 'issue'
 assignees: ''
-
 ---
 
 **Describe the bug**
