@@ -1,3 +1,6 @@
+<img width="4000" height="2487" alt="Pic-O Mockup" src="https://github.com/user-attachments/assets/c69d2dee-eb38-4a9a-935c-ea94ab839baa" />
+
+
 # Pic-O - A Lightweight Photo Sharing Platform
 
 **Pic-O** is a simple, elegant, and self-hosted photo publishing platform built with **Laravel 12** and **Bootstrap 5.x**.  
