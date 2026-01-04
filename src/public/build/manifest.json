@@ -26,9 +26,10 @@
     "name": "domHelpers"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BvVCN0vU.css",
+    "file": "assets/app-_Bw8paHh.css",
     "src": "resources/css/app.css",
     "isEntry": true,
+    "name": "app",
     "names": [
       "app.css"
     ]
@@ -66,7 +67,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-BtCuGNKZ.js",
+    "file": "assets/app-CXihD_FS.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
