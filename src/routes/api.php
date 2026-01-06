@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Auth;
 Route::middleware([
 
     EnsureInitialization::class,
-    EnsureFrontendRequestsAreStateful::class,
+    'web',
     OptionalAuth::class,
 
 ])->group(function ()
@@ -87,7 +87,7 @@ Route::middleware([
 Route::middleware([
 
     EnsureInitialization::class,
-    EnsureFrontendRequestsAreStateful::class,
+    'web',
     'auth:sanctum',
 
 ])->group(function ()
