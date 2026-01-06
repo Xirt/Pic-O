@@ -102,10 +102,7 @@ class SettingController extends Controller
                 $rules[$key] = $meta['rules'];
             }
         }
-                    Setting::updateOrCreate(
-                ['key' => 'setup_completed'],
-                ['value' => 0],
-            );
+
         $validated = validator($input, $rules)->validate();
         foreach ($validated as $key => $value)
         {
