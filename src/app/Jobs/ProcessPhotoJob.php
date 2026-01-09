@@ -20,7 +20,7 @@ use App\Services\PhotoService;
  * This job reads the photo from disk, extracts metadata (EXIF, dimensions, etc.),
  * generates thumbnails or blurhashes, and stores or updates the corresponding
  * Photo model in the database.
- */        
+ */
 class ProcessPhotoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -94,7 +94,7 @@ class ProcessPhotoJob implements ShouldQueue
      * @return void
      */
     public function handle(PhotoService $photoService): void
-    {  
+    {
         Log::channel(self::LOG_CHANNEL)->info("Processing photo: $this->relativePath");
 
         if (!file_exists($this->path) || !is_readable($this->path))
@@ -111,10 +111,7 @@ class ProcessPhotoJob implements ShouldQueue
         ], $this->getEXIFData());
 
         // (Corrected) dimensions
-        $dims = @getimagesize($this->path);
-        $width  = $dims ? $dims[0] : null;
-        $height = $dims ? $dims[1] : null;
-
+        [$width, $height] = array_values($this->getImageDims($this->path));
         if (in_array($metadata['orientation'], [5, 6, 7, 8])) {
             [$width, $height] = [$height, $width];
         }
@@ -156,6 +153,41 @@ class ProcessPhotoJob implements ShouldQueue
     }
 
     /**
+     * Get the width and height of a given image
+     *
+     * @param string $path Absolute path to the image
+     *
+     * @return array{width:int|null,height:int|null}
+     */
+    private function getImageDims(string $path): array
+    {
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (in_array($ext, ['heic', 'heif']) && class_exists('Imagick'))
+        {
+            try
+            {
+                $img = new \Imagick($path);
+                return [
+                    'width'  => $img->getImageWidth(),
+                    'height' => $img->getImageHeight(),
+                ];
+            } catch (\Throwable) {}
+        }
+        else if ($dims = @getimagesize($path))
+        {
+            return [
+                'width'  => $dims[0],
+                'height' => $dims[1],
+            ];
+        }
+
+        return [
+            'width' => null,
+            'height' => null
+        ];
+    }
+
+    /**
      * Retrieve EXIF metadata from the photo.
      *
      * @return array<string, mixed>
@@ -163,40 +195,107 @@ class ProcessPhotoJob implements ShouldQueue
     private function getEXIFData(): array
     {
         $extension = strtolower(pathinfo($this->filename, PATHINFO_EXTENSION));
-        if (!in_array($extension, ['jpg', 'jpeg', 'tiff']))
+        if (in_array($extension, ['heic', 'heif']) && class_exists('Imagick'))
         {
-            return [];
+            return $this->normalizeMetadata($this->getHEICMetadata());
         }
 
-        // Attempt to retrieve EXIF data
-        if (!$exif = @exif_read_data($this->path))
+        return $this->normalizeMetadata($this->getMetadata());
+    }
+
+    /**
+     * Extract metadata from HEIC/HEIF images via Imagick
+     *
+     * @return array<string, mixed>
+     */
+    private function getHEICMetadata(): array
+    {
+        try
         {
-            return [];
+            $img = new \Imagick($this->path);
+            $exifRaw = $img->getImageProperties('exif:*');
+
+            $iso = $exifRaw['exif:PhotographicSensitivity']
+                ?? $exifRaw['exif:ISOSpeedRatings']
+                ?? $exifRaw['exif:ISO']
+                ?? null;
+
+            $exposureTime = $exifRaw['exif:ExposureTime']
+                ?? $exifRaw['exif:ExposureTimeNumerator'] / ($exifRaw['exif:ExposureTimeDenominator'] ?? 1)
+                ?? null;
+
+            return [
+                'camera'        => $exifRaw['exif:Model'] ?? null,
+                'make'          => $exifRaw['exif:Make'] ?? null,
+                'orientation'   => isset($exifRaw['exif:Orientation']) ? (int)$exifRaw['exif:Orientation'] : null,
+                'aperture'      => isset($exifRaw['exif:FNumber']) ? $this->interpretValue($exifRaw['exif:FNumber']) : null,
+                'iso'           => $iso !== null ? (int)$iso : null,
+                'focal_length'  => $this->interpretValue($exifRaw['exif:FocalLength'] ?? null),
+                'exposure_time' => $this->interpretValue($exposureTime),
+                'taken_at'      => isset($exifRaw['exif:DateTimeOriginal']) ? Carbon::parse($exifRaw['exif:DateTimeOriginal'], 'UTC') : null,
+                'shutter_speed' => null,
+                'exif_raw'      => $exifRaw,
+            ];
+        } catch (\Throwable) {}
+
+        return [];
+    }
+
+    /**
+     * Extract metadata from JPEG/TIFF images via PHP EXIF
+     *
+     * @return array<string, mixed>
+     */
+    private function getMetadata(): array
+    {
+        if ($exif = @exif_read_data($this->path))
+        {
+
+            return [
+                'camera'        => $exif['Model'] ?? null,
+                'make'          => $exif['Make'] ?? null,
+                'orientation'   => $exif['Orientation'] ?? null,
+                'aperture'      => $exif['COMPUTED']['ApertureFNumber'] ?? null,
+                'iso'           => $exif['ISOSpeedRatings'] ?? null,
+                'focal_length'  => $this->interpretValue($exif['FocalLength'] ?? null),
+                'exposure_time' => $this->interpretValue($exif['ExposureTime'] ?? null),
+                'taken_at'      => $this->getTakenAt($exif),
+                'shutter_speed' => null,
+            ];
         }
 
-        $metadata = [
-            'camera'        => $exif['Model'] ?? null,
-            'make'          => $exif['Make'] ?? null,
-            'orientation'   => $exif['Orientation'] ?? null,
-            'aperture'      => $exif['COMPUTED']['ApertureFNumber'] ?? null,
-            'iso'           => $exif['ISOSpeedRatings'] ?? null,
-            'focal_length'  => $this->interpretValue($exif['FocalLength'] ?? null),
-            'exposure_time' => $this->interpretValue($exif['ExposureTime'] ?? null),
-            'taken_at'      => $this->getTakenAt($exif),
-        ];
+        return [];
+    }
 
+    /**
+     * Normalize metadata: trim strings, calculate shutter speed, format focal length and exposure time
+     *
+     * @param array<string, mixed> $metadata
+     *
+     * @return array<string, mixed>
+     */
+    private function normalizeMetadata(array $metadata): array
+    {
         // Remove obsolete spaces
         $metadata = array_map(function ($value) {
             return is_string($value) ? Str::trim($value) : $value;
         }, $metadata);
 
         // Attempt to determine shutter speed
-        if (empty($exif['ExposureTime']) && !empty($exif['ShutterSpeedValue']))
+        $shutterSource = $metadata['exif_raw']['exif:ShutterSpeedValue'] ?? $metadata['shutter_speed'] ?? null;
+        if (empty($metadata['exposure_time']) && $shutterSource !== null)
         {
             $apex = $this->interpretValue($exif['ShutterSpeedValue'] ?? null);
             if (is_numeric($apex)) {
                 $metadata['shutter_speed'] = 1 / pow(2, (float) $apex);
             }
+        }
+
+        unset($metadata['exif_raw']);
+
+        // Formatting for aperture
+        if (!empty($metadata['aperture']) && !str_starts_with((string)  $metadata['aperture'], 'f/')) {
+            $metadata['aperture'] = 'f/' . round($metadata['aperture'], 1);
         }
 
         // Formatting for focal length (in mm)
@@ -221,7 +320,6 @@ class ProcessPhotoJob implements ShouldQueue
 
         return $metadata;
     }
-
 
     /**
      * Determine photo capture time from EXIF or filename.

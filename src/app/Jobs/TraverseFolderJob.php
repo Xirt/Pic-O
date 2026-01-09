@@ -52,7 +52,7 @@ class TraverseFolderJob implements ShouldQueue
     *
     * @var array<int, string>
     */
-    private const PHOTO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    private array $photoExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
     /**
      * @param string   $path     Absolute folder path
@@ -67,6 +67,11 @@ class TraverseFolderJob implements ShouldQueue
 
         $this->folderName   = basename($path);
         $this->relativePath = str_replace(resource_path(), '', $path);
+
+        if ($this->checkHEICSupport()) {
+            array_push($this->photoExtensions, 'heic', 'heif');
+        }
+
     }
 
     /**
@@ -160,7 +165,7 @@ class TraverseFolderJob implements ShouldQueue
             if ($fileInfo->isFile())
             {
                 $ext = Str::lower($fileInfo->getExtension());
-                if (in_array($ext, self::PHOTO_EXTENSIONS, true)) {
+                if (in_array($ext, $this->photoExtensions, true)) {
                     $files[] = $fileInfo->getPathname();
                 }
             }
@@ -291,5 +296,25 @@ class TraverseFolderJob implements ShouldQueue
             }
         }
         return false;
+    }   protected static ?bool $supportsHeic = null;
+
+    /**
+     * Checks whether the current environment can handle HEIC files
+     *
+     * @return bool
+     */
+    protected static function checkHEICSupport(): bool
+    {
+        if (extension_loaded('imagick'))
+        {
+            try
+            {
+                $formats = array_map('strtoupper', \Imagick::queryFormats());
+                return in_array('HEIC', $formats, true) || in_array('HEIF', $formats, true);
+            } catch (\Throwable) {}
+        }
+
+        return false;
     }
+
 }
