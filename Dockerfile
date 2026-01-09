@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y \
         libjpeg62-turbo-dev \
         libfreetype6-dev \
         libpng-dev \
+        libheif-dev \
+        libde265-dev \
         libonig-dev \
         libxml2-dev \
         libzip-dev \
