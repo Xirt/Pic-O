@@ -27,6 +27,7 @@ use kornrunner\Blurhash\Blurhash;
 class PhotoService
 {
     // Dimensions to use for photo rendering
+    private const MAXIMIZE_DIMS = 9999;
     private const RENDER_DIMS = 1920;
 
     // Collection configuration
@@ -73,10 +74,15 @@ class PhotoService
 
         if (!config('settings.downscale_renders'))
         {
+            $ext = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+            if (in_array($ext, ['heic', 'heif'])) {
+                return $this->scaledRender($fullPath, self::MAXIMIZE_DIMS);
+            }
+
             return Response::file($fullPath);
         }
 
-        return $this->downScaledRender($fullPath);
+        return $this->scaledRender($fullPath, self::RENDER_DIMS);
     }
 
     /**
@@ -201,13 +207,14 @@ class PhotoService
      * Returns a downscaled render of the provided Photo.
      *
      * @param string $fullPath
+     * @param int $maxDim
      *
      * @return BinaryFileResponse|BinaryStreamResponse
      */
-    private function downScaledRender(String $fullPath): BinaryFileResponse|BinaryStreamResponse
+    private function scaledRender(String $fullPath, int $maxDim): BinaryFileResponse|BinaryStreamResponse
     {
 
-        $cacheName = 'render_' . md5_file($fullPath) . self::RENDER_DIMS;
+        $cacheName = 'render_' . md5_file($fullPath) . $maxDim;
         if (config('settings.cache_renders') && $image = $this->retrieveFromCache($cacheName) )
         {
             return $image;
@@ -216,9 +223,9 @@ class PhotoService
         $manager = $this->getImageManager();
         $image = $manager->read($fullPath);
 
-        if ($image->width() > self::RENDER_DIMS || $image->height() > self::RENDER_DIMS)
+        if ($image->width() > $maxDim || $image->height() > $maxDim)
         {
-            $image = $this->resizeImage($image, self::RENDER_DIMS);
+            $image = $this->resizeImage($image, $maxDim);
         }
 
         if (config('settings.cache_renders'))
