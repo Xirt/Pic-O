@@ -228,7 +228,7 @@ class ProcessPhotoJob implements ShouldQueue
                 'camera'        => $exifRaw['exif:Model'] ?? null,
                 'make'          => $exifRaw['exif:Make'] ?? null,
                 'orientation'   => isset($exifRaw['exif:Orientation']) ? (int)$exifRaw['exif:Orientation'] : null,
-                'aperture'      => $exifRaw['exif:FNumber'] ?? null,
+                'aperture'      => isset($exifRaw['exif:FNumber']) ? $this->interpretValue($exifRaw['exif:FNumber']) : null,
                 'iso'           => $iso !== null ? (int)$iso : null,
                 'focal_length'  => $this->interpretValue($exifRaw['exif:FocalLength'] ?? null),
                 'exposure_time' => $this->interpretValue($exposureTime),
@@ -292,6 +292,11 @@ class ProcessPhotoJob implements ShouldQueue
         }
 
         unset($metadata['exif_raw']);
+
+        // Formatting for aperture
+        if (!empty($metadata['aperture']) && !str_starts_with((string)  $metadata['aperture'], 'f/')) {
+            $metadata['aperture'] = 'f/' . round($metadata['aperture'], 1);
+        }
 
         // Formatting for focal length (in mm)
         if (!empty($metadata['focal_length']))
