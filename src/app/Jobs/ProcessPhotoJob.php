@@ -215,14 +215,23 @@ class ProcessPhotoJob implements ShouldQueue
             $img = new \Imagick($this->path);
             $exifRaw = $img->getImageProperties('exif:*');
 
+            $iso = $exifRaw['exif:PhotographicSensitivity']
+                ?? $exifRaw['exif:ISOSpeedRatings']
+                ?? $exifRaw['exif:ISO']
+                ?? null;
+
+            $exposureTime = $exifRaw['exif:ExposureTime']
+                ?? $exifRaw['exif:ExposureTimeNumerator'] / ($exifRaw['exif:ExposureTimeDenominator'] ?? 1)
+                ?? null;
+
             return [
                 'camera'        => $exifRaw['exif:Model'] ?? null,
                 'make'          => $exifRaw['exif:Make'] ?? null,
                 'orientation'   => isset($exifRaw['exif:Orientation']) ? (int)$exifRaw['exif:Orientation'] : null,
                 'aperture'      => $exifRaw['exif:FNumber'] ?? null,
-                'iso'           => isset($exifRaw['exif:ISOSpeedRatings']) ? (int)$exifRaw['exif:ISOSpeedRatings'] : null,
+                'iso'           => $iso !== null ? (int)$iso : null,
                 'focal_length'  => $this->interpretValue($exifRaw['exif:FocalLength'] ?? null),
-                'exposure_time' => $this->interpretValue($exifRaw['exif:ExposureTime'] ?? null),
+                'exposure_time' => $this->interpretValue($exposureTime),
                 'taken_at'      => isset($exifRaw['exif:DateTimeOriginal']) ? Carbon::parse($exifRaw['exif:DateTimeOriginal'], 'UTC') : null,
                 'shutter_speed' => null,
                 'exif_raw'      => $exifRaw,
