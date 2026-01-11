@@ -42,13 +42,10 @@ class AppServiceProvider extends ServiceProvider
 
         if (Schema::hasTable('settings'))
         {
-            $settings = Setting::all()->pluck('value', 'key')->toArray();
-            config(['settings' => $settings]);
-        }
-
-        if (($demoMode = env('demo_environment')) !== null)
-        {
-            config(['settings.demo_environment' => (int) $demoMode]);
+            config()->set('settings', array_merge(
+                Setting::pluck('value', 'key')->toArray(),
+                config('settings', []),
+            ));
         }
     }
 }
