@@ -32,12 +32,12 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {           
+    {
         if (Request::header('X-Forwarded-Proto') === 'https')
         {
            URL::forceScheme('https');
         }
-	
+
         Gate::policy(AdminController::class, AdminPolicy::class);
 
         if (Schema::hasTable('settings'))
@@ -46,5 +46,9 @@ class AppServiceProvider extends ServiceProvider
             config(['settings' => $settings]);
         }
 
+        if (($demoMode = env('demo_environment')) !== null)
+        {
+            config(['settings.demo_environment' => (int) $demoMode]);
+        }
     }
 }
