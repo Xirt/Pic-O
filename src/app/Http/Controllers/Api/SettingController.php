@@ -91,6 +91,10 @@ class SettingController extends Controller
     public function store(Request $request): JsonResponse
     {
         $this->authorize('update', Setting::class);
+        if ($response = $this->denyIfDemoMode())
+        {
+            return $response;
+        }
 
         $input = $request->all();
 
@@ -113,5 +117,22 @@ class SettingController extends Controller
         }
 
         return response()->json(['message' => 'Settings saved']);
+    }
+
+    /**
+     * Block mutating actions in demo environment.
+     *
+     * @return JsonResponse|null
+     */
+    private function denyIfDemoMode(): ?JsonResponse
+    {
+        if (config('settings.demo_environment', 0) == 1)
+        {
+            return response()->json([
+                'message' => 'Settings management is disabled in demo mode.',
+            ], 403);
+        }
+
+        return null;
     }
 }
