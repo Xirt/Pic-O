@@ -69,6 +69,10 @@ class UserController extends Controller
     public function store(Request $request): JsonResponse
     {
         $this->authorize('create', User::class);
+        if ($response = $this->denyIfDemoMode())
+        {
+            return $response;
+        }
 
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
@@ -101,6 +105,10 @@ class UserController extends Controller
     public function update(Request $request, User $user): JsonResponse
     {
         $this->authorize('update', $user);
+        if ($response = $this->denyIfDemoMode())
+        {
+            return $response;
+        }
 
         $validated = $request->validate([
             'name'     => 'sometimes|string|max:255',
@@ -161,13 +169,17 @@ class UserController extends Controller
     public function destroy(Request $request, User $user)
     {
         $this->authorize('delete', $user);
+        if ($response = $this->denyIfDemoMode())
+        {
+            return $response;
+        }
 
         if ($request->user()->id === $user->id)
         {
             return response()->json([
                 'message' => 'You cannot delete your own account.',
             ], 403);
-        }
+        }       
 
         // Prevent deletion if it would leave 0 admins
         if ($user->role === 'admin' && User::where('role', 'admin')->count() <= 1)
@@ -182,5 +194,22 @@ class UserController extends Controller
         return response()->json([
             'message' => 'User deleted successfully.'
         ], 200);
+    }
+
+    /**
+     * Block mutating actions in demo environment.
+     *
+     * @return JsonResponse|null
+     */
+    private function denyIfDemoMode(): ?JsonResponse
+    {
+        if (config('settings.demo_environment', 0) == 1)
+        {
+            return response()->json([
+                'message' => 'User management is disabled in demo mode.',
+            ], 403);
+        }
+
+        return null;
     }
 }
