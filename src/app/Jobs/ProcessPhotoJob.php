@@ -112,7 +112,7 @@ class ProcessPhotoJob implements ShouldQueue
 
         // (Corrected) dimensions
         [$width, $height] = array_values($this->getImageDims($this->path));
-        if (in_array($metadata['orientation'], [5, 6, 7, 8])) {
+        if (isset($metadata['orientation']) && in_array($metadata['orientation'], [5, 6, 7, 8])) {
             [$width, $height] = [$height, $width];
         }
 
