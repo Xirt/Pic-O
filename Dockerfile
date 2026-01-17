@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# Version: 20260117-2109
+# Version: 20251115-1451
 
 # -----------------------------------------------------------------------------
 # 1. Install dependencies
@@ -67,9 +67,13 @@ WORKDIR /var/www
 COPY src/ /var/www
 
 # -----------------------------------------------------------------------------
-# 7. Copy .env parameters file
+# 7. Create environment key
 # -----------------------------------------------------------------------------
-RUN mv /var/www/.env.docker /var/www/.env
+RUN if ! grep -q '^APP_KEY=.\+' /var/www/.env.docker; then \
+        APP_KEY="base64:$(php -r 'echo base64_encode(random_bytes(32));')" && \
+        sed -i "s|^APP_KEY=.*|APP_KEY=$APP_KEY|" /var/www/.env.docker; \
+    fi \
+    && mv /var/www/.env.docker /var/www/.env
 
 # -----------------------------------------------------------------------------
 # 8. Copy entrypoint script

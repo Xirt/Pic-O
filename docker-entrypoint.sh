@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: 20260117-2108
+# Version: 20251115-1514
 
 SCHEDULER_LOG="/var/www/storage/logs/laravel-scheduler.log"
 LARAVEL_LOG="/var/www/storage/logs/laravel.log"
@@ -13,23 +13,8 @@ cd /var/www
 
 set -e
 
-
 # -----------------------------------------------------------------------------
-# 1. Create missing authorizations (optional)
-# -----------------------------------------------------------------------------
-KEY_FILE="/var/www/storage/app/app.key"
-
-if [ ! -f "$KEY_FILE" ]; then
-    php -r 'echo "base64:" . base64_encode(random_bytes(32));' > "$KEY_FILE"
-fi
-
-export APP_KEY="$(cat "$KEY_FILE")"
-
-exec "$@"
-
-
-# -----------------------------------------------------------------------------
-# 2. Create missing authorizations (optional)
+# 0. Create missing authorizations (optional)
 # -----------------------------------------------------------------------------
 if [ -n "$PHOTOS_GID" ]; then
 
@@ -54,14 +39,14 @@ else
 fi
 
 # -----------------------------------------------------------------------------
-# 3. Set PHP Memory limit
+# 0. Set PHP Memory limit
 # -----------------------------------------------------------------------------
 PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-512M}"
 echo "memory_limit = ${PHP_MEMORY_LIMIT}" > /usr/local/etc/php/conf.d/99-memory-limit.ini
 echo "Setting PHP Memory limit to $PHP_MEMORY_LIMIT"
 
 # -----------------------------------------------------------------------------
-# 4. Wait for DB to be ready before running migrations
+# 1. Wait for DB to be ready before running migrations
 # -----------------------------------------------------------------------------
 MAX_RETRIES=30
 COUNT=0
@@ -100,7 +85,7 @@ fi
 echo "Database is ready! Continuing startup."
 
 # -----------------------------------------------------------------------------
-# 5. Clear & rebuild caches
+# 2. Clear & rebuild caches
 # -----------------------------------------------------------------------------
 php artisan config:clear
 php artisan config:cache
@@ -108,7 +93,7 @@ php artisan route:cache
 php artisan view:cache
 
 # -----------------------------------------------------------------------------
-# 6. Set permissions for storage and cache directories
+# 3. Set permissions for storage and cache directories
 # -----------------------------------------------------------------------------
 if [ "$(id -u)" -eq 0 ]; then
 
@@ -137,11 +122,11 @@ else
 fi
 
 # -----------------------------------------------------------------------------
-# 7. Run database migrations
+# 5. Run database migrations
 # -----------------------------------------------------------------------------
 php artisan migrate --force --seed
 
 # -----------------------------------------------------------------------------
-# 8. Start Supervisor (manages PHP-FPM + queue worker)
+# 7. Start Supervisor (manages PHP-FPM + queue worker)
 # -----------------------------------------------------------------------------
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
