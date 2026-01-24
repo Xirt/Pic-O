@@ -66,6 +66,7 @@ Route::middleware([
     Route::prefix('tokens')->as('api.tokens.')->group(function ()
     {
         Route::post('/', [ShareTokenController::class, 'store'])->name('store');
+        Route::patch('{token}', [ShareTokenController::class, 'update'])->name('update');
         Route::delete('{token}', [ShareTokenController::class, 'destroy'])->name('destroy');
     });
 

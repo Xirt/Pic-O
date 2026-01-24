@@ -23,7 +23,6 @@
 
                 <div id="tokenList" class="token-container d-grid gap-3 overflow-scroll">
 
-
                     <div class="no-token rounded p-3 bg-light">
                         These are no sharing links yet.
                     </div>
@@ -38,11 +37,14 @@
 
                         <div class="d-flex">
 
-                            <input class="form-control form-control-sm">
+                            <input type="text" class="form-control form-control-sm">
 
                             <button type="button" class="btn btn-sm btn-primary ms-2 btn-copy"><i class="bi bi-copy"></i></button>
 
-                            <button type="button" class="btn btn-sm btn-secondary ms-2 btn-calendar d-none"><i class="bi bi-calendar3-event"></i></button>
+                            <div class="position-relative">
+                                <input type="date" class="date-picker position-absolute top-0 start-0 opacity-0 pe-none" style="width: 1px; height: 1px;">
+                                <button type="button" class="btn btn-sm btn-secondary ms-2 btn-calendar"><i class="bi bi-calendar3-event"></i></button>
+                            </div>
 
                             <button type="button" class="btn btn-sm btn-secondary ms-2 btn-delete"><i class="bi bi-trash3"></i></button>
 
