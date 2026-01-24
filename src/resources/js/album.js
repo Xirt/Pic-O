@@ -4,7 +4,7 @@ import { Selection } from './Selection.js';
 import { AppRequest } from './AppRequest.js';
 import { Grid, GridItemFactory } from './Grid.js';
 import { SelectionManager } from './selectionManager.js';
-import { getJSONFromForm, populateForm, removeEventListeners, openCanvas, toast, createIcon } from './domHelpers.js';
+import { getJSONFromForm, populateForm, removeEventListeners, openCanvas, toast, createIcon, formatDate } from './domHelpers.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -144,7 +144,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         clone.querySelector('input').value = url;
         clone.querySelector('.expiry').classList.toggle('d-none', !tokenResponse.expires_at);
-        clone.querySelector('.expires_at').value = tokenResponse.expires_at;
+        clone.querySelector('.expires_at').textContent = formatDate(tokenResponse.expires_at);
+        clone.querySelector('.date-picker').value = tokenResponse.expires_at;
 
         const copyButton = clone.querySelector('.btn-copy');
         copyButton.addEventListener('click', () => {
@@ -162,6 +163,32 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             toast('Copied to clipboard');
+
+        });
+
+
+        const calendarButton = clone.querySelector('.btn-calendar');
+        calendarButton.addEventListener('click', () => {
+
+            const dateInput = calendarButton.previousElementSibling;
+
+            dateInput.addEventListener('change', async () => {
+
+                const response = await AppRequest.request(route('api.tokens.update', {
+                    expires_at: dateInput.value,
+                    token: tokenResponse.id,
+                }), 'PATCH' );
+
+                const newToken = response.data;
+                const wrapper = calendarButton.closest(".token-wrapper");
+
+                wrapper.querySelector('.expiry').classList.toggle('d-none', !newToken.expires_at);
+                wrapper.querySelector('.expires_at').textContent = formatDate(newToken.expires_at);        
+
+            }, { once: true });
+
+            dateInput.showPicker?.();
+            dateInput.focus();
 
         });
 

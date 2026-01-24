@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -61,6 +62,33 @@ class ShareTokenController extends Controller
             $request->album_id,
             $request->expires_at ? new DateTime($request->expires_at) : null,
         );
+
+        return new ShareTokenResource($token);
+    }
+
+    /**
+     * Update a given Share Token
+     *
+     * @param Request    $request
+     * @param ShareToken $shareToken
+     *
+     * @return ShareTokenResource
+     */
+    public function update(Request $request, ShareToken $token): ShareTokenResource
+    {
+        $this->authorize('update', $token);
+
+        $validated = $request->validate([
+            'expires_at' => 'nullable|date',
+        ]);
+
+        if (!empty($validated['expires_at']))
+        {
+            $validated['expires_at'] = Carbon::parse($validated['expires_at'])->endOfDay();
+        }
+
+        $token->fill($validated);
+        $token->save();
 
         return new ShareTokenResource($token);
     }
