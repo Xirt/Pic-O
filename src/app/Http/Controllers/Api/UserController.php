@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules\Enum;
 use App\Enums\UserRole;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\Album;
 
 /**
  * Handles User management via API endpoints.
@@ -26,8 +27,12 @@ use App\Models\User;
  *  - GET    /api/users
  *  - GET    /api/users/{id}
  *  - POST   /api/users
- *  - PUT    /api/users/{id}
+ *  - PUT    /api/users/{id} 
  *  - DELETE /api/users/{id}
+ *  - PUT    /api/users/{id}/albums/
+ *  - PUT    /api/users/{id}/albums/{id}
+ *  - DELETE /api/users/{id}/albums/
+ *  - DELETE /api/users/{id}/albums/{id}
  */
 class UserController extends Controller
 {
@@ -194,6 +199,141 @@ class UserController extends Controller
         return response()->json([
             'message' => 'User deleted successfully.'
         ], 200);
+    }
+
+    /**
+     * Get albums assigned to a specific user (for guests)
+     *
+     * @param User $user
+     *
+     * @return JsonResponse
+     */
+    public function getAlbums(User $user): JsonResponse
+    {
+        $this->authorize('view', $user);
+
+        $albums = $user->albums()->with(['coverPhoto'])->withCount('photos')->get();
+
+        return response()->json([
+            'data' => $albums,
+        ], 200);
+    }
+
+    /**
+     * Assign a single album to a user (for guests)
+     *
+     * @param Request $request
+     * @param User    $user
+     * @param Album   $album
+     *
+     * @return JsonResponse
+     */
+    public function assignAlbum(Request $request, User $user, Album $album): JsonResponse
+    {
+        $modifiedRequest = $request->merge(['album_ids' => [$album->id]]);
+        return $this->assignAlbums($modifiedRequest, $user);
+    }
+
+    /**
+     * Assign multiple albums to a user (for guests)
+     *
+     * @param Request $request
+     * @param User    $user
+     *
+     * @return JsonResponse
+     */
+    public function assignAlbums(Request $request, User $user): JsonResponse
+    {
+        if ($response = $this->validateAlbumManagement($request, $user))
+        {
+            return $response;
+        }
+
+        $validated = $request->validate([
+            'album_ids'   => 'required|array',
+            'album_ids.*' => 'required|integer|exists:albums,id',
+        ]);
+
+        // Get albums not already assigned to avoid redundant database entries
+        $alreadyAssigned = $user->albums()->pluck('albums.id')->toArray();
+        $newAlbums = array_diff($validated['album_ids'], $alreadyAssigned);
+
+        if (empty($newAlbums))
+        {
+            return response()->json([
+                'message' => 'All specified albums were already assigned.',
+            ], 200);
+        }
+
+        $user->albums()->attach($newAlbums);
+
+        return response()->json([
+            'message' => count($newAlbums) . ' new album(s) assigned successfully.',
+        ], 200);
+    }
+
+    /**
+     * Remove a single album from a user (for guests)
+     *
+     * @param Request $request
+     * @param User    $user
+     * @param Album   $album
+     *
+     * @return JsonResponse
+     */
+    public function removeAlbum(Request $request, User $user, Album $album): JsonResponse
+    {
+        $modifiedRequest = $request->merge(['album_ids' => [$album->id]]);
+        return $this->removeAlbums($modifiedRequest, $user);
+    }
+
+    /**
+     * Remove multiple albums from a user (for guests)
+     *
+     * @param Request $request
+     * @param User    $user
+     *
+     * @return JsonResponse
+     */
+    public function removeAlbums(Request $request, User $user): JsonResponse
+    {
+        if ($response = $this->validateAlbumManagement($request, $user))
+        {
+            return $response;
+        }
+
+        $validated = $request->validate([
+            'album_ids'   => 'required|array',
+            'album_ids.*' => 'required|integer|exists:albums,id',
+        ]);
+
+        $user->albums()->detach($validated['album_ids']);
+
+        return response()->json([
+            'message' => count($validated['album_ids']) . ' album(s) removed successfully.',
+        ], 200);
+    }
+
+    /**
+     * Validate authorization and permissions for album management
+     *
+     * @param Request $request
+     * @param User    $user
+     *
+     * @return JsonResponse|null
+     */
+    private function validateAlbumManagement(Request $request, User $user): ?JsonResponse
+    {
+        $this->authorize('update', $user);
+        
+        if ($request->user()->role !== UserRole::ADMIN)
+        {
+            return response()->json([
+                'message' => 'Only administrators can manage album assignments.',
+            ], 403);
+        }
+
+        return $this->denyIfDemoMode();
     }
 
     /**

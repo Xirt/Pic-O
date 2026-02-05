@@ -75,6 +75,13 @@ Route::middleware([
     {
         Route::get('{user}', [UserController::class, 'show'])->name('show');
         Route::put('{user}', [UserController::class, 'update'])->name('update');
+        
+        // User Albums (getter for guest/album assignments)
+        Route::prefix('{user}/albums')->as('albums.')->group(function ()
+        {
+            Route::get('/', [UserController::class, 'getAlbums'])->name('index');
+        });
+
     });
 
 });
@@ -117,6 +124,16 @@ Route::middleware([
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::post('/', [UserController::class, 'store'])->name('store');
         Route::delete('{user}', [UserController::class, 'destroy'])->name('destroy');
+        
+        // User Albums (for guest/album assignment)
+        Route::prefix('{user}/albums')->as('albums.')->group(function ()
+        {
+            Route::put('/', [UserController::class, 'assignAlbums'])->name('assignMultiple');
+            Route::put('{album}', [UserController::class, 'assignAlbum'])->name('assignOne');
+            Route::delete('/', [UserController::class, 'removeAlbums'])->name('removeMultiple');
+            Route::delete('{album}', [UserController::class, 'removeAlbum'])->name('removeOne');
+        });
+
     });
 
     // Settings
