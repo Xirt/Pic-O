@@ -25,6 +25,7 @@ class AlbumPolicy
      */
     public function viewAny(?User $user): bool
     {
+        // All authenticated users can view albums (guests see only their assigned albums)
         return (bool) $user;
     }
 
@@ -39,7 +40,23 @@ class AlbumPolicy
     public function view(?User $user, Album $album): bool
     {
         $token = request()->token;
-        return ($user || ($token && $token->album_id === $album->id && !$token->isExpired()));
+        
+        // Allow access via share token
+        if (!$user && $token && $token->album_id === $album->id && !$token->isExpired()) {
+            return true;
+        }
+        
+        // Admins and regular users can view all albums
+        if ($user && in_array($user->role, [UserRole::ADMIN, UserRole::USER])) {
+            return true;
+        }
+        
+        // Guests can only view albums assigned to them
+        if ($user && $user->role === UserRole::GUEST) {
+            return $album->users()->where('users.id', $user->id)->exists();
+        }
+        
+        return false;
     }
 
     /**

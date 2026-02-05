@@ -43,7 +43,21 @@ class PhotoPolicy
             return $photo->albums()->where('albums.id', $token->album_id)->exists();
         }
 
-        return (bool) $user;
+        // Admins and regular users can view all photos
+        if ($user && in_array($user->role, [UserRole::ADMIN, UserRole::USER])) {
+            return true;
+        }
+
+        // Guests can only view photos in their assigned albums
+        if ($user && $user->role === UserRole::GUEST) {
+            // Get all album IDs assigned to this guest user
+            $assignedAlbumIds = $user->albums()->pluck('albums.id');
+            
+            // Check if this photo belongs to any of those albums
+            return $photo->albums()->whereIn('albums.id', $assignedAlbumIds)->exists();
+        }
+
+        return false;
     }
 
     /**
