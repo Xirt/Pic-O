@@ -25,7 +25,6 @@ class AlbumPolicy
      */
     public function viewAny(?User $user): bool
     {
-        // All authenticated users can view albums (guests see only their assigned albums)
         return (bool) $user;
     }
 
