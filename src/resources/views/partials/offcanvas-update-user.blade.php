@@ -86,7 +86,6 @@
 
                     <div class="col-sm-4">
 
-
                     @if(auth()->user()->role->value === 'admin')
 
                         <div class="input-group input-group-sm">
@@ -94,6 +93,7 @@
                                 <i class="bi bi-list"></i>
                             </span>
                             <select class="form-select" id="updateUserRole" name="role" required>
+                                <option value="guest">Guest</option>
                                 <option value="user">User</option>
                                 <option value="admin">Admin</option>
                             </select>

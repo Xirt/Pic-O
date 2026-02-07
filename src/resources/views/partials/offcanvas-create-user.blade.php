@@ -90,6 +90,7 @@
                                 <i class="bi bi-list"></i>
                             </span>
                             <select class="form-select" id="user-role" name="role" required>
+                                <option value="guest">Guest</option>
                                 <option value="user">User</option>
                                 <option value="admin">Admin</option>
                             </select>
