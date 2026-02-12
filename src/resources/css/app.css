@@ -15,8 +15,20 @@
 }
 
 .btn-primary:hover {
-    background-color: #7873f5 !important;
-    border-color: #7873f5 !important;
+    background-color: #6663d1 !important;
+    border-color: #6663d1 !important;
+}
+
+.btn-tertiary {
+    background-color: #ff6ec4;
+    border-color: #ff6ec4;
+    color: #fff;
+}
+
+.btn-tertiary:hover {
+    background-color: #d659a4 !important;
+    border-color: #d659a4 !important; 
+    color: #fff;
 }
 
 
@@ -355,7 +367,16 @@ table .col-role {
 }
 
 table .col-actions {
-    width: 200px;
+    width: 150px;
+}
+
+
+@media (min-width: 768px) {
+
+    table .col-actions {
+        width: 300px;
+    }
+
 }
 
 footer {
@@ -556,6 +577,25 @@ body:not(.slideshow-mode) .picoview .bi-stop-fill {
     }
 
 }
+
+/**
+ * Admin page - users
+ */
+#albums-list-container {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+@media (max-height: 768px) {
+
+    #albums-list-container {
+        max-height: 25vh;
+        overflow-y: auto;
+    }
+
+
+}
+
 
 .text-purple {
     color: #6f42c1 !important;

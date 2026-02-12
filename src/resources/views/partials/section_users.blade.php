@@ -15,7 +15,7 @@
             <tr>
                 <th scope="col" class="d-none d-sm-table-cell">Name</th>
                 <th scope="col">Email</th>
-                <th scope="col" class="col-role text-center">Role</th>
+                <th scope="col" class="col-role d-none d-sm-table-cell text-center">Role</th>
                 <th scope="col" class="col-actions text-end">&nbsp;</th>
             </tr>
         </thead>
@@ -24,17 +24,24 @@
                 <tr data-user-id="{{ $user->id }}">
                     <td class="d-none d-sm-table-cell">{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td class="text-center">{{ ucfirst($user->role->value) }}</td>
+                    <td class="col-role d-none d-sm-table-cell text-center">{{ ucfirst($user->role->value) }}</td>
                     <td class="text-end">
 
                         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="offcanvas-update-user" data-user-id="{{ $user->id }}">
-                            <i class="bi bi-pencil m-0 me-sm-1"></i>
-                            <span class="d-none d-sm-inline">Modify</span>
+                            <i class="bi bi-pencil m-0 me-md-1"></i>
+                            <span class="d-none d-md-inline">Modify</span>
                         </button>
 
+                        @if ($user->role->value === 'guest')
+                        <button type="button" class="btn btn-sm btn-tertiary manage-albums" data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}">
+                            <i class="bi bi-collection m-0 me-md-1"></i>
+                            <span class="d-none d-md-inline">Albums</span>
+                        </button>
+                        @endif
+
                         <button type="button" class="btn btn-sm btn-secondary remove-user" data-user-id="{{ $user->id }}">
-                            <i class="bi bi-trash m-0 me-sm-1"></i>
-                            <span class="d-none d-sm-inline">Delete</span>
+                            <i class="bi bi-trash m-0 me-md-1"></i>
+                            <span class="d-none d-md-inline">Delete</span>
                         </button>
 
                     </td>

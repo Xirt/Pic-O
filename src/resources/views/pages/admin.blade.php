@@ -57,6 +57,8 @@
 
 @include('partials.offcanvas-create-user')
 
+@include('partials.offcanvas-manage-user-albums')
+
 @include('partials.offcanvas-confirm-delete-user')
 
 @endsection
