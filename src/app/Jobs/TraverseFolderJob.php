@@ -120,7 +120,10 @@ class TraverseFolderJob implements ShouldQueue
 
                 $relative = $this->getRelativePath($subfolder);
                 return !$this->isIgnored($relative, $ignorePatterns);
-            });
+            })
+			->sortByDesc(function ($subfolder) {
+				return @filemtime($subfolder) ?: 0;
+			});
 
         // Scan found subdirectories
         foreach ($subfolders as $subfolder)
