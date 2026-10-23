@@ -27,7 +27,7 @@ use App\Models\Album;
  *  - GET    /api/users
  *  - GET    /api/users/{id}
  *  - POST   /api/users
- *  - PUT    /api/users/{id} 
+ *  - PUT    /api/users/{id}
  *  - DELETE /api/users/{id}
  *  - PUT    /api/users/{id}/albums/
  *  - PUT    /api/users/{id}/albums/{id}
@@ -184,7 +184,7 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'You cannot delete your own account.',
             ], 403);
-        }       
+        }
 
         // Prevent deletion if it would leave 0 admins
         if ($user->role === 'admin' && User::where('role', 'admin')->count() <= 1)
@@ -216,6 +216,34 @@ class UserController extends Controller
 
         return response()->json([
             'data' => $albums,
+        ], 200);
+    }
+
+    /**
+     * Replace assigned albums for a user (for guests)
+     *
+     * @param Request $request
+     * @param User    $user
+     * @param Album   $album
+     *
+     * @return JsonResponse
+     */
+    public function replaceAssignedAlbums(Request $request, User $user, Album $album): JsonResponse
+    {
+        if ($response = $this->validateAlbumManagement($request, $user))
+        {
+            return $response;
+        }
+
+        $validated = $request->validate([
+            'album_ids'   => 'required|array',
+            'album_ids.*' => 'required|integer|exists:albums,id',
+        ]);
+
+        $user->albums()->sync($validated['album_ids']);
+
+        return response()->json([
+            'message' => count($validated['album_ids']) . ' album(s) assigned successfully.',
         ], 200);
     }
 
@@ -325,7 +353,7 @@ class UserController extends Controller
     private function validateAlbumManagement(Request $request, User $user): ?JsonResponse
     {
         $this->authorize('update', $user);
-        
+
         if ($request->user()->role !== UserRole::ADMIN)
         {
             return response()->json([
