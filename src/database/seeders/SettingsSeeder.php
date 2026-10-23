@@ -21,6 +21,11 @@ class SettingsSeeder extends Seeder
         );
 
         Setting::firstOrCreate(
+            ['key'   => 'cdn_usage'],
+            ['value' => '1']
+        );
+
+        Setting::firstOrCreate(
             ['key'   => 'media_root'],
             ['value' => '/photos']
         );
