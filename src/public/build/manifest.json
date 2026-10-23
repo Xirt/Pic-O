@@ -34,8 +34,34 @@
       "app.css"
     ]
   },
+  "resources/css/bootstrap-icons.min.css": {
+    "file": "assets/bootstrap-icons-BTR1HNgt.css",
+    "src": "resources/css/bootstrap-icons.min.css",
+    "isEntry": true,
+    "name": "bootstrap-icons.min",
+    "names": [
+      "bootstrap-icons.css"
+    ]
+  },
+  "resources/css/bootstrap.min.css": {
+    "file": "assets/bootstrap-DBkz-poX.css",
+    "src": "resources/css/bootstrap.min.css",
+    "isEntry": true,
+    "name": "bootstrap.min",
+    "names": [
+      "bootstrap.css"
+    ]
+  },
+  "resources/css/fonts/bootstrap-icons.woff": {
+    "file": "assets/bootstrap-icons-BHUGvtHM.woff",
+    "src": "resources/css/fonts/bootstrap-icons.woff"
+  },
+  "resources/css/fonts/bootstrap-icons.woff2": {
+    "file": "assets/bootstrap-icons-DJdhg9lH.woff2",
+    "src": "resources/css/fonts/bootstrap-icons.woff2"
+  },
   "resources/js/admin.js": {
-    "file": "assets/admin-B3QcACAN.js",
+    "file": "assets/admin-iCVtGMg1.js",
     "name": "admin",
     "src": "resources/js/admin.js",
     "isEntry": true,
