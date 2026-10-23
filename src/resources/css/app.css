@@ -27,7 +27,7 @@
 
 .btn-tertiary:hover {
     background-color: #d659a4 !important;
-    border-color: #d659a4 !important; 
+    border-color: #d659a4 !important;
     color: #fff;
 }
 
@@ -81,7 +81,8 @@ header {
     align-items: flex-start;
 }
 
-.grid .empty-grid {
+.grid .empty-grid,
+#albums-list-container .empty-grid {
     opacity: 0;
     transition: opacity 2s;
 }
