@@ -5,6 +5,8 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
+                'resources/css/bootstrap.min.css',
+                'resources/css/bootstrap-icons.min.css',
                 'resources/css/app.css',
                 'resources/js/app.js',      
                 'resources/js/login.js',

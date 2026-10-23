@@ -25,6 +25,28 @@
 
         <div class="mb-1 row align-items-center">
 
+            <label for="cdn_usage" class="col-md-4 col-form-label">CDN Usage</label>
+
+            <div class="col-md-8">
+
+                <div class="input-group input-group-sm">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-list"></i>
+                    </span>
+                    <select class="form-select" id="cdn_usage" name="cdn_usage" required>
+                        <option value="1" {{ config('settings.cdn_usage')  ? 'selected' : '' }}>Use Content Delivery Network</option>
+                        <option value="0" {{ !config('settings.cdn_usage') ? 'selected' : '' }}>Use local files</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mb-1 row align-items-center">
+
             <label for="media_root" class="col-md-4 col-form-label">Photo directory</label>
 
             <div class="col-md-8">

@@ -31,6 +31,10 @@ class SettingController extends Controller
             'rules' => 'required|string|max:255',
         ],
 
+        'cdn_usage' => [
+            'rules' => 'required|in:0,1',
+        ],
+
         'media_root' => [
             'rules' => 'required|string|max:255',
         ],
