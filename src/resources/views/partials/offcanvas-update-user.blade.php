@@ -1,4 +1,4 @@
-<div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvas-update-user" aria-labelledby="offcanvasUpdateUserLabel">
+<div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvasUpdateUser" aria-labelledby="offcanvasUpdateUserLabel">
 
     <div class="offcanvas-inner bg-white rounded-top mx-auto w-100 px-3">
 
@@ -8,13 +8,12 @@
 
         <div class="offcanvas-body small">
 
-            <form action="#" method="POST" id="updateUserForm" class="w-100">
-                @csrf
-                @method('PUT')
+            <form action="" method="POST" id="updateUserForm" class="w-100">
+            @csrf
 
                 <div class="mb-1 row align-items-center">
 
-                    <label for="updateUserName" class="col-sm-4 col-form-label">Display name</label>
+                    <label for="user-name" class="col-sm-4 col-form-label">Display name</label>
 
                     <div class="col-sm-8">
 
@@ -22,7 +21,7 @@
                             <span class="input-group-text">
                                 <i class="bi bi-fonts"></i>
                             </span>
-                            <input type="text" class="form-control" id="updateUserName" name="name" placeholder="User name" required>
+                            <input type="text" class="form-control" id="user-name" name="name" placeholder="User name" required>
                         </div>
 
                     </div>
@@ -31,7 +30,7 @@
 
                 <div class="mb-1 row align-items-center">
 
-                    <label for="updateUserEmail" class="col-sm-4 col-form-label">Email address</label>
+                    <label for="user-email" class="col-sm-4 col-form-label">Email address</label>
 
                     <div class="col-sm-8">
 
@@ -39,7 +38,7 @@
                             <span class="input-group-text">
                                 <i class="bi bi-envelope"></i>
                             </span>
-                            <input type="email" class="form-control" id="updateUserEmail" name="email" placeholder="Email address" required>
+                            <input type="email" class="form-control" id="user-email" name="email" placeholder="Email address" required>
                         </div>
 
                     </div>
@@ -48,7 +47,7 @@
 
                 <div class="mb-1 row align-items-center">
 
-                    <label for="updatePassword" class="col-sm-4 col-form-label">Password</label>
+                    <label for="user-password" class="col-sm-4 col-form-label">Password</label>
 
                     <div class="col-sm-8">
 
@@ -56,7 +55,7 @@
                             <span class="input-group-text">
                                 <i class="bi bi-key"></i>
                             </span>
-                            <input type="password" class="form-control" id="updatePassword" name="password" placeholder="Password (optional)">
+                            <input type="password" class="form-control" id="user-password" name="password" placeholder="Password (optional)">
                         </div>
 
                     </div>
@@ -65,7 +64,7 @@
 
                 <div class="mb-1 row align-items-center">
 
-                    <label for="updatePasswordConf" class="col-sm-4 col-form-label">Password (verify)</label>
+                    <label for="user-password-confirm" class="col-sm-4 col-form-label">Password (verify)</label>
 
                     <div class="col-sm-8">
 
@@ -73,7 +72,7 @@
                             <span class="input-group-text">
                                 <i class="bi bi-key"></i>
                             </span>
-                            <input type="password" class="form-control" id="updatePasswordConf" name="password_confirmation" placeholder="Password (verification)">
+                            <input type="password" class="form-control" id="user-password-confirm" name="password_confirmation" placeholder="Password (verification)">
                         </div>
 
                     </div>
@@ -82,7 +81,7 @@
 
                 <div class="mb-1 row align-items-center">
 
-                    <label for="updateUserRole" class="col-sm-4 col-form-label">Role</label>
+                    <label for="user-role" class="col-sm-4 col-form-label">Role</label>
 
                     <div class="col-sm-4">
 
@@ -92,7 +91,7 @@
                             <span class="input-group-text">
                                 <i class="bi bi-list"></i>
                             </span>
-                            <select class="form-select" id="updateUserRole" name="role" required>
+                            <select class="form-select" id="user-role" name="role" required>
                                 <option value="guest">Guest</option>
                                 <option value="user">User</option>
                                 <option value="admin">Admin</option>
@@ -120,7 +119,7 @@
 
                 <div class="d-flex justify-content-center mt-4 mb-3">
 
-                    <input type="hidden" name="id" />
+                    <input type="hidden" id="userId" name="id" value="">
 
                     <button type="submit" class="btn btn-sm btn-primary w-50 mx-2 mx-sm-4">
                         <i class="bi bi-pencil me-1"></i> Save

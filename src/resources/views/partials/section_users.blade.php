@@ -5,7 +5,7 @@
 <div class="mx-lg-5">
 
     <div class="text-end my-2 mb-3">
-        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-create-user" aria-controls="offcanvas-create-user">
+        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCreateUser" aria-controls="offcanvas-create-user">
             <i class="bi bi-person-fill-add me-1"></i> Create user
         </button>
     </div>
@@ -20,6 +20,33 @@
             </tr>
         </thead>
         <tbody>
+
+            <template id="row-user">
+            <tr>
+                <td class="d-none d-sm-table-cell user-name"></td>
+                <td class="user-email"></td>
+                <td class="col-role d-none d-sm-table-cell text-center user-role"></td>
+                <td class="text-end">
+
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUpdateUser" aria-controls="offcanvasUpdateUser">
+                        <i class="bi bi-pencil m-0 me-md-1"></i>
+                        <span class="d-none d-md-inline">Modify</span>
+                    </button>
+
+                    <button type="button" class="btn btn-sm btn-tertiary manage-albums">
+                        <i class="bi bi-collection m-0 me-md-1"></i>
+                        <span class="d-none d-md-inline">Albums</span>
+                    </button>
+
+                    <button type="button" class="btn btn-sm btn-secondary remove-user" >
+                        <i class="bi bi-trash m-0 me-md-1"></i>
+                        <span class="d-none d-md-inline">Delete</span>
+                    </button>
+
+                </td>
+            </tr>
+            </template>
+
             @forelse ($users as $user)
                 <tr data-user-id="{{ $user->id }}">
                     <td class="d-none d-sm-table-cell">{{ $user->name }}</td>
@@ -27,7 +54,7 @@
                     <td class="col-role d-none d-sm-table-cell text-center">{{ ucfirst($user->role->value) }}</td>
                     <td class="text-end">
 
-                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="offcanvas-update-user" data-user-id="{{ $user->id }}">
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUpdateUser" aria-controls="offcanvasUpdateUser" data-user-id="{{ $user->id }}">
                             <i class="bi bi-pencil m-0 me-md-1"></i>
                             <span class="d-none d-md-inline">Modify</span>
                         </button>

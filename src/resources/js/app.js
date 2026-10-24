@@ -18,9 +18,9 @@ const REDIRECT_DELAY = 1000;
 
                 // Populate form & show offcanvas
                 const result = await AppRequest.request(`/api/users/${userId}`, 'GET');
-                populateForm(document.getElementById('updateUserForm'), result.data);
+                populateForm(document.getElementById('updateCurrentUserForm'), result.data);
 
-                openCanvas('offcanvas-update-user');
+                openCanvas('offcanvasUpdateCurrentUser');
 
             } catch (e) { console.log(e); }
 
@@ -28,7 +28,7 @@ const REDIRECT_DELAY = 1000;
     });
 
     // Activate "Update User"-functionality (store & hide)
-    const updateUserForm = document.getElementById('updateUserForm');
+    const updateUserForm = document.getElementById('updateCurrentUserForm');
     updateUserForm?.addEventListener('submit', async function (e) {
 
         e.preventDefault();
@@ -39,13 +39,13 @@ const REDIRECT_DELAY = 1000;
 
             // Store user
             const data = getJSONFromForm(updateUserForm);
-            const result = await AppRequest.request(`/api/users/${userId}`, 'PUT', data);
+            const result = await AppRequest.request(`/api/users/${userId}`, 'PATCH', data);
 
             // Show result (success) & hide offcanvas
             showMessage(messageBox, result.message, true, REDIRECT_DELAY);
 
             setTimeout(() => {
-                closeCanvas('offcanvas-update-user');
+                closeCanvas('offcanvasUpdateCurrentUser');
             }, REDIRECT_DELAY);
 
         } catch (error) {

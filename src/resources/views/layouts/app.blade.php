@@ -44,7 +44,7 @@
     </main>
 
     @auth
-    @include('partials.offcanvas-update-user')
+    @include('partials.offcanvas-update-current-user')
     @endauth
 
     {{-- Footer --}}
