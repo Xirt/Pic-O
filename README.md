@@ -3,7 +3,7 @@
 
 # Pic-O - A Lightweight Photo Sharing Platform
 
-**Pic-O** is a simple, elegant, and self-hosted photo publishing platform built with **Laravel 12** and **Bootstrap 5.x**.  
+**Pic-O** is a simple, elegant, and self-hosted photo publishing platform built with **Laravel 13** and **Bootstrap 5.x**.  
 It’s designed for photographers, families, and self-hosters who want an easy way to organize and share their photo collections without the complexity or overhead of full-fledged photo management suites.
 
 Unlike heavy solutions that try to automate everything, **Pic-O** keeps things simple:  
@@ -105,7 +105,7 @@ docker run -d \
   -e DB_USERNAME=<db_user> \     # database username
   -e DB_PASSWORD=<db_pass> \     # database password
   -e APP_HOST=<host_or_domain> \ # URL of your Pic-O instance
-  xirtnl/pic-o:beta
+  xirtnl/pic-o:latest
 ```
 
 This pulls the latest version of Pic-O and mounts your local photo directory inside the container.
