@@ -100,4 +100,14 @@ class Album extends Model
     {
         return $this->belongsTo(Photo::class, 'photo_id');
     }
+
+    /**
+     * Get the Users who have access to this Album (for GUEST role).
+     *
+     * @return BelongsToMany<User>
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
 }

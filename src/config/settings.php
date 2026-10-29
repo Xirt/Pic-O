@@ -14,6 +14,6 @@ return [
     | overrides the database setting (via CLI) if present.
     |
     */
-    'demo_environment' => (int)env('DEMO_ENVIRONMENT', 1)
+    'demo_environment' => (int)env('DEMO_ENVIRONMENT', 0)
 
 ];

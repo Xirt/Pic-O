@@ -7,6 +7,7 @@ use App\Http\Resources\PhotoResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
+use App\Enums\UserRole;
 use App\Models\Album;
 use App\Models\Photo;
 use App\Models\Folder;
@@ -38,9 +39,18 @@ class PhotoController extends Controller
     {
         $this->authorize('viewAny', Photo::class);
 
-        $photos = Photo::orderByRaw('taken_at IS NULL, taken_at DESC')
-                       ->paginate(50);
+        $query = Photo::query();
 
+        $user = request()->user();
+        if ($user && $user->role === UserRole::GUEST)
+        {
+            $assignedAlbumIds = $user->albums()->pluck('albums.id');
+            $query->whereHas('albums', function ($q) use ($assignedAlbumIds) {
+                $q->whereIn('albums.id', $assignedAlbumIds);
+            });
+        }
+
+        $photos = $query->orderByRaw('taken_at IS NULL, taken_at DESC')->paginate(50);
         return PhotoResource::collection($photos);
     }
 

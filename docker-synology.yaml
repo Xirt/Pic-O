@@ -28,7 +28,7 @@ services:
             - pico
 
     postgres:
-        image: postgres:16
+        image: postgres:18.6
         container_name: pico_postgres
         restart: unless-stopped
         environment:
@@ -38,7 +38,7 @@ services:
         ports:
             - "5433:5432"
         volumes:
-            - postgres_data:/var/lib/postgresql/data
+            - postgres_data_18:/var/lib/postgresql
         networks:
             - pico
 
@@ -46,4 +46,4 @@ networks:
     pico:
 
 volumes:
-    postgres_data:
+    postgres_data_18:

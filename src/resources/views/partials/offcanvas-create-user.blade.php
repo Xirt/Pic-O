@@ -1,4 +1,4 @@
-<div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvas-create-user" aria-labelledby="offcanvasCreateUserLabel">
+<div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvasCreateUser" aria-labelledby="offcanvasCreateUserLabel">
 
     <div class="offcanvas-inner bg-white rounded-top mx-auto w-100 px-3">
 
@@ -8,7 +8,7 @@
 
         <div class="offcanvas-body small">
 
-            <form action="{{ route('api.users.store') }}" method="POST" id="createForm" class="w-100">
+            <form action="{{ route('api.users.store') }}" method="POST" id="createUserForm" class="w-100">
             @csrf
 
                 <div class="mb-1 row align-items-center">
@@ -90,6 +90,7 @@
                                 <i class="bi bi-list"></i>
                             </span>
                             <select class="form-select" id="user-role" name="role" required>
+                                <option value="guest">Guest</option>
                                 <option value="user">User</option>
                                 <option value="admin">Admin</option>
                             </select>
@@ -99,7 +100,7 @@
 
                 </div>
 
-                <div class="mb-3 alert form-message" id="createFormMessage"></div>
+                <div class="my-3 alert form-message"></div>
 
                 <hr />
 

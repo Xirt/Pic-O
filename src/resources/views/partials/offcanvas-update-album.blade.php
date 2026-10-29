@@ -1,10 +1,10 @@
-<div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvasUpdateAlbum" aria-labelledby="offcanvasUpdateLabel">
+<div class="offcanvas offcanvas-bottom offcanvas-bottom-sm" tabindex="-1" id="offcanvasUpdateAlbum" aria-labelledby="offcanvasUpdateAlbumLabel">
 
     <div class="offcanvas-inner bg-white rounded-top mx-auto w-100 px-3">
 
         <div class="offcanvas-header">
 
-            <h5 class="offcanvas-title" id="offcanvasUpdateLabel">
+            <h5 class="offcanvas-title" id="offcanvasUpdateAlbumLabel">
                 Modify album
             </h5>
 
@@ -120,7 +120,7 @@
 
                 <div class="d-flex justify-content-center mt-4 mb-3">
 
-                    <input type="hidden" class="form-control" id="albumId" name="id" placeholder="Album title" value="">
+                    <input type="hidden" id="albumId" name="id" value="">
 
                     <button type="submit" class="btn btn-sm btn-primary form-processor w-50 mx-2 mx-sm-4">
                         <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>

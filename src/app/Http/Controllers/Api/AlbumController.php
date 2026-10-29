@@ -12,6 +12,7 @@ use Illuminate\Validation\Rules\Enum;
 
 use App\Enums\AlbumType;
 use App\Enums\DatePrecision;
+use App\Enums\UserRole;
 use App\Http\Resources\AlbumResource;
 use App\Models\Album;
 use App\Models\Photo;
@@ -51,11 +52,17 @@ class AlbumController extends Controller
     {
         $this->authorize('viewAny', Album::class);
 
-        $albums = Album::with(['coverPhoto'])
-           ->withCount('photos')
-           ->orderBy('name', 'asc')
-           ->paginate(10);
+        $query = Album::with(['coverPhoto'])->withCount('photos');
 
+        $user = request()->user();
+        if ($user && $user->role === UserRole::GUEST)
+        {
+            $query->whereHas('users', function ($q) use ($user) {
+                $q->where('users.id', $user->id);
+            });
+        }
+
+        $albums = $query->orderBy('name', 'asc')->paginate(10);
         return AlbumResource::collection($albums);
     }
 
@@ -82,13 +89,20 @@ class AlbumController extends Controller
         $order     = $validated['order'] ?? 'name';
         $direction = strtoupper($validated['direction'] ?? 'ASC');
 
-        $albums = Album::with(['coverPhoto'])
+        $albumsQuery = Album::with(['coverPhoto'])
             ->withCount('photos')
             ->when($query, fn($q) => $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%']))
-            ->when($type, fn($q) => $q->where('type', $type))
-            ->orderBy($order, $direction)
-            ->paginate(25);
+            ->when($type, fn($q) => $q->where('type', $type));
 
+        $user = $request->user();
+        if ($user && $user->role === UserRole::GUEST)
+        {
+            $albumsQuery->whereHas('users', function ($q) use ($user) {
+                $q->where('users.id', $user->id);
+            });
+        }
+
+        $albums = $albumsQuery->orderBy($order, $direction)->paginate(25);
         return AlbumResource::collection($albums);
     }
 
@@ -121,7 +135,7 @@ class AlbumController extends Controller
 
         $validated = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'type'      => ['required', new Enum(AlbumType::class)],
+            'type' => ['required', new Enum(AlbumType::class)],
         ])->validate();
 
         $photoIds = $this->getPhotoIds($request);
@@ -148,13 +162,12 @@ class AlbumController extends Controller
         $folder = Folder::findOrFail($validated['folder_id']);
 
         $folderIds = [$folder->id];
-        if (!empty($validated['subdirectories'])) {
-
+        if (!empty($validated['subdirectories']))
+        {
             $folderIds = array_merge($folderIds, Folder::where('path', 'like', $folder->path . DIRECTORY_SEPARATOR . '%')
                 ->pluck('id')
                 ->toArray()
             );
-
         }
 
         $photoIds = Photo::whereIn('folder_id', $folderIds)->pluck('id')->toArray();

@@ -26,7 +26,7 @@
     "name": "domHelpers"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BtkmZ53s.css",
+    "file": "assets/app-CqDWx5HN.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -61,7 +61,7 @@
     "src": "resources/css/fonts/bootstrap-icons.woff2"
   },
   "resources/js/admin.js": {
-    "file": "assets/admin-iCVtGMg1.js",
+    "file": "assets/admin-DW2xzppi.js",
     "name": "admin",
     "src": "resources/js/admin.js",
     "isEntry": true,
@@ -93,7 +93,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-uMqeYmfv.js",
+    "file": "assets/app-jhyY_6BS.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
